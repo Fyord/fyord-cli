@@ -11,7 +11,7 @@ export interface ISettingsService {
 export class SettingsService implements ISettingsService {
   private static instance: ISettingsService | null = null;
   public static Instance(
-    settingsFilePath = './fyord-cli.json',
+    settingsFilePath = './fyord.json',
     persister: IPersister | null = null
   ): ISettingsService {
     return this.instance || (this.instance = new SettingsService(settingsFilePath, persister));
