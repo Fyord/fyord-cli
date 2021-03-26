@@ -1,22 +1,23 @@
-const puppeteer = require('puppeteer');
-const fse = require('fs-extra');
+/* eslint-disable no-console */
+import * as fse from 'fs-extra';
+import * as puppeteer from 'puppeteer';
+import { Settings } from './settings/settings';
+import { SettingsService } from './settings/settingsService';
+
+const configFileLocation = process.argv[2];
+console.log(`Using ${configFileLocation ? configFileLocation : 'default'} configuration`);
+const settingsService = SettingsService.Instance(configFileLocation);
 
 const config = {
-  baseUrl: 'http://localhost:4200',
-  outputPathRoot: 'public/pre-render',
-  blockedResourceTypes: [
-    'image', 'media', 'font'
-  ],
-  skippedResources: [
-    'google', 'paypal', 'gstatic'
-  ],
-  renderModes: {
-    dynamic: '<!-- fyord-dynamic-render -->',
-    static: '<!-- fyord-static-render -->',
-    hybrid: '<!-- fyord-hybrid-render -->'
-  },
-  bundleScriptRegex: /<script src="\/bundle.js(.*?)"><\/script>/,
-  unsupportedBrowserScript: '<script src="/unsupported-browser.js"></script>'
+  baseUrl: settingsService.GetSettingOrDefault(Settings.BaseUrl),
+  outputPathRoot: settingsService.GetSettingOrDefault(Settings.OutputPathRoot),
+  blockedResourceTypes: settingsService.GetSettingOrDefault(Settings.BlockedResourceTypes) as string[],
+  skippedResources: settingsService.GetSettingOrDefault(Settings.SkippedResources) as string[],
+  dynamicRenderModeString: settingsService.GetSettingOrDefault(Settings.DynamicRenderModeString),
+  staticRenderModeString: settingsService.GetSettingOrDefault(Settings.StaticRenderModeString),
+  hybridRenderModeString: settingsService.GetSettingOrDefault(Settings.HybridRenderModeString),
+  bundleScriptRegex: new RegExp(settingsService.GetSettingOrDefault(Settings.BundleScriptRegex) as string),
+  unsupportedBrowserScript: settingsService.GetSettingOrDefault(Settings.UnsupportedBrowserScript)
 };
 
 const errors = new Array();
@@ -52,7 +53,6 @@ async function renderPage(page, route) {
   const pageName = route === '' ? 'index' : route;
   const url = `${config.baseUrl}${route}`;
 
-  // eslint-disable-next-line no-console
   console.log(`| ========= Attempting to crawl: ${pageName} ========= |`);
 
   await page.goto(url, { waitUntil: 'networkidle2' });
@@ -60,11 +60,11 @@ async function renderPage(page, route) {
   let content = await page.content();
   content = content.replace(/\r?\n|\r/g, '').replace(/>\s+</g, '><');
 
-  if (content.indexOf(config.renderModes.static) >= 0) {
+  if (content.indexOf(config.staticRenderModeString) >= 0) {
     content = content.replace(config.bundleScriptRegex, '');
   }
 
-  if (content.indexOf(config.renderModes.dynamic) < 0) {
+  if (content.indexOf(config.dynamicRenderModeString) < 0) {
     await fse.outputFile(`${config.outputPathRoot}/${pageName}.html`, content);
     addEntrySiteMap(url);
   } else {
@@ -141,7 +141,8 @@ ${xmlEnd}`;
         }
       });
     } catch (error) {
-      errors.push({ page: pageToCrawl, error: error });
+      console.error(error);
+      errors.push({ page: pageToCrawl, error: error.toString() });
     }
 
     if (pageToCrawl) {
@@ -153,7 +154,6 @@ ${xmlEnd}`;
   await fse.outputFile(`${config.outputPathRoot}/sitemap.xml`, getXmlSiteMap());
   await fse.outputFile(`${config.outputPathRoot}/errors.json`, JSON.stringify(errors));
 
-  // eslint-disable-next-line no-console
   console.log(`Completed crawling ${crawledPages.length} pages with ${errors.length} errors.`);
 
   await browser.close();
