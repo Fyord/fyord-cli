@@ -1,0 +1,27 @@
+{
+  "name": "fyord-cli",
+  "repository": {
+    "type": "GitHub",
+    "url": "https://github.com/Fyord/fyord-cli"
+  },
+  "author": {
+    "name": "Fyord"
+  },
+  "keywords": [
+    "typescript",
+    "javascript",
+    "framework"
+  ],
+  "license": "MIT",
+  "version": "0.0.1",
+  "description": "A companion CLI to the Fyord framework",
+  "private": false,
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "dependencies": {
+    "tsbase": "^3.3.16"
+  },
+  "bin": {
+    "fyord": "./index.js"
+  }
+}

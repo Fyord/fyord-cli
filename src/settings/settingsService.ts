@@ -1,5 +1,5 @@
 import { FSPersister, IPersister, KeyValue, Repository, Strings } from 'tsbase';
-import { FileSystemAdapter } from './FileSystemAdapter';
+import { FileSystemAdapter } from './fileSystemAdapter';
 import { PathResolver } from './pathResolver';
 import { Settings, SettingsMap } from './settings';
 
