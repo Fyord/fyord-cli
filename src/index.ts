@@ -3,7 +3,7 @@ import { Strings } from 'tsbase';
 import { CommandName } from './core/constants';
 import { CommandMap, Commands } from './core/module';
 
-const commandKey = process.argv[2];
+const commandKey = process.argv[2] || 'help';
 const args = process.argv.slice(3, process.argv.length);
 
 (() => {

@@ -1,5 +1,6 @@
-import { CommandName } from './constants';
+import { CommandName as CliName } from './constants';
 import { PreRender } from './module';
+import { Generate } from './operations/generate';
 import { Help } from './operations/help';
 
 export type Operation = (args?: string[]) => void;
@@ -14,7 +15,8 @@ export type Command = {
 
 export enum Commands {
   Help = 'help',
-  PreRender = 'preRender'
+  PreRender = 'preRender',
+  Generate = 'generate'
 }
 
 export const CommandMap = new Map<Commands, Command>([
@@ -23,13 +25,20 @@ export const CommandMap = new Map<Commands, Command>([
     Description: 'List available commands and arguments',
     Arguments: ['Command Name'],
     Operation: (args) => Help(args),
-    Example: `${CommandName} ${Commands.Help} ${Commands.PreRender}`
+    Example: `${CliName} ${Commands.Help} ${Commands.PreRender}`
   }],
   [Commands.PreRender, {
     Name: Commands.PreRender,
     Description: 'Crawls and pre renders pages within the app',
     Arguments: [],
     Operation: () => PreRender(),
-    Example: `${CommandName} ${Commands.PreRender}`
+    Example: `${CliName} ${Commands.PreRender}`
+  }],
+  [Commands.Generate, {
+    Name: Commands.Generate,
+    Description: 'Scaffold a fyord app component, page, etc.',
+    Arguments: ['Type (component, page, etc.)', 'Name (ex. MyComponent)'],
+    Operation: (args) => Generate(args),
+    Example: `${CliName} ${Commands.Generate} component myComponent`
   }]
 ]);
