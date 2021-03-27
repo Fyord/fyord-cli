@@ -1,3 +1,4 @@
+import { ConfigurationFileName } from '../core/constants';
 import { FSPersister, IPersister, KeyValue, Repository, Strings } from 'tsbase';
 import { FileSystemAdapter } from './fileSystemAdapter';
 import { PathResolver } from './pathResolver';
@@ -11,19 +12,18 @@ export interface ISettingsService {
 export class SettingsService implements ISettingsService {
   private static instance: ISettingsService | null = null;
   public static Instance(
-    settingsFilePath = './fyord.json',
     persister: IPersister | null = null
   ): ISettingsService {
-    return this.instance || (this.instance = new SettingsService(settingsFilePath, persister));
+    return this.instance || (this.instance = new SettingsService(persister));
   }
   public static Destroy(): void { this.instance = null; }
 
   public Repository: Repository<KeyValue>;
 
-  private constructor(settingsFilePath: string, persister: IPersister | null = null) {
+  private constructor(persister: IPersister | null = null) {
     persister = persister || new FSPersister(
       './',
-      settingsFilePath,
+      `./${ConfigurationFileName}`,
       'settings',
       PathResolver,
       FileSystemAdapter);
