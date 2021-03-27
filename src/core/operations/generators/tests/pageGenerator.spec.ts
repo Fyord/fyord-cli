@@ -1,4 +1,4 @@
-import { PageGenerator } from '../PageGenerator';
+import { PageGenerator } from '../pageGenerator';
 
 describe('PageGenerator', () => {
   let classUnderTest: PageGenerator;
