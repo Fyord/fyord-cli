@@ -20,9 +20,9 @@ const args = process.argv.slice(3, process.argv.length);
 `);
 
   console.log(`
-Executing "${CommandName} ${commandKey}${args.length > 0 ? ` ${args.join(' ')}` : Strings.Empty}"
+Executing "${CommandName} ${commandKey}${args.length > 0 ? ` ${args.join(Strings.Space)}` : Strings.Empty}"
 
 `);
 
-  CommandMap.get(commandKey.replace('--', '') as Commands)?.Operation(args);
+  CommandMap.get(commandKey.replace('--', Strings.Empty) as Commands)?.Operation(args);
 })();

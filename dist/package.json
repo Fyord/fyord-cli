@@ -10,7 +10,8 @@
   "keywords": [
     "typescript",
     "javascript",
-    "framework"
+    "framework",
+    "cli"
   ],
   "license": "MIT",
   "version": "0.0.3",

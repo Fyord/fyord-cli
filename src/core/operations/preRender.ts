@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import * as fse from 'fs-extra';
 import * as puppeteer from 'puppeteer';
+import { Strings } from 'tsbase';
 import { Settings } from '../../settings/settings';
 import { SettingsService } from '../../settings/settingsService';
 import { Operation } from '../module';
@@ -50,7 +51,7 @@ export const PreRender: Operation = () => {
   }
 
   async function renderPage(page, route) {
-    const pageName = route === '' ? 'index' : route;
+    const pageName = route === Strings.Empty ? 'index' : route;
     const url = `${config.baseUrl}${route}`;
 
     console.log(`| ========= Attempting to crawl: ${pageName} ========= |`);
@@ -58,17 +59,17 @@ export const PreRender: Operation = () => {
     await page.goto(url, { waitUntil: 'networkidle2' });
 
     let content = await page.content();
-    content = content.replace(/\r?\n|\r/g, '').replace(/>\s+</g, '><');
+    content = content.replace(/\r?\n|\r/g, Strings.Empty).replace(/>\s+</g, '><');
 
     if (content.indexOf(config.staticRenderModeString) >= 0) {
-      content = content.replace(config.bundleScriptRegex, '');
+      content = content.replace(config.bundleScriptRegex, Strings.Empty);
     }
 
     if (content.indexOf(config.dynamicRenderModeString) < 0) {
       await fse.outputFile(`${config.outputPathRoot}/${pageName}.html`, content);
       addEntrySiteMap(url);
     } else {
-      const bundleScript = content.match(config.bundleScriptRegex)[0] || '';
+      const bundleScript = content.match(config.bundleScriptRegex)[0] || Strings.Empty;
       const appRootDivString = '<div id="app-root">';
       const closingHtml = `${appRootDivString}</div>${config.unsupportedBrowserScript}${bundleScript}</body></html>`;
 
@@ -106,7 +107,7 @@ export const PreRender: Operation = () => {
   <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">`;
     const xmlEnd = '</urlset>';
 
-    let xmlContent = '';
+    let xmlContent = Strings.Empty;
     siteMap.forEach(url => {
       xmlContent += `
     <url>
@@ -126,7 +127,7 @@ export const PreRender: Operation = () => {
     const page = await browser.newPage();
     await excludeMediaAndIntegrations(page);
 
-    const pagesToCrawl = [''];
+    const pagesToCrawl = [Strings.Empty];
     const crawledPages = ['/'];
 
     while (pagesToCrawl.length >= 1) {
