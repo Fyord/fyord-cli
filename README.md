@@ -4,8 +4,14 @@ A companion CLI to the Fyord framework.
 ## Installation
 - `npm i`
 
+## Local Dev
+- `npm start`
+- `fyord` will then be available as a command in your shell to test.  Re-run `npm start` between changes to update the local copy.
+- You may have to remove `fyord-cli` from your global node_modules from time to time.
+
 ## Test
 - `npm test`
+- `npm test-once`
 
 ## Lint
 - `npm run lint`

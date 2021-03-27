@@ -13,7 +13,8 @@
     "build": "tsc --sourceMap",
     "build-prod": "tsc",
     "publish": "npm publish dist",
-    "start": "npm unlink --no-save fyord && npm unlink && npm run build-prod && npm link"
+    "unlink": "npm unlink --no-save fyord && npm unlink",
+    "start": "npm run unlink && npm run build-prod && npm link"
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.17",

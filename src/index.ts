@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Strings } from 'tsbase';
-import { CommandName } from './core/constants';
+import { CommandName, VersionNumber } from './core/constants';
 import { CommandMap, Commands } from './core/module';
 
 const commandKey = process.argv[2] || 'help';
@@ -15,8 +15,7 @@ const args = process.argv.slice(3, process.argv.length);
 | | | |_| | (_) | | | (_| |
 |_|  \\__, |\\___/|_|  \\__,_|
       __/ |
-     |___/
-
+     |___/   Version: ${VersionNumber}
 `);
 
   console.log(`
@@ -24,5 +23,11 @@ Executing "${CommandName} ${commandKey}${args.length > 0 ? ` ${args.join(Strings
 
 `);
 
-  CommandMap.get(commandKey.replace('--', Strings.Empty) as Commands)?.Operation(args);
+  const command = CommandMap.get(commandKey.replace('--', Strings.Empty) as Commands);
+
+  if (command) {
+    command.Operation(args);
+  } else {
+    console.warn(`Unknown command, "${commandKey}"`);
+  }
 })();

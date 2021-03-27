@@ -1,9 +1,7 @@
 import * as fse from 'fs-extra';
 import { Strings } from 'tsbase';
 import { IGenerator } from './generators';
-import { CssModuleTemplate } from './templates/ccsModuleTemplate';
-import { ComponentSpecTemplate } from './templates/componentSpecTemplate';
-import { ComponentTemplate } from './templates/componentTemplate';
+import { ComponentSpecTemplate, ComponentTemplate, CssModuleTemplate } from './templates/module';
 
 export class ComponentGenerator implements IGenerator {
   public async Generate(args: string[]): Promise<void> {

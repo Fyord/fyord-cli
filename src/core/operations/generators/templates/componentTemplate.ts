@@ -8,7 +8,7 @@ export const ComponentTemplate: Template = (args?: string[]) => {
 import styles from './${Strings.CamelCase(name)}.module.scss';
 
 export class ${Strings.PascalCase(name)} extends Component {
-  Html = async () => <div>Hello ${name} component!</div>;
+  Html = async () => <div class={styles.container}>Hello ${name} component!</div>;
 
   Behavior = () => { }
 }

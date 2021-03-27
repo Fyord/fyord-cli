@@ -1,13 +1,16 @@
 import { ComponentGenerator } from './componentGenerator';
+import { PageGenerator } from './pageGenerator';
 
 export interface IGenerator {
   Generate(args: string[]): Promise<void>;
 }
 
 export enum Generators {
-  Component = 'component'
+  Component = 'component',
+  Page = 'page'
 }
 
 export const GeneratorMap = new Map<Generators, IGenerator>([
-  [Generators.Component, new ComponentGenerator()]
+  [Generators.Component, new ComponentGenerator()],
+  [Generators.Page, new PageGenerator()]
 ]);

@@ -2,6 +2,7 @@ import { CommandName as CliName } from './constants';
 import { PreRender } from './module';
 import { Generate } from './operations/generate';
 import { Help } from './operations/help';
+import { Version } from './operations/version';
 
 export type Operation = (args?: string[]) => void;
 
@@ -15,6 +16,7 @@ export type Command = {
 
 export enum Commands {
   Help = 'help',
+  Version = 'version',
   PreRender = 'preRender',
   Generate = 'generate'
 }
@@ -26,6 +28,13 @@ export const CommandMap = new Map<Commands, Command>([
     Arguments: ['Command Name'],
     Operation: (args) => Help(args),
     Example: `${CliName} ${Commands.Help} ${Commands.PreRender}`
+  }],
+  [Commands.Version, {
+    Name: Commands.Version,
+    Description: 'Prints the current version of fyord-cli',
+    Arguments: [],
+    Operation: () => Version(),
+    Example: `${CliName} ${Commands.Version}`
   }],
   [Commands.PreRender, {
     Name: Commands.PreRender,
