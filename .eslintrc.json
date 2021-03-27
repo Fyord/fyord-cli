@@ -38,15 +38,6 @@
     ],
     "no-bitwise": "error",
     "no-dupe-args": "error",
-    "no-console": [
-      "error",
-      {
-        "allow": [
-          "error",
-          "warn"
-        ]
-      }
-    ],
     "prefer-const": "error",
     "no-empty": "error",
     "no-var": "error",
