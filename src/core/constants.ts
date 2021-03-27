@@ -1,3 +1,3 @@
-export const CommandName = 'fyord';
+export const CliName = 'fyord';
 export const ConfigurationFileName = 'fyord.json';
-export const VersionNumber = '0.0.4';
+export const VersionNumber = '0.0.5';

@@ -1,6 +1,11 @@
-import { Operation } from '../commands';
+import { Command, Result } from 'tsbase';
 import { VersionNumber } from '../constants';
+import { IOperation } from './operation';
 
-export const Version: Operation = () => {
-  console.log(VersionNumber);
-};
+export class VersionOperation implements IOperation {
+  public Execute(): Result {
+    return new Command(() => {
+      console.log(VersionNumber);
+    }).Execute();
+  }
+}

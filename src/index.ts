@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Strings } from 'tsbase';
-import { CommandName, VersionNumber } from './core/constants';
+import { CliName, VersionNumber } from './core/constants';
 import { CommandMap, Commands } from './core/module';
 
 const commandKey = process.argv[2] || 'help';
@@ -19,7 +19,7 @@ const args = process.argv.slice(3, process.argv.length);
 `);
 
   console.log(`
-Executing "${CommandName} ${commandKey}${args.length > 0 ? ` ${args.join(Strings.Space)}` : Strings.Empty}"
+Executing "${CliName} ${commandKey}${args.length > 0 ? ` ${args.join(Strings.Space)}` : Strings.Empty}"
 
 `);
 
