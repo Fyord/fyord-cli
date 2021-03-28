@@ -5,8 +5,22 @@ import { Settings } from '../../settings/settings';
 import { ISettingsService, SettingsService } from '../../settings/settingsService';
 import { IOperation } from './operation';
 
+export interface IPage {
+  on(event: string, callback: (request: any) => void);
+  setRequestInterception(on: boolean): void;
+  waitForSelector(selector: string, options: any): Promise<void>;
+  goto(url: string, options: any): Promise<void>;
+  evaluate(callback: () => void): Promise<string[]>;
+  content(): Promise<string>;
+}
+
+export interface IBrowser {
+  newPage(): Promise<IPage>;
+  close(): Promise<void>;
+}
+
 export interface IPuppeteer {
-  launch(): Promise<any>;
+  launch(): Promise<IBrowser>;
 }
 
 export class PreRenderOperation implements IOperation {
@@ -15,9 +29,9 @@ export class PreRenderOperation implements IOperation {
     outputPathRoot: string | string[],
     blockedResourceTypes: string[],
     skippedResources: string[],
-    dynamicRenderModeString: string | string[],
-    staticRenderModeString: string | string[],
-    hybridRenderModeString: string | string[],
+    dynamicRenderModeString: string,
+    staticRenderModeString: string,
+    hybridRenderModeString: string,
     bundleScriptRegex: RegExp,
     unsupportedBrowserScript: string | string[],
   };
@@ -37,9 +51,9 @@ export class PreRenderOperation implements IOperation {
       outputPathRoot: settingsService.GetSettingOrDefault(Settings.OutputPathRoot),
       blockedResourceTypes: settingsService.GetSettingOrDefault(Settings.BlockedResourceTypes) as string[],
       skippedResources: settingsService.GetSettingOrDefault(Settings.SkippedResources) as string[],
-      dynamicRenderModeString: settingsService.GetSettingOrDefault(Settings.DynamicRenderModeString),
-      staticRenderModeString: settingsService.GetSettingOrDefault(Settings.StaticRenderModeString),
-      hybridRenderModeString: settingsService.GetSettingOrDefault(Settings.HybridRenderModeString),
+      dynamicRenderModeString: settingsService.GetSettingOrDefault(Settings.DynamicRenderModeString) as string,
+      staticRenderModeString: settingsService.GetSettingOrDefault(Settings.StaticRenderModeString) as string,
+      hybridRenderModeString: settingsService.GetSettingOrDefault(Settings.HybridRenderModeString) as string,
       bundleScriptRegex: new RegExp(settingsService.GetSettingOrDefault(Settings.BundleScriptRegex) as string),
       unsupportedBrowserScript: settingsService.GetSettingOrDefault(Settings.UnsupportedBrowserScript)
     };
@@ -109,7 +123,7 @@ export class PreRenderOperation implements IOperation {
     });
   }
 
-  private async excludeMediaAndIntegrations(page) {
+  private async excludeMediaAndIntegrations(page: IPage) {
     await page.setRequestInterception(true);
 
     page.on('request', (pageRequest) => {
@@ -122,7 +136,7 @@ export class PreRenderOperation implements IOperation {
     });
   }
 
-  private async getPathsForLinksOnPage(page) {
+  private async getPathsForLinksOnPage(page: IPage) {
     await page.waitForSelector('a', { timeout: 5000 });
 
     const linkPaths = await page.evaluate(() => {
@@ -147,7 +161,7 @@ export class PreRenderOperation implements IOperation {
       this.config.skippedResources.some(resource => url.indexOf(resource) !== -1);
   }
 
-  private async renderPage(page, route) {
+  private async renderPage(page: IPage, route) {
     this.crawledPages.push(route);
     const pageName = route === Strings.Empty ? 'index' : route;
     const url = `${this.config.baseUrl}${route}`;
@@ -167,7 +181,7 @@ export class PreRenderOperation implements IOperation {
       await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, content);
       this.addEntrySiteMap(url);
     } else {
-      const bundleScript = content.match(this.config.bundleScriptRegex)[0] || Strings.Empty;
+      const bundleScript = content.match(this.config.bundleScriptRegex)?.[0] || Strings.Empty;
       const appRootDivString = '<div id="app-root">';
       const closingHtml = `${appRootDivString}</div>${this.config.unsupportedBrowserScript}${bundleScript}</body></html>`;
 
