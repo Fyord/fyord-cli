@@ -28,9 +28,9 @@ describe('HelpOperation', () => {
   });
 
   it('should execute with args, and log a warning when the given command is unknown', () => {
-    mockConsole.Setup(s => s.warn(Strings.Empty));
+    mockConsole.Setup(s => s.error(Strings.Empty));
     classUnderTest.Execute(['fake']);
     mockConsole.Verify(c => c.log(Strings.Empty), Times.Never);
-    mockConsole.Verify(c => c.warn(Strings.Empty), Times.Once);
+    mockConsole.Verify(c => c.error(Strings.Empty), Times.Once);
   });
 });

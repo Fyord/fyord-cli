@@ -9,7 +9,7 @@ export type Command = {
   Name: string;
   Description: string;
   Arguments: string[];
-  Operation: (args?: string[]) => Result;
+  Operation: (args: string[]) => Result;
   Example: string;
 }
 

@@ -23,7 +23,7 @@ export class HelpOperation implements IOperation {
       }
 
       if (commandName && !CommandMap.get(commandName)) {
-        this.mainConsole.warn(`Unknown command, "${commandName}"`);
+        this.mainConsole.error(`Unknown command, "${commandName}"`);
       }
     }).Execute();
   }

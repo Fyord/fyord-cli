@@ -28,6 +28,6 @@ Executing "${CliName} ${commandKey}${args.length > 0 ? ` ${args.join(Strings.Spa
   if (command) {
     command.Operation(args);
   } else {
-    console.warn(`Unknown command, "${commandKey}"`);
+    console.error(`Unknown command, "${commandKey}"`);
   }
 })();
