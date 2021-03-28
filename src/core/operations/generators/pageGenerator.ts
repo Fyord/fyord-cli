@@ -1,10 +1,13 @@
-import * as fse from 'fs-extra';
-import { FileSystemAdapter } from '../../../settings/fileSystemAdapter';
-import { Strings } from 'tsbase';
+import { IFileSystemAdapter, Strings } from 'tsbase';
+import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { IGenerator } from './generators';
 import { PageTemplate, CssModuleTemplate, PageSpecTemplate } from './templates/module';
 
 export class PageGenerator implements IGenerator {
+  constructor(
+    private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
+    private fs: IFileSystemAdapter = FileSystemAdapter) { }
+
   public async Generate(args: string[]): Promise<void> {
     const name = args[0];
     const camelCaseName = Strings.CamelCase(name);
@@ -14,20 +17,20 @@ export class PageGenerator implements IGenerator {
     const cssModuleTemplate = CssModuleTemplate(args);
     const pageSpecTemplate = PageSpecTemplate(args);
 
-    await fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, pageTemplate);
-    await fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.scss`, cssModuleTemplate);
-    await fse.outputFile(`./${camelCaseName}/${camelCaseName}.spec.tsx`, pageSpecTemplate);
+    await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, pageTemplate);
+    await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.scss`, cssModuleTemplate);
+    await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.spec.tsx`, pageSpecTemplate);
 
     const moduleFile = './module.ts';
-    if (await fse.pathExists(moduleFile)) {
+    if (await this.fse.pathExists(moduleFile)) {
       const pagesDeclarationStartString = 'export const pages = [';
-      let moduleContents = FileSystemAdapter.readFileSync(moduleFile, 'utf8').toString();
+      let moduleContents = this.fs.readFileSync(moduleFile, 'utf8').toString();
 
       moduleContents = `import { ${pascalCaseName} } from './${camelCaseName}/${camelCaseName}';
 ${moduleContents.replace(pagesDeclarationStartString, `${pagesDeclarationStartString}
   new ${pascalCaseName}(),`)}`;
 
-      await fse.outputFile(moduleFile, moduleContents);
+      await this.fse.outputFile(moduleFile, moduleContents);
     }
   }
 }
