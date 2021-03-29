@@ -23,10 +23,10 @@ Executing "${CliName} ${commandKey}${args.length > 0 ? ` ${args.join(Strings.Spa
 
 `);
 
-  const command = CommandMap.get(commandKey.replace('--', Strings.Empty) as Commands);
+  const command = CommandMap.get(commandKey.toLowerCase().replace(/-/g, Strings.Empty) as Commands);
 
   if (command) {
-    command.Operation(args);
+    command.Operation.Execute(args);
   } else {
     console.error(`Unknown command, "${commandKey}"`);
   }
