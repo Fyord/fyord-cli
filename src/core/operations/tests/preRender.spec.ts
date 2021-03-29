@@ -1,9 +1,11 @@
 import { Strings } from 'tsbase';
-import { Mock } from 'tsmockit';
+import { Mock, Times } from 'tsmockit';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 import { Settings } from '../../../settings/settings';
 import { ISettingsService } from '../../../settings/settingsService';
-import { IBrowser, IPage, IPuppeteer, PreRenderOperation } from '../preRender';
+import { IBrowser, IPage, IPageRequest, IPuppeteer, PreRenderOperation } from '../preRender';
+
+const mockPageRequest = new Mock<IPageRequest>();
 
 class FakePage implements IPage {
   renderMode: 'dynamic' | 'hybrid' | 'static' = 'hybrid';
@@ -15,8 +17,7 @@ class FakePage implements IPage {
 
   async on(event: string, callback: (request: any) => void) {
     this.onCalls.push({ event });
-    const request = {};
-    callback(request);
+    callback(mockPageRequest.Object);
   }
   setRequestInterception(on: boolean): void {
     this.setRequestInterceptionCalls.push(on);
@@ -36,7 +37,7 @@ class FakePage implements IPage {
     /* eslint-disable indent */
     switch (this.renderMode) {
       case 'dynamic':
-        return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Routing | fyord app</title><meta name="description" content="Light-weight framework designed to embrace core competencies"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="    default-src \'self\' assets.chucknorris.host via.placeholder.com;    connect-src \'self\' api.chucknorris.io;    style-src-elem \'self\' fonts.googleapis.com;    font-src *;    upgrade-insecure-requests;"><link rel="icon" type="image/jpg" href="/images/favicon.jpg"><link href="/styles.css" rel="stylesheet"><meta name="og:image" content=""></head><body><div class="unsupported-browser"></div><div id="app-root"><div id="app-root-layout" default="true"><div id="fy-64f9544a-0bc7-420f-458b-57e77ea0011a"><header><nav class="_16oNEZrmYtIpb6ILEcszYU"><ul><li key="0"><a href="/" routed="true">Home</a></li><li key="1"><a href="/examples" routed="true">Examples</a></li><li key="2"><a href="/styleguide" routed="true">Styleguide</a></li></ul></nav></header></div><main><div id="fy-b25fbf67-7861-4e26-b48e-0b5f84dbf5a9"><div><h1>Routing</h1><p>Routing in fyord is seamless.  Simply use normal anchor tags, and local urls which aren\'t target blank will be routed on the client.</p><p>The below examples demonstrate this. Follow any of the "params" links to see how to make use of the respective parameter types.</p><ul class="list-style"><li><a href="/examples/routing/route-params/one/two" routed="true">Route Params</a></li><li><a href="/examples/routing/query-params?one=1&amp;two=2" routed="true">Query Params</a></li><li><a href="/examples/routing/hash-params#one#two" routed="true">Hash Params</a></li><li><a href="/examples/routing" target="_blank" routed="true">Target Blank</a></li><li><a href="https://duckduckgo.com/" routed="true">External Route</a></li></ul></div></div><!-- fyord-dynamic-render --></main><div id="fy-0d1d4b98-a9ac-4001-6b82-a55c4ba94ad2"><footer class="eMWRAqAhoDqWRqO7kVkWl"><h2>Footer</h2></footer></div></div></div><script src="/unsupported-browser.js"></script></body></html>';
+        return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Routing | fyord app</title><meta name="description" content="Light-weight framework designed to embrace core competencies"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="    default-src \'self\' assets.chucknorris.host via.placeholder.com;    connect-src \'self\' api.chucknorris.io;    style-src-elem \'self\' fonts.googleapis.com;    font-src *;    upgrade-insecure-requests;"><link rel="icon" type="image/jpg" href="/images/favicon.jpg"><link href="/styles.css" rel="stylesheet"><meta name="og:image" content=""></head><body><div class="unsupported-browser"></div><div id="app-root"><div id="app-root-layout" default="true"><div id="fy-64f9544a-0bc7-420f-458b-57e77ea0011a"><header><nav class="_16oNEZrmYtIpb6ILEcszYU"><ul><li key="0"><a href="/" routed="true">Home</a></li><li key="1"><a href="/examples" routed="true">Examples</a></li><li key="2"><a href="/styleguide" routed="true">Styleguide</a></li></ul></nav></header></div><main><div id="fy-b25fbf67-7861-4e26-b48e-0b5f84dbf5a9"><div><h1>Routing</h1><p>Routing in fyord is seamless.  Simply use normal anchor tags, and local urls which aren\'t target blank will be routed on the client.</p><p>The below examples demonstrate this. Follow any of the "params" links to see how to make use of the respective parameter types.</p><ul class="list-style"><li><a href="/examples/routing/route-params/one/two" routed="true">Route Params</a></li><li><a href="/examples/routing/query-params?one=1&amp;two=2" routed="true">Query Params</a></li><li><a href="/examples/routing/hash-params#one#two" routed="true">Hash Params</a></li><li><a href="/examples/routing" target="_blank" routed="true">Target Blank</a></li><li><a href="https://duckduckgo.com/" routed="true">External Route</a></li></ul></div></div><!-- fyord-dynamic-render --></main><div id="fy-0d1d4b98-a9ac-4001-6b82-a55c4ba94ad2"><footer class="eMWRAqAhoDqWRqO7kVkWl"><h2>Footer</h2></footer></div></div></div><script src="/unsupported-browser.js"></script><script src="/bundle.js"></script></body></html>';
       case 'static':
         return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Routing | fyord app</title><meta name="description" content="Light-weight framework designed to embrace core competencies"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="    default-src \'self\' assets.chucknorris.host via.placeholder.com;    connect-src \'self\' api.chucknorris.io;    style-src-elem \'self\' fonts.googleapis.com;    font-src *;    upgrade-insecure-requests;"><link rel="icon" type="image/jpg" href="/images/favicon.jpg"><link href="/styles.css" rel="stylesheet"><meta name="og:image" content=""></head><body><div class="unsupported-browser"></div><div id="app-root"><div id="app-root-layout" default="true"><div id="fy-64f9544a-0bc7-420f-458b-57e77ea0011a"><header><nav class="_16oNEZrmYtIpb6ILEcszYU"><ul><li key="0"><a href="/" routed="true">Home</a></li><li key="1"><a href="/examples" routed="true">Examples</a></li><li key="2"><a href="/styleguide" routed="true">Styleguide</a></li></ul></nav></header></div><main><div id="fy-b25fbf67-7861-4e26-b48e-0b5f84dbf5a9"><div><h1>Routing</h1><p>Routing in fyord is seamless.  Simply use normal anchor tags, and local urls which aren\'t target blank will be routed on the client.</p><p>The below examples demonstrate this. Follow any of the "params" links to see how to make use of the respective parameter types.</p><ul class="list-style"><li><a href="/examples/routing/route-params/one/two" routed="true">Route Params</a></li><li><a href="/examples/routing/query-params?one=1&amp;two=2" routed="true">Query Params</a></li><li><a href="/examples/routing/hash-params#one#two" routed="true">Hash Params</a></li><li><a href="/examples/routing" target="_blank" routed="true">Target Blank</a></li><li><a href="https://duckduckgo.com/" routed="true">External Route</a></li></ul></div></div><!-- fyord-static-render --></main><div id="fy-0d1d4b98-a9ac-4001-6b82-a55c4ba94ad2"><footer class="eMWRAqAhoDqWRqO7kVkWl"><h2>Footer</h2></footer></div></div></div><script src="/unsupported-browser.js"></script></body></html>';
       default:
@@ -60,18 +61,26 @@ describe('PreRenderOperation', () => {
   beforeAll(() => {
     spyOn(console, 'log');
     spyOn(console, 'error');
+    mockFileSystemExtra.Setup(fse => fse.outputFile(Strings.Empty, Strings.Empty));
+    mockPageRequest.Setup(r => r._url, '/test?query=test#test');
+    mockPageRequest.Setup(r => r.abort());
+    mockPageRequest.Setup(r => r.continue());
+    mockPageRequest.Setup(r => r.resourceType(), 'test');
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Strings.Empty as Settings), Strings.Empty);
-    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.BlockedResourceTypes), []);
-    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.SkippedResources), []);
+    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.BlockedResourceTypes), ['blocked-resource']);
+    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.SkippedResources), ['skipped-resource']);
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.DynamicRenderModeString), '<!-- fyord-dynamic-render -->');
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.StaticRenderModeString), '<!-- fyord-static-render -->');
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.HybridRenderModeString), '<!-- fyord-hybrid-render -->');
+    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.BundleScriptRegex), '<script src="/bundle.js(.*?)"></script>');
     mockPuppeteer.Setup(p => p.launch(), mockBrowser.Object);
     mockBrowser.Setup(b => b.close());
     mockBrowser.Setup(b => b.newPage(), fakePage);
-    mockLocation.Setup(l => l.origin, location.origin);
+    const origin = 'testOrigin';
+    mockLocation.Setup(l => l.origin, origin);
+    mockDocument.Setup(d => d.location, mockLocation.Object);
     mockDocument.Setup(d => d.querySelectorAll('a'), [
-      { href: `${location.origin}/test`, pathname: '/test' }
+      { href: `${origin}/test`, pathname: '/test' }
     ]);
   });
 
@@ -81,7 +90,8 @@ describe('PreRenderOperation', () => {
     classUnderTest = new PreRenderOperation(
       mockPuppeteer.Object,
       mockFileSystemExtra.Object,
-      mockSettingsService.Object);
+      mockSettingsService.Object,
+      mockDocument.Object);
   });
 
   it('should construct', () => {
@@ -89,20 +99,61 @@ describe('PreRenderOperation', () => {
     expect(new PreRenderOperation()).toBeDefined();
   });
 
+  const minimumFilesOutput = 4;
   it('should pre render a page using hybrid mode', async () => {
+    fakePage.renderMode = 'hybrid';
+
     const result = await classUnderTest.Execute();
+
     expect(result).toBeTruthy();
+    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput + 1);
   });
 
   it('should pre render a page using dynamic mode', async () => {
     fakePage.renderMode = 'dynamic';
+
     const result = await classUnderTest.Execute();
+
     expect(result).toBeTruthy();
+    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput * 2 + 2);
   });
 
   it('should pre render a page using static mode', async () => {
     fakePage.renderMode = 'static';
+
     const result = await classUnderTest.Execute();
+
     expect(result).toBeTruthy();
+    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput * 3 + 3);
+  });
+
+  it('should NOT pre-render external pages (links with different origin)', async () => {
+    mockDocument.Setup(d => d.querySelectorAll('a'), [
+      { href: 'fake/test', pathname: '/external' }
+    ]);
+    mockFileSystemExtra.Setup(fse => fse.outputFile('/external', Strings.Empty));
+
+    const result = await classUnderTest.Execute();
+
+    expect(result).toBeTruthy();
+    mockFileSystemExtra.Verify(fse => fse.outputFile('/external', Strings.Empty), minimumFilesOutput);
+  });
+
+  it('should abort page request on skipped resource', async () => {
+    mockPageRequest.Setup(r => r._url, 'skipped-resource');
+
+    const result = await classUnderTest.Execute();
+
+    expect(result).toBeTruthy();
+    mockPageRequest.Verify(r => r.abort(), Times.Once);
+  });
+
+  it('should abort page request on blocked resource', async () => {
+    mockPageRequest.Setup(r => r.resourceType(), 'blocked-resource');
+
+    const result = await classUnderTest.Execute();
+
+    expect(result).toBeTruthy();
+    mockPageRequest.Verify(r => r.abort(), 2);
   });
 });

@@ -6,6 +6,13 @@ import { Settings } from '../../settings/settings';
 import { ISettingsService, SettingsService } from '../../settings/settingsService';
 import { IOperation } from './operation';
 
+export interface IPageRequest {
+  _url: string,
+  resourceType: () => string,
+  abort: () => void,
+  continue: () => void
+}
+
 export interface IPage {
   on(event: string, callback: (request: any) => void);
   setRequestInterception(on: boolean): void;
@@ -35,6 +42,7 @@ export class PreRenderOperation implements IOperation {
     hybridRenderModeString: string,
     bundleScriptRegex: RegExp,
     unsupportedBrowserScript: string | string[],
+    appRootString: string
   };
 
   private pagesToCrawl = ['/'];
@@ -45,7 +53,8 @@ export class PreRenderOperation implements IOperation {
   constructor(
     private browser: IPuppeteer = puppeteer,
     private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
-    settingsService: ISettingsService = SettingsService.Instance()
+    settingsService: ISettingsService = SettingsService.Instance(),
+    private windowDocument?: Document
   ) {
     this.config = {
       baseUrl: settingsService.GetSettingOrDefault(Settings.BaseUrl),
@@ -56,7 +65,8 @@ export class PreRenderOperation implements IOperation {
       staticRenderModeString: settingsService.GetSettingOrDefault(Settings.StaticRenderModeString) as string,
       hybridRenderModeString: settingsService.GetSettingOrDefault(Settings.HybridRenderModeString) as string,
       bundleScriptRegex: new RegExp(settingsService.GetSettingOrDefault(Settings.BundleScriptRegex) as string),
-      unsupportedBrowserScript: settingsService.GetSettingOrDefault(Settings.UnsupportedBrowserScript)
+      unsupportedBrowserScript: settingsService.GetSettingOrDefault(Settings.UnsupportedBrowserScript),
+      appRootString: settingsService.GetSettingOrDefault(Settings.AppRootString) as string
     };
   }
 
@@ -100,7 +110,6 @@ export class PreRenderOperation implements IOperation {
             });
           }
         } catch (error) {
-          console.error(error);
           this.errors.push({ page: pageToCrawl, error: error.toString() });
         }
       }
@@ -127,7 +136,7 @@ export class PreRenderOperation implements IOperation {
   private async excludeMediaAndIntegrations(page: IPage) {
     await page.setRequestInterception(true);
 
-    page.on('request', (pageRequest) => {
+    page.on('request', (pageRequest: IPageRequest) => {
       const url = pageRequest._url.split('?')[0].split('#')[0];
       if (this.requestIsMediaOrBlockedResource(pageRequest, url)) {
         pageRequest.abort();
@@ -142,11 +151,11 @@ export class PreRenderOperation implements IOperation {
 
     const linkPaths = await page.evaluate(() => {
       const pathNames = Array<string>();
-      const linkElements = document.querySelectorAll('a');
+      const linkElements = (this.windowDocument || document).querySelectorAll('a');
 
       // @ts-ignore
       for (const element of linkElements) {
-        if (element.href.indexOf(document.location.origin) >= 0) {
+        if (element.href.indexOf((this.windowDocument || document).location.origin) >= 0) {
           pathNames.push(element.pathname);
         }
       }
@@ -157,7 +166,7 @@ export class PreRenderOperation implements IOperation {
     return linkPaths;
   }
 
-  private requestIsMediaOrBlockedResource(pageRequest, url) {
+  private requestIsMediaOrBlockedResource(pageRequest: IPageRequest, url: string) {
     return this.config.blockedResourceTypes.indexOf(pageRequest.resourceType()) !== -1 ||
       this.config.skippedResources.some(resource => url.indexOf(resource) !== -1);
   }
@@ -183,16 +192,14 @@ export class PreRenderOperation implements IOperation {
       await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, content);
       this.addEntrySiteMap(url);
     } else {
-      const bundleScript = content.match(this.config.bundleScriptRegex)?.[0] || Strings.Empty;
-      const appRootDivString = '<div id="app-root">';
-      const closingHtml = `${appRootDivString}</div>${this.config.unsupportedBrowserScript}${bundleScript}</body></html>`;
+      const bundleScript = (content.match(this.config.bundleScriptRegex) as Array<string>)[0];
+      const appRootString = this.config.appRootString;
+      const closingHtml = `${appRootString}</div>${this.config.unsupportedBrowserScript}${bundleScript}</body></html>`;
 
-      if (content.indexOf(appRootDivString) >= 0) {
-        let unRenderedVersion = content.split(appRootDivString)[0];
-        unRenderedVersion = `${unRenderedVersion}${closingHtml}`;
-        await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, unRenderedVersion);
-        this.addEntrySiteMap(url);
-      }
+      let unRenderedVersion = content.split(appRootString)[0];
+      unRenderedVersion = `${unRenderedVersion}${closingHtml}`;
+      await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, unRenderedVersion);
+      this.addEntrySiteMap(url);
     }
 
     return await this.getPathsForLinksOnPage(page);

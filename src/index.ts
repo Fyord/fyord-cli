@@ -32,7 +32,7 @@ Executing "${CliName} ${commandKey}${args.length > 0 ? ` ${args.join(Strings.Spa
 Command completed successfully`);
     } else {
       console.log(`
-Command completed with ${result.ErrorMessages.length} errors, see below output for details:
+Command completed with ${result.ErrorMessages.length} error(s), see below output for details:
 ${result.ErrorMessages.join('\n')}`);
     }
   } else {

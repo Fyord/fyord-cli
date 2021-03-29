@@ -7,7 +7,8 @@ export enum Settings {
   StaticRenderModeString = 'staticRenderModeString',
   HybridRenderModeString = 'hybridRenderModeString',
   BundleScriptRegex = 'bundleScriptRegex',
-  UnsupportedBrowserScript = 'unsupportedBrowserScript'
+  UnsupportedBrowserScript = 'unsupportedBrowserScript',
+  AppRootString = 'appRootString'
 }
 
 export const SettingsMap = new Map<string, any>([
@@ -19,5 +20,6 @@ export const SettingsMap = new Map<string, any>([
   [Settings.StaticRenderModeString, '<!-- fyord-static-render -->'],
   [Settings.HybridRenderModeString, '<!-- fyord-hybrid-render -->'],
   [Settings.BundleScriptRegex, '<script src="\/bundle.js(.*?)"><\/script>'],
-  [Settings.UnsupportedBrowserScript, '<script src="/unsupported-browser.js"></script>']
+  [Settings.UnsupportedBrowserScript, '<script src="/unsupported-browser.js"></script>'],
+  [Settings.AppRootString, '<div id="app-root">']
 ]);
