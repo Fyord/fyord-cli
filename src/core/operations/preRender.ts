@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import * as puppeteer from 'puppeteer';
-import { Command, Result, Strings } from 'tsbase';
+import { AsyncCommand, Result, Strings } from 'tsbase';
 import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { Settings } from '../../settings/settings';
 import { ISettingsService, SettingsService } from '../../settings/settingsService';
@@ -60,8 +60,8 @@ export class PreRenderOperation implements IOperation {
     };
   }
 
-  public Execute(): Result {
-    return new Command(() => {
+  public async Execute(): Promise<Result> {
+    return await new AsyncCommand(async () => {
       const getXmlSiteMap = () => {
         const xmlStart = `<?xml version="1.0" encoding="UTF-8"?>
       <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">`;
@@ -82,38 +82,36 @@ export class PreRenderOperation implements IOperation {
       ${xmlEnd}`;
       };
 
-      (async () => {
-        const browser = await this.browser.launch();
-        const page = await browser.newPage();
-        await this.excludeMediaAndIntegrations(page);
+      const browser = await this.browser.launch();
+      const page = await browser.newPage();
+      await this.excludeMediaAndIntegrations(page);
 
-        while (this.pagesToCrawl.length >= 1) {
-          const pageToCrawl = this.pagesToCrawl.shift();
+      while (this.pagesToCrawl.length >= 1) {
+        const pageToCrawl = this.pagesToCrawl.shift();
 
-          try {
-            if (pageToCrawl) {
-              const linksOnPage = await this.renderPage(page, pageToCrawl);
+        try {
+          if (pageToCrawl) {
+            const linksOnPage = await this.renderPage(page, pageToCrawl);
 
-              linksOnPage.forEach(linkHref => {
-                if (this.crawledPages.indexOf(linkHref) < 0 && this.pagesToCrawl.indexOf(linkHref) < 0) {
-                  this.pagesToCrawl.push(linkHref);
-                }
-              });
-            }
-          } catch (error) {
-            console.error(error);
-            this.errors.push({ page: pageToCrawl, error: error.toString() });
+            linksOnPage.forEach(linkHref => {
+              if (this.crawledPages.indexOf(linkHref) < 0 && this.pagesToCrawl.indexOf(linkHref) < 0) {
+                this.pagesToCrawl.push(linkHref);
+              }
+            });
           }
+        } catch (error) {
+          console.error(error);
+          this.errors.push({ page: pageToCrawl, error: error.toString() });
         }
+      }
 
-        await this.fse.outputFile(`${this.config.outputPathRoot}/sitemap.json`, JSON.stringify({ urlset: this.siteMap }));
-        await this.fse.outputFile(`${this.config.outputPathRoot}/sitemap.xml`, getXmlSiteMap());
-        await this.fse.outputFile(`${this.config.outputPathRoot}/errors.json`, JSON.stringify(this.errors));
+      await this.fse.outputFile(`${this.config.outputPathRoot}/sitemap.json`, JSON.stringify({ urlset: this.siteMap }));
+      await this.fse.outputFile(`${this.config.outputPathRoot}/sitemap.xml`, getXmlSiteMap());
+      await this.fse.outputFile(`${this.config.outputPathRoot}/errors.json`, JSON.stringify(this.errors));
 
-        console.log(`Completed crawling ${this.crawledPages.length} pages with ${this.errors.length} errors.`);
+      console.log(`Completed crawling ${this.crawledPages.length} pages with ${this.errors.length} errors.`);
 
-        await browser.close();
-      })();
+      await browser.close();
     }).Execute();
   }
 

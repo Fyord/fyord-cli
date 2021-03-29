@@ -17,19 +17,19 @@ describe('HelpOperation', () => {
     expect(new HelpOperation()).toBeDefined();
   });
 
-  it('should execute without args, and log info for every command', () => {
-    classUnderTest.Execute();
+  it('should execute without args, and log info for every command', async () => {
+    await classUnderTest.Execute();
     mockConsole.Verify(c => c.log(Strings.Empty), CommandMap.size);
   });
 
-  it('should execute with args, and only log the given command', () => {
-    classUnderTest.Execute([Commands.Help]);
+  it('should execute with args, and only log the given command', async () => {
+    await classUnderTest.Execute([Commands.Help]);
     mockConsole.Verify(c => c.log(Strings.Empty), Times.Once);
   });
 
-  it('should execute with args, and log a warning when the given command is unknown', () => {
+  it('should execute with args, and log a warning when the given command is unknown', async () => {
     mockConsole.Setup(s => s.error(Strings.Empty));
-    classUnderTest.Execute(['fake']);
+    await classUnderTest.Execute(['fake']);
     mockConsole.Verify(c => c.log(Strings.Empty), Times.Never);
     mockConsole.Verify(c => c.error(Strings.Empty), Times.Once);
   });

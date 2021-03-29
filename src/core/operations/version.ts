@@ -1,10 +1,10 @@
-import { Command, Result } from 'tsbase';
+import { AsyncCommand, Result } from 'tsbase';
 import { VersionNumber } from '../constants';
 import { IOperation } from './operation';
 
 export class VersionOperation implements IOperation {
-  public Execute(): Result {
-    return new Command(() => {
+  public async Execute(): Promise<Result> {
+    return await new AsyncCommand(async () => {
       console.log(VersionNumber);
     }).Execute();
   }

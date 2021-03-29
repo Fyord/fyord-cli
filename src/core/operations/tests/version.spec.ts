@@ -11,9 +11,9 @@ describe('VersionOperation', () => {
     expect(classUnderTest).toBeDefined();
   });
 
-  it('should execute', () => {
+  it('should execute', async () => {
     spyOn(console, 'log');
-    const result = classUnderTest.Execute();
+    const result = await classUnderTest.Execute();
     expect(result.IsSuccess).toBeTruthy();
   });
 });

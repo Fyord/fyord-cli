@@ -1,4 +1,4 @@
-import { Command, Result } from 'tsbase';
+import { AsyncCommand, Result } from 'tsbase';
 import { CommandMap, Commands } from '../commands';
 import { IOperation } from './operation';
 
@@ -7,8 +7,8 @@ export class HelpOperation implements IOperation {
     private mainConsole: Console = console
   ) { }
 
-  public Execute(args?: string[]): Result {
-    return new Command(() => {
+  public async Execute(args?: string[]): Promise<Result> {
+    return await new AsyncCommand(async () => {
       const commandName = args?.[0] as Commands;
 
       for (const command of CommandMap) {

@@ -21,21 +21,22 @@ describe('GenerateOperation', () => {
     expect(classUnderTest).toBeDefined();
   });
 
-  it('should return a successful result when a map exists', () => {
-    expect(classUnderTest.Execute([mockGeneratorKey]).IsSuccess).toBeTruthy();
+  it('should return a successful result when a map exists', async () => {
+    const result = await classUnderTest.Execute([mockGeneratorKey]);
+    expect(result.IsSuccess).toBeTruthy();
     mockGenerator.Verify(g => g.Generate([]), Times.Once);
   });
 
-  it('should return a failed result when no map exists', () => {
-    const result = classUnderTest.Execute(['fake']);
+  it('should return a failed result when no map exists', async () => {
+    const result = await classUnderTest.Execute(['fake']);
 
     expect(result.IsSuccess).toBeFalsy();
     expect(result.ErrorMessages).toContain('Unknown generator, "fake"');
     mockGenerator.Verify(g => g.Generate([]), Times.Once);
   });
 
-  it('should return a failed result when no map exists', () => {
-    const result = classUnderTest.Execute(['fake']);
+  it('should return a failed result when no map exists', async () => {
+    const result = await classUnderTest.Execute(['fake']);
 
     expect(result.IsSuccess).toBeFalsy();
     expect(result.ErrorMessages).toContain('Unknown generator, "fake"');

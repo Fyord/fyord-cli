@@ -6,7 +6,7 @@ import { CommandMap, Commands } from './core/module';
 const commandKey = process.argv[2] || 'help';
 const args = process.argv.slice(3, process.argv.length);
 
-(() => {
+(async () => {
   console.log(`
   __                     _
  / _|                   | |
@@ -20,13 +20,21 @@ const args = process.argv.slice(3, process.argv.length);
 
   console.log(`
 Executing "${CliName} ${commandKey}${args.length > 0 ? ` ${args.join(Strings.Space)}` : Strings.Empty}"
-
 `);
 
   const command = CommandMap.get(commandKey.toLowerCase().replace(/-/g, Strings.Empty) as Commands);
 
   if (command) {
-    command.Operation.Execute(args);
+    const result = await command.Operation.Execute(args);
+
+    if (result.IsSuccess) {
+      console.log(`
+Command completed successfully`);
+    } else {
+      console.log(`
+Command completed with ${result.ErrorMessages.length} errors, see below output for details:
+${result.ErrorMessages.join('\n')}`);
+    }
   } else {
     console.error(`Unknown command, "${commandKey}"`);
   }

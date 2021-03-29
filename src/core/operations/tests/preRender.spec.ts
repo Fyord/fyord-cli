@@ -89,20 +89,20 @@ describe('PreRenderOperation', () => {
     expect(new PreRenderOperation()).toBeDefined();
   });
 
-  it('should pre render a page using hybrid mode', () => {
-    const result = classUnderTest.Execute();
-    expect(result.IsSuccess).toBeTruthy();
+  it('should pre render a page using hybrid mode', async () => {
+    const result = await classUnderTest.Execute();
+    expect(result).toBeTruthy();
   });
 
-  it('should pre render a page using dynamic mode', () => {
+  it('should pre render a page using dynamic mode', async () => {
     fakePage.renderMode = 'dynamic';
-    const result = classUnderTest.Execute();
-    expect(result.IsSuccess).toBeTruthy();
+    const result = await classUnderTest.Execute();
+    expect(result).toBeTruthy();
   });
 
-  it('should pre render a page using static mode', () => {
+  it('should pre render a page using static mode', async () => {
     fakePage.renderMode = 'static';
-    const result = classUnderTest.Execute();
-    expect(result.IsSuccess).toBeTruthy();
+    const result = await classUnderTest.Execute();
+    expect(result).toBeTruthy();
   });
 });
