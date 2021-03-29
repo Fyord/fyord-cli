@@ -1,6 +1,7 @@
+/* eslint-disable max-lines */
 import * as puppeteer from 'puppeteer';
-import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { Command, Result, Strings } from 'tsbase';
+import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { Settings } from '../../settings/settings';
 import { ISettingsService, SettingsService } from '../../settings/settingsService';
 import { IOperation } from './operation';
@@ -10,7 +11,7 @@ export interface IPage {
   setRequestInterception(on: boolean): void;
   waitForSelector(selector: string, options: any): Promise<void>;
   goto(url: string, options: any): Promise<void>;
-  evaluate(callback: () => void): Promise<string[]>;
+  evaluate(callback: () => any): Promise<string[]>;
   content(): Promise<string>;
 }
 
@@ -36,7 +37,7 @@ export class PreRenderOperation implements IOperation {
     unsupportedBrowserScript: string | string[],
   };
 
-  private pagesToCrawl = [Strings.Empty];
+  private pagesToCrawl = ['/'];
   private crawledPages = ['/'];
   private errors = new Array();
   private siteMap = new Array();
@@ -90,13 +91,15 @@ export class PreRenderOperation implements IOperation {
           const pageToCrawl = this.pagesToCrawl.shift();
 
           try {
-            const linksOnPage = await this.renderPage(page, pageToCrawl);
+            if (pageToCrawl) {
+              const linksOnPage = await this.renderPage(page, pageToCrawl);
 
-            linksOnPage.forEach(linkHref => {
-              if (this.crawledPages.indexOf(linkHref) < 0 && this.pagesToCrawl.indexOf(linkHref) < 0) {
-                this.pagesToCrawl.push(linkHref);
-              }
-            });
+              linksOnPage.forEach(linkHref => {
+                if (this.crawledPages.indexOf(linkHref) < 0 && this.pagesToCrawl.indexOf(linkHref) < 0) {
+                  this.pagesToCrawl.push(linkHref);
+                }
+              });
+            }
           } catch (error) {
             console.error(error);
             this.errors.push({ page: pageToCrawl, error: error.toString() });
@@ -161,9 +164,10 @@ export class PreRenderOperation implements IOperation {
       this.config.skippedResources.some(resource => url.indexOf(resource) !== -1);
   }
 
-  private async renderPage(page: IPage, route) {
+  // eslint-disable-next-line complexity
+  private async renderPage(page: IPage, route: string) {
     this.crawledPages.push(route);
-    const pageName = route === Strings.Empty ? 'index' : route;
+    const pageName = (route === Strings.Empty || route === '/') ? 'index' : route;
     const url = `${this.config.baseUrl}${route}`;
 
     console.log(`| ========= Attempting to crawl: ${pageName} ========= |`);
