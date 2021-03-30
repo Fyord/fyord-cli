@@ -1,5 +1,5 @@
 import { AsyncCommand, Result } from 'tsbase';
-import { CommandMap, Commands } from '../commands';
+import { Command, CommandMap, Commands } from '../commands';
 import { IOperation } from './operation';
 
 export class HelpOperation implements IOperation {
@@ -9,22 +9,39 @@ export class HelpOperation implements IOperation {
 
   public async Execute(args?: string[]): Promise<Result> {
     return await new AsyncCommand(async () => {
-      const commandName = args?.[0] as Commands;
-
-      for (const command of CommandMap) {
-        if (!commandName || command[0] === commandName) {
-          this.mainConsole.log({
-            Name: command[1].Name,
-            Description: command[1].Description,
-            Arguments: command[1].Arguments,
-            Example: command[1].Example
-          });
-        }
+      const commandNameArgument = args?.[0] as Commands;
+      if (!commandNameArgument) {
+        this.mainConsole.log(`Pass a command name, like "fyord help {name}" for additional details on a given command
+`);
       }
 
-      if (commandName && !CommandMap.get(commandName)) {
-        this.mainConsole.error(`Unknown command, "${commandName}"`);
+      for (const commandMap of CommandMap) {
+        const [commandName, commandObject] = commandMap;
+        this.logCommandDetails(commandNameArgument, commandName, commandObject);
+      }
+
+      if (commandNameArgument && !CommandMap.get(commandNameArgument)) {
+        this.mainConsole.error(`Unknown command, "${commandNameArgument}"`);
       }
     }).Execute();
+  }
+
+  private logCommandDetails(commandNameArgument: Commands, commandName: string, commandObject: Command) {
+    const commandNameMatchesArgument = commandName === commandNameArgument;
+
+    if (!commandNameArgument || commandNameMatchesArgument) {
+      this.mainConsole.log({
+        Name: commandObject.Name,
+        Description: commandObject.Description,
+        Arguments: commandObject.Arguments,
+        Example: commandObject.Example
+      });
+
+      if (commandObject.AdditionalDetails && commandNameMatchesArgument) {
+        this.mainConsole.log(`
+Additional details: `);
+        this.mainConsole.log(commandObject.AdditionalDetails);
+      }
+    }
   }
 }

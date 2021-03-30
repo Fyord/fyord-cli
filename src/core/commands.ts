@@ -11,6 +11,7 @@ export type Command = {
   Arguments: string[];
   Operation: IOperation;
   Example: string;
+  AdditionalDetails?: object;
 }
 
 export enum Commands {
@@ -44,9 +45,13 @@ export const CommandMap = new Map<Commands, Command>([
   }],
   [Commands.Generate, {
     Name: Commands.Generate,
-    Description: 'Scaffold a fyord app component, page, etc.',
+    Description: 'Scaffold a fyord app component, page, etc. in the current directory',
     Arguments: ['Type (component, page, etc.)', 'Name (ex. MyComponent)'],
     Operation: new GenerateOperation(),
-    Example: `${CliName} ${Commands.Generate} component myComponent`
+    Example: `${CliName} ${Commands.Generate} component myComponent`,
+    AdditionalDetails: {
+      'Available Types': ['component', 'page'],
+      'Casing convention': 'PascalCase will be used in declarations and camelCase will be used in file names'
+    }
   }]
 ]);
