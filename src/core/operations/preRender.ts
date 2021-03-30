@@ -46,7 +46,7 @@ export class PreRenderOperation implements IOperation {
   };
 
   private pagesToCrawl = ['/'];
-  private crawledPages = ['/'];
+  private crawledPages = new Array<string>();
   private errors = new Array<{ page: string, error: string }>();
   private siteMap = new Array();
 
