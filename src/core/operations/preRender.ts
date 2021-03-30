@@ -47,7 +47,7 @@ export class PreRenderOperation implements IOperation {
 
   private pagesToCrawl = ['/'];
   private crawledPages = ['/'];
-  private errors = new Array();
+  private errors = new Array<{ page: string, error: string }>();
   private siteMap = new Array();
 
   constructor(
@@ -97,18 +97,16 @@ export class PreRenderOperation implements IOperation {
       await this.excludeMediaAndIntegrations(page);
 
       while (this.pagesToCrawl.length >= 1) {
-        const pageToCrawl = this.pagesToCrawl.shift();
+        const pageToCrawl = this.pagesToCrawl.shift() as string;
 
         try {
-          if (pageToCrawl) {
-            const linksOnPage = await this.renderPage(page, pageToCrawl);
+          const linksOnPage = await this.renderPage(page, pageToCrawl);
 
-            linksOnPage.forEach(linkHref => {
-              if (this.crawledPages.indexOf(linkHref) < 0 && this.pagesToCrawl.indexOf(linkHref) < 0) {
-                this.pagesToCrawl.push(linkHref);
-              }
-            });
-          }
+          linksOnPage.forEach(linkHref => {
+            if (this.crawledPages.indexOf(linkHref) < 0 && this.pagesToCrawl.indexOf(linkHref) < 0) {
+              this.pagesToCrawl.push(linkHref);
+            }
+          });
         } catch (error) {
           this.errors.push({ page: pageToCrawl, error: error.toString() });
         }
@@ -121,6 +119,10 @@ export class PreRenderOperation implements IOperation {
       console.log(`Completed crawling ${this.crawledPages.length} pages with ${this.errors.length} errors.`);
 
       await browser.close();
+
+      if (this.errors.length) {
+        throw new Error(this.errors.map(e => e.error).join('\n'));
+      }
     }).Execute();
   }
 
