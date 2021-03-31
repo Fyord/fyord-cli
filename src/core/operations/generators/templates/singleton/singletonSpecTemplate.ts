@@ -5,7 +5,9 @@ export const SingletonSpecTemplate: Template = (args?: string[]) => {
   const name = args?.[0] || Strings.Empty;
   const pascalCaseName = Strings.PascalCase(name);
 
-  return `describe('${pascalCaseName}', () => {
+  return `import { I${pascalCaseName}, ${pascalCaseName} } from './${Strings.CamelCase(name)}';
+
+describe('${pascalCaseName}', () => {
   let classUnderTest: I${pascalCaseName};
 
   beforeEach(() => {
