@@ -1,5 +1,5 @@
 import { Strings } from 'tsbase';
-import { Template } from './template';
+import { Template } from '../template';
 
 export const ComponentTemplate: Template = (args?: string[]) => {
   const name = args?.[0] || Strings.Empty;
