@@ -11,7 +11,7 @@ describe('PageGenerator', () => {
   beforeEach(() => {
     mockFileSystemExtra.Setup(fse => fse.pathExists(Strings.Empty), true);
     mockFileSystemExtra.Setup(fse => fse.outputFile(Strings.Empty, Strings.Empty));
-    mockFileSystem.Setup(fs => fs.readFileSync(Strings.Empty, 'utf8'), new Buffer(''));
+    mockFileSystem.Setup(fs => fs.readFileSync(Strings.Empty, 'utf8'), Buffer.from(Strings.Empty, 'utf8'));
 
     classUnderTest = new PageGenerator(mockFileSystemExtra.Object, mockFileSystem.Object);
   });

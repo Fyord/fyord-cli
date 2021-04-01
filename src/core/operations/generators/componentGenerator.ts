@@ -1,13 +1,17 @@
-import { Strings } from 'tsbase';
-import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { IFileSystemAdapter, Strings } from 'tsbase';
+import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { IGenerator } from './generators';
 import { ComponentSpecTemplate, ComponentTemplate, CssModuleTemplate } from './templates/module';
+import { updateModuleExports } from './updateModuleExports';
 
 export class ComponentGenerator implements IGenerator {
-  constructor(private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter) { }
+  constructor(
+    private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
+    private fs: IFileSystemAdapter = FileSystemAdapter) { }
 
   public async Generate(args: string[]): Promise<void> {
-    const camelCaseName = Strings.CamelCase(args[0]);
+    const name = args[0];
+    const camelCaseName = Strings.CamelCase(name);
 
     const componentTemplate = ComponentTemplate(args);
     const cssModuleTemplate = CssModuleTemplate(args);
@@ -16,5 +20,7 @@ export class ComponentGenerator implements IGenerator {
     await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, componentTemplate);
     await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.scss`, cssModuleTemplate);
     await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.spec.tsx`, componentSpecTemplate);
+
+    await updateModuleExports(this.fse, this.fs, Strings.PascalCase(name), camelCaseName);
   }
 }
