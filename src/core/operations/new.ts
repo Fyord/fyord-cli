@@ -1,5 +1,5 @@
-import * as cp from 'child_process';
-import * as fs from 'fs';
+import * as child_process from 'child_process';
+import * as filesystem from 'fs';
 import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { AsyncCommand, Result } from 'tsbase';
 import { IOperation } from './operation';
@@ -7,7 +7,10 @@ import { IOperation } from './operation';
 const defaultName = 'fyord app';
 
 export class NewOperation implements IOperation {
-  constructor(private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter) { }
+  constructor(
+    private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
+    private fs: any = filesystem,
+    private cp: any = child_process) { }
 
   public async Execute(args: string[]): Promise<Result> {
     return await new AsyncCommand(async () => {
@@ -28,16 +31,17 @@ export class NewOperation implements IOperation {
   }
 
   private initializeNewBoilerplateRepoWithName(name: string): void {
-    cp.execSync(`git clone https://github.com/Fyord/fyord-boilerplate.git ./${name}`);
-    fs.rmdirSync(`./${name}/.git`, { recursive: true });
-    cp.execSync(`cd ./${name} && git init`);
-    cp.execSync(`cd ./${name} && git add .`);
-    cp.execSync(`cd ./${name} && git commit -m "Scaffold ${name} with fyord cli"`);
+    name = name || 'fyord-boilerplate';
+    this.cp.execSync(`git clone https://github.com/Fyord/fyord-boilerplate.git ./${name}`);
+    this.fs.rmdirSync(`./${name}/.git`, { recursive: true });
+    this.cp.execSync(`cd ./${name} && git init`);
+    this.cp.execSync(`cd ./${name} && git add .`);
+    this.cp.execSync(`cd ./${name} && git commit -m "Scaffold ${name} with fyord cli"`);
   }
 
   private async updateDefaultNameInFile(fileName: string, name: string): Promise<void> {
     if (await this.fse.pathExists(fileName)) {
-      let moduleContents = fs.readFileSync(fileName, 'utf8').toString();
+      let moduleContents = this.fs.readFileSync(fileName, 'utf8').toString();
       moduleContents = moduleContents.replace(defaultName, name);
       await this.fse.outputFile(fileName, moduleContents);
     }
