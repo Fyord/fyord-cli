@@ -15,7 +15,7 @@ const args = process.argv.slice(3, process.argv.length);
 | | | |_| | (_) | | | (_| |
 |_|  \\__, |\\___/|_|  \\__,_|
       __/ |
-     |___/   Version: ${VersionNumber}
+     |___/  Version: ${VersionNumber}
 `);
 
   console.log(`

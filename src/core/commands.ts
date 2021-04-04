@@ -1,6 +1,7 @@
 import { CliName } from './constants';
 import { GenerateOperation } from './operations/generate';
 import { HelpOperation } from './operations/help';
+import { NewOperation } from './operations/new';
 import { IOperation } from './operations/operation';
 import { PreRenderOperation } from './operations/preRender';
 import { VersionOperation } from './operations/version';
@@ -18,7 +19,8 @@ export enum Commands {
   Help = 'help',
   Version = 'version',
   PreRender = 'prerender',
-  Generate = 'generate'
+  Generate = 'generate',
+  New = 'new'
 }
 
 export const CommandMap = new Map<Commands, Command>([
@@ -52,6 +54,16 @@ export const CommandMap = new Map<Commands, Command>([
     AdditionalDetails: {
       'Available Types': ['component', 'page', 'singleton'],
       'Casing convention': 'PascalCase will be used in declarations and camelCase will be used in file names'
+    }
+  }],
+  [Commands.New, {
+    Name: Commands.New,
+    Description: 'Creates a new fyord app',
+    Arguments: ['Name'],
+    Operation: new NewOperation(),
+    Example: `${CliName} ${Commands.New} NewFyordApp`,
+    AdditionalDetails: {
+      'Requires': ['git']
     }
   }]
 ]);
