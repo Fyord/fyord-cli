@@ -1,5 +1,6 @@
 import { AsyncCommand, Result } from 'tsbase';
-import { GeneratorMap, Generators } from './generators/module';
+import { GetAliasableValueFromMap } from '../utility/getIterableValueWithAlias';
+import { GeneratorMap, IGenerator } from './generators/module';
 import { IOperation } from './operation';
 
 export class GenerateOperation implements IOperation {
@@ -8,9 +9,7 @@ export class GenerateOperation implements IOperation {
       const generatorName = args[0];
       const remainingArgs = args.slice(1, args.length);
 
-      const generator = GeneratorMap.has(generatorName as Generators) ?
-        GeneratorMap.get(generatorName as Generators) :
-        Array.from(GeneratorMap.values()).filter(g => g.Alias === generatorName)[0];
+      const generator = GetAliasableValueFromMap<IGenerator>(GeneratorMap, generatorName);
 
       if (generator) {
         generator.Generate(remainingArgs);

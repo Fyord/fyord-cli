@@ -6,22 +6,22 @@ import { IOperation } from './operations/operation';
 import { PreRenderOperation } from './operations/preRender';
 import { VersionOperation } from './operations/version';
 
-export type Command = {
-  Name: string;
-  Alias: string;
-  Description: string;
-  Arguments: string[];
-  Operation: IOperation;
-  Example: string;
-  AdditionalDetails?: object;
-}
-
 export enum Commands {
   Help = 'help',
   Version = 'version',
   PreRender = 'prerender',
   Generate = 'generate',
   New = 'new'
+}
+
+export type Command = {
+  Name: Commands;
+  Alias: string;
+  Description: string;
+  Arguments: string[];
+  Operation: IOperation;
+  Example: string;
+  AdditionalDetails?: object;
 }
 
 export const CommandMap = new Map<Commands, Command>([

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { Strings } from 'tsbase';
 import { CliName, VersionNumber } from './core/constants';
-import { CommandMap, Commands } from './core/module';
+import { Command, CommandMap } from './core/module';
+import { GetAliasableValueFromMap } from './core/utility/getIterableValueWithAlias';
 
 const commandKey = process.argv[2] || 'help';
 const args = process.argv.slice(3, process.argv.length);
@@ -23,9 +24,7 @@ Executing "${CliName} ${commandKey}${args.length > 0 ? ` ${args.join(Strings.Spa
 `);
 
   const commandArgument = commandKey.toLowerCase().replace(/-/g, Strings.Empty);
-  const command = CommandMap.has(commandArgument as Commands) ?
-    CommandMap.get(commandArgument as Commands) :
-    Array.from(CommandMap.values()).filter(c => c.Alias === commandArgument)[0];
+  const command = GetAliasableValueFromMap<Command>(CommandMap, commandArgument);
 
   if (command) {
     const result = await command.Operation.Execute(args);

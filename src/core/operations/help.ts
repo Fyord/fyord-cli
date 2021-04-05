@@ -1,5 +1,6 @@
 import { AsyncCommand, Result } from 'tsbase';
 import { Command, CommandMap, Commands } from '../commands';
+import { GetAliasableValueFromMap } from '../utility/getIterableValueWithAlias';
 import { IOperation } from './operation';
 
 export class HelpOperation implements IOperation {
@@ -15,12 +16,17 @@ export class HelpOperation implements IOperation {
 `);
       }
 
-      for (const commandMap of CommandMap) {
-        const [commandName, commandObject] = commandMap;
-        this.logCommandDetails(commandNameArgument, commandName, commandObject);
+      const namedCommand = GetAliasableValueFromMap<Command>(CommandMap, commandNameArgument);
+      if (namedCommand) {
+        this.logCommandDetails(namedCommand.Name, namedCommand.Name, namedCommand);
+      } else {
+        for (const commandMap of CommandMap) {
+          const [commandName, commandObject] = commandMap;
+          this.logCommandDetails(commandNameArgument, commandName, commandObject);
+        }
       }
 
-      if (commandNameArgument && !CommandMap.get(commandNameArgument)) {
+      if (commandNameArgument && !namedCommand) {
         this.mainConsole.error(`Unknown command, "${commandNameArgument}"`);
       }
     }).Execute();
