@@ -3,6 +3,7 @@ import { PageGenerator } from './pageGenerator';
 import { SingletonGenerator } from './singletonGenerator';
 
 export interface IGenerator {
+  Alias: string;
   Generate(args: string[]): Promise<void>;
 }
 

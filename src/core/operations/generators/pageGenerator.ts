@@ -4,6 +4,8 @@ import { IGenerator } from './generators';
 import { PageTemplate, CssModuleTemplate, PageSpecTemplate } from './templates/module';
 
 export class PageGenerator implements IGenerator {
+  public Alias = 'p';
+
   constructor(
     private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
     private fs: IFileSystemAdapter = FileSystemAdapter) { }
