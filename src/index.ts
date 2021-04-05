@@ -22,7 +22,10 @@ const args = process.argv.slice(3, process.argv.length);
 Executing "${CliName} ${commandKey}${args.length > 0 ? ` ${args.join(Strings.Space)}` : Strings.Empty}"
 `);
 
-  const command = CommandMap.get(commandKey.toLowerCase().replace(/-/g, Strings.Empty) as Commands);
+  const commandArgument = commandKey.toLowerCase().replace(/-/g, Strings.Empty);
+  const command = CommandMap.has(commandArgument as Commands) ?
+    CommandMap.get(commandArgument as Commands) :
+    Array.from(CommandMap.values()).filter(c => c.Alias === commandArgument)[0];
 
   if (command) {
     const result = await command.Operation.Execute(args);

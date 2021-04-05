@@ -8,6 +8,7 @@ import { VersionOperation } from './operations/version';
 
 export type Command = {
   Name: string;
+  Alias: string;
   Description: string;
   Arguments: string[];
   Operation: IOperation;
@@ -26,6 +27,7 @@ export enum Commands {
 export const CommandMap = new Map<Commands, Command>([
   [Commands.Help, {
     Name: Commands.Help,
+    Alias: 'h',
     Description: 'List available commands and arguments',
     Arguments: ['Command Name'],
     Operation: new HelpOperation(),
@@ -33,6 +35,7 @@ export const CommandMap = new Map<Commands, Command>([
   }],
   [Commands.Version, {
     Name: Commands.Version,
+    Alias: 'v',
     Description: 'Prints the current version of fyord-cli',
     Arguments: [],
     Operation: new VersionOperation(),
@@ -40,6 +43,7 @@ export const CommandMap = new Map<Commands, Command>([
   }],
   [Commands.PreRender, {
     Name: Commands.PreRender,
+    Alias: 'pr',
     Description: 'Crawls and pre renders pages within the app',
     Arguments: [],
     Operation: new PreRenderOperation(),
@@ -47,6 +51,7 @@ export const CommandMap = new Map<Commands, Command>([
   }],
   [Commands.Generate, {
     Name: Commands.Generate,
+    Alias: 'g',
     Description: 'Scaffold a fyord app component, page, etc. in the current directory',
     Arguments: ['Type (component, page, etc.)', 'Name (ex. MyComponent)'],
     Operation: new GenerateOperation(),
@@ -58,6 +63,7 @@ export const CommandMap = new Map<Commands, Command>([
   }],
   [Commands.New, {
     Name: Commands.New,
+    Alias: 'n',
     Description: 'Creates a new fyord app',
     Arguments: ['Name'],
     Operation: new NewOperation(),
