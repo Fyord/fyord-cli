@@ -47,7 +47,10 @@ export const CommandMap = new Map<Commands, Command>([
     Description: 'Crawls and pre renders pages within the app',
     Arguments: [],
     Operation: new PreRenderOperation(),
-    Example: `${CliName} ${Commands.PreRender}`
+    Example: `${CliName} ${Commands.PreRender}`,
+    AdditionalDetails: {
+      'Utilizes config file if available': './fyord.json'
+    }
   }],
   [Commands.Generate, {
     Name: Commands.Generate,

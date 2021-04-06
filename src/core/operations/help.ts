@@ -37,8 +37,7 @@ export class HelpOperation implements IOperation {
 
     if (!commandNameArgument || commandNameMatchesArgument) {
       this.mainConsole.log({
-        Name: commandObject.Name,
-        Alias: commandObject.Alias,
+        Name: `${commandObject.Name} (${commandObject.Alias})`,
         Description: commandObject.Description,
         Arguments: commandObject.Arguments,
         Example: commandObject.Example
