@@ -5,6 +5,8 @@ import { IGenerator } from './generators';
 import { updateModuleExports } from './updateModuleExports';
 
 export class SingletonGenerator implements IGenerator {
+  public Alias = 's';
+
   constructor(
     private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
     private fs: IFileSystemAdapter = FileSystemAdapter) { }

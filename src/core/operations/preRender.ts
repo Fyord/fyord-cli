@@ -2,8 +2,7 @@
 import * as puppeteer from 'puppeteer';
 import { AsyncCommand, Result, Strings } from 'tsbase';
 import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
-import { Settings } from '../../settings/settings';
-import { ISettingsService, SettingsService } from '../../settings/settingsService';
+import { ISettingsService, SettingsService, Settings } from '../../settings/module';
 import { IOperation } from './operation';
 
 export interface IPageRequest {

@@ -5,6 +5,8 @@ import { ComponentSpecTemplate, ComponentTemplate, CssModuleTemplate } from './t
 import { updateModuleExports } from './updateModuleExports';
 
 export class ComponentGenerator implements IGenerator {
+  public Alias = 'c';
+
   constructor(
     private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
     private fs: IFileSystemAdapter = FileSystemAdapter) { }

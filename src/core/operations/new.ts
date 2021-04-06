@@ -1,7 +1,7 @@
 import * as child_process from 'child_process';
 import * as filesystem from 'fs';
-import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { AsyncCommand, Result } from 'tsbase';
+import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { IOperation } from './operation';
 
 const defaultName = 'fyord app';
