@@ -1,5 +1,5 @@
 import { AsyncCommand, Result } from 'tsbase';
-import { GetAliasableValueFromMap } from '../utility/getIterableValueWithAlias';
+import { GetAliasableValueFromMap } from '../utility/getAliasableValueFromMap';
 import { GeneratorMap, IGenerator } from './generators/module';
 import { IOperation } from './operation';
 

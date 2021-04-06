@@ -1,6 +1,6 @@
 import { AsyncCommand, Result } from 'tsbase';
 import { Command, CommandMap, Commands } from '../commands';
-import { GetAliasableValueFromMap } from '../utility/getIterableValueWithAlias';
+import { GetAliasableValueFromMap } from '../utility/getAliasableValueFromMap';
 import { IOperation } from './operation';
 
 export class HelpOperation implements IOperation {

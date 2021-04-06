@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 import { Strings } from 'tsbase';
-import { CliName, VersionNumber } from './core/constants';
-import { Command, CommandMap } from './core/module';
-import { GetAliasableValueFromMap } from './core/utility/getIterableValueWithAlias';
+import { CliName, Command, CommandMap, VersionNumber } from './core/module';
+import { GetAliasableValueFromMap } from './core/utility/module';
 
 const commandKey = process.argv[2] || 'help';
 const args = process.argv.slice(3, process.argv.length);

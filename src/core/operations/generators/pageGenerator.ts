@@ -1,7 +1,7 @@
 import { IFileSystemAdapter, Strings } from 'tsbase';
 import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
-import { IGenerator } from './generators';
 import { PageTemplate, CssModuleTemplate, PageSpecTemplate } from './templates/module';
+import { IGenerator } from './generators';
 
 export class PageGenerator implements IGenerator {
   public Alias = 'p';

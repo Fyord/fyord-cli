@@ -1,5 +1,5 @@
-import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 import { IFileSystemAdapter } from 'tsbase';
+import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 
 export const updateModuleExports = async (
   fse: IFileSystemExtraAdapter,
