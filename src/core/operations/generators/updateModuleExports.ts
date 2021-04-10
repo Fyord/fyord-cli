@@ -10,7 +10,7 @@ export const updateModuleExports = async (
   const moduleFile = './module.ts';
   if (await fse.pathExists(moduleFile)) {
     let moduleContents = fs.readFileSync(moduleFile, 'utf8').toString();
-    moduleContents = `import { ${pascalCaseName} } from './${camelCaseName}/${camelCaseName}';
+    moduleContents = `export * from './${camelCaseName}/${camelCaseName}';
 ${moduleContents}`;
 
     await fse.outputFile(moduleFile, moduleContents);
