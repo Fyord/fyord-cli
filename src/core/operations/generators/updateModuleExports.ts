@@ -4,7 +4,6 @@ import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdap
 export const updateModuleExports = async (
   fse: IFileSystemExtraAdapter,
   fs: IFileSystemAdapter,
-  pascalCaseName: string,
   camelCaseName: string
 ) => {
   const moduleFile = './module.ts';

@@ -23,6 +23,6 @@ export class ComponentGenerator implements IGenerator {
     await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.scss`, cssModuleTemplate);
     await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.spec.tsx`, componentSpecTemplate);
 
-    await updateModuleExports(this.fse, this.fs, Strings.PascalCase(name), camelCaseName);
+    await updateModuleExports(this.fse, this.fs, camelCaseName);
   }
 }
