@@ -21,6 +21,6 @@ export class SingletonGenerator implements IGenerator {
     await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.ts`, singletonTemplate);
     await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.spec.ts`, singletonSpecTemplate);
 
-    await updateModuleExports(this.fse, this.fs, Strings.PascalCase(name), camelCaseName);
+    await updateModuleExports(this.fse, this.fs, camelCaseName);
   }
 }
