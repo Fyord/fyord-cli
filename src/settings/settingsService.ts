@@ -1,8 +1,8 @@
-import { ConfigurationFileName } from '../core/constants';
 import { FSPersister, IPersister, KeyValue, Repository, Strings } from 'tsbase';
 import { FileSystemAdapter } from '../fileSystem/fileSystemAdapter';
 import { PathResolver } from '../fileSystem/pathResolver';
 import { Settings, SettingsMap } from './settings';
+import { GetConfigurationFileName } from './getConfigurationFileName';
 
 export interface ISettingsService {
   Repository: Repository<KeyValue>;
@@ -14,7 +14,7 @@ export class SettingsService implements ISettingsService {
   public static Instance(
     persister: IPersister = new FSPersister(
       './',
-      `./${ConfigurationFileName}`,
+      GetConfigurationFileName(),
       'settings',
       PathResolver,
       FileSystemAdapter)
