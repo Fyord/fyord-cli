@@ -16,8 +16,7 @@ describe('${pascalCaseName}', () => {
   beforeEach(() => {
     classUnderTest = new ${pascalCaseName}(
       pageMocks.mockSeoService.Object,
-      pageMocks.mockApp.Object,
-      pageMocks.mockDocument.Object);
+      pageMocks.mockApp.Object);
   });
 
   it('should construct', () => {
@@ -43,10 +42,7 @@ describe('${pascalCaseName}', () => {
   });
 
   it('should have appropriate behavior', async () => {
-    const renderedComponent = document.createElement('div');
-    renderedComponent.innerHTML = await classUnderTest.Render();
-    pageMocks.mockDocument.Setup(d => d.getElementById(classUnderTest.Id), renderedComponent);
-
+    document.body.innerHTML = await classUnderTest.Render();
     classUnderTest.Behavior();
 
     setTimeout(() => {
