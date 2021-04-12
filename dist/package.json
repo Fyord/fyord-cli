@@ -23,7 +23,8 @@
     "tsbase": "^3.4.0",
     "puppeteer": "^1.20.0",
     "fs-extra": "^9.1.0",
-    "tslib": "^1.13.0"
+    "tslib": "^1.13.0",
+    "inquirer": "^8.0.0"
   },
   "bin": {
     "fyord": "./index.js"
