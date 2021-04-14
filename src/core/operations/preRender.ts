@@ -36,11 +36,7 @@ export class PreRenderOperation implements IOperation {
     outputPathRoot: string | string[],
     blockedResourceTypes: string[],
     skippedResources: string[],
-    dynamicRenderModeString: string,
-    staticRenderModeString: string,
-    hybridRenderModeString: string,
     bundleScriptRegex: RegExp,
-    unsupportedBrowserScript: string | string[],
     appRootString: string
   };
 
@@ -58,14 +54,10 @@ export class PreRenderOperation implements IOperation {
     this.config = {
       baseUrl: settingsService.GetSettingOrDefault(Settings.BaseUrl),
       outputPathRoot: settingsService.GetSettingOrDefault(Settings.OutputPathRoot),
-      blockedResourceTypes: settingsService.GetSettingOrDefault(Settings.BlockedResourceTypes) as string[],
-      skippedResources: settingsService.GetSettingOrDefault(Settings.SkippedResources) as string[],
-      dynamicRenderModeString: settingsService.GetSettingOrDefault(Settings.DynamicRenderModeString) as string,
-      staticRenderModeString: settingsService.GetSettingOrDefault(Settings.StaticRenderModeString) as string,
-      hybridRenderModeString: settingsService.GetSettingOrDefault(Settings.HybridRenderModeString) as string,
-      bundleScriptRegex: new RegExp(settingsService.GetSettingOrDefault(Settings.BundleScriptRegex) as string),
-      unsupportedBrowserScript: settingsService.GetSettingOrDefault(Settings.UnsupportedBrowserScript),
-      appRootString: settingsService.GetSettingOrDefault(Settings.AppRootString) as string
+      blockedResourceTypes: settingsService.GetSettingOrDefault(Settings.BlockedResourceTypes)?.trim().split(','),
+      skippedResources: settingsService.GetSettingOrDefault(Settings.SkippedResources)?.trim().split(','),
+      bundleScriptRegex: new RegExp(settingsService.GetSettingOrDefault(Settings.BundleScriptRegex)),
+      appRootString: settingsService.GetSettingOrDefault(Settings.AppRootString)
     };
   }
 
@@ -185,17 +177,17 @@ export class PreRenderOperation implements IOperation {
     let content = await page.content();
     content = content.replace(/\r?\n|\r/g, Strings.Empty).replace(/>\s+</g, '><');
 
-    if (content.indexOf(this.config.staticRenderModeString) >= 0) {
+    if (content.indexOf('<!-- fyord-static-render -->') >= 0) {
       content = content.replace(this.config.bundleScriptRegex, Strings.Empty);
     }
 
-    if (content.indexOf(this.config.dynamicRenderModeString) < 0) {
+    if (content.indexOf('<!-- fyord-dynamic-render -->') < 0) {
       await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, content);
       this.addEntrySiteMap(url);
     } else {
       const bundleScript = (content.match(this.config.bundleScriptRegex) as Array<string>)[0];
       const appRootString = this.config.appRootString;
-      const closingHtml = `${appRootString}</div>${this.config.unsupportedBrowserScript}${bundleScript}</body></html>`;
+      const closingHtml = `${appRootString}</div>${bundleScript}</body></html>`;
 
       let unRenderedVersion = content.split(appRootString)[0];
       unRenderedVersion = `${unRenderedVersion}${closingHtml}`;

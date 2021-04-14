@@ -8,6 +8,7 @@ describe('SettingsService', () => {
   let classUnderTest: SettingsService;
 
   beforeEach(() => {
+    spyOn(console, 'log');
     mockPersister.Setup(p => p.Retrieve(), []);
 
     classUnderTest = SettingsService.Instance(mockPersister.Object);

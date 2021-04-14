@@ -69,11 +69,8 @@ describe('PreRenderOperation', () => {
     mockPageRequest.Setup(r => r.continue());
     mockPageRequest.Setup(r => r.resourceType(), 'test');
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Strings.Empty as Settings), Strings.Empty);
-    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.BlockedResourceTypes), ['blocked-resource']);
-    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.SkippedResources), ['skipped-resource']);
-    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.DynamicRenderModeString), '<!-- fyord-dynamic-render -->');
-    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.StaticRenderModeString), '<!-- fyord-static-render -->');
-    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.HybridRenderModeString), '<!-- fyord-hybrid-render -->');
+    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.BlockedResourceTypes), 'blocked-resource');
+    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.SkippedResources), 'skipped-resource');
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.BundleScriptRegex), '<script src="/bundle.js(.*?)"></script>');
     mockPuppeteer.Setup(p => p.launch(), mockBrowser.Object);
     mockBrowser.Setup(b => b.close());

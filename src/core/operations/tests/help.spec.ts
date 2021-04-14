@@ -8,6 +8,7 @@ describe('HelpOperation', () => {
   const mockConsole = new Mock<Console>();
 
   beforeEach(() => {
+    spyOn(console, 'log');
     mockConsole.Setup(c => c.log(Strings.Empty));
     classUnderTest = new HelpOperation(mockConsole.Object);
   });

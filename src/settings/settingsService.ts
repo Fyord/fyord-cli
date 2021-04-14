@@ -6,7 +6,7 @@ import { GetConfigurationFileName } from './getConfigurationFileName';
 
 export interface ISettingsService {
   Repository: Repository<KeyValue>;
-  GetSettingOrDefault(settingName: Settings): string | string[];
+  GetSettingOrDefault(settingName: Settings): string;
 }
 
 export class SettingsService implements ISettingsService {
@@ -26,10 +26,11 @@ export class SettingsService implements ISettingsService {
   public Repository: Repository<KeyValue>;
 
   private constructor(persister: IPersister) {
+    console.log(`Using configuration file at ${persister['filePath']}`);
     this.Repository = new Repository<KeyValue>(persister);
   }
 
-  public GetSettingOrDefault(settingName: Settings): string | string[] {
+  public GetSettingOrDefault(settingName: Settings): string {
     const setting = this.Repository.Find(s => s.key === settingName);
     return setting && (typeof setting.value === 'object' || !Strings.IsEmptyOrWhiteSpace(setting.value)) ?
       setting.value :

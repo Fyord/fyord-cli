@@ -16,8 +16,5 @@ export const GetConfigurationFileName = (fs: IFileSystemAdapter = FileSystemAdap
     }
   }
 
-  const configurationFileName = `${relativePath}${ConfigurationFileName}`;
-  console.log(`Using configuration file: ${configurationFileName}`);
-
-  return configurationFileName;
+  return `${relativePath}${ConfigurationFileName}`;
 };
