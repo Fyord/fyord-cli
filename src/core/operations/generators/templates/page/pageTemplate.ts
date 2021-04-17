@@ -16,8 +16,6 @@ export class ${pascalCaseName} extends Page {
   Html = async () => {
     return <div class={styles.container}>Hello ${name} page!</div>;
   }
-
-  Behavior = () => { }
 }
 `;
 };

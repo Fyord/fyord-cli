@@ -43,7 +43,6 @@ describe('${pascalCaseName}', () => {
 
   it('should have appropriate behavior', async () => {
     document.body.innerHTML = await classUnderTest.Render();
-    classUnderTest.Behavior();
 
     setTimeout(() => {
       // fire any attached events
