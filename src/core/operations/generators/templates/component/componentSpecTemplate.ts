@@ -19,7 +19,7 @@ describe('${pascalCaseName}', () => {
     expect(classUnderTest).toBeDefined();
   });
 
-  it('should render html', async () => {
+  it('should render template', async () => {
     expect(await classUnderTest.Template()).toBeDefined();
   });
 

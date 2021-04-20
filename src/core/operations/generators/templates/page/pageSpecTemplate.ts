@@ -37,7 +37,7 @@ describe('${pascalCaseName}', () => {
     expect(classUnderTest.Route(route)).toBeFalsy();
   });
 
-  it('should render html', async () => {
+  it('should render template', async () => {
     expect(await classUnderTest.Template()).toBeDefined();
   });
 
