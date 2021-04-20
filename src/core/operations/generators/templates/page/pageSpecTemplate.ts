@@ -38,7 +38,7 @@ describe('${pascalCaseName}', () => {
   });
 
   it('should render html', async () => {
-    expect(await classUnderTest.Html()).toBeDefined();
+    expect(await classUnderTest.Template()).toBeDefined();
   });
 
   it('should have appropriate behavior', async () => {

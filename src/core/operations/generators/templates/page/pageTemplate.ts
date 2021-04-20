@@ -13,7 +13,7 @@ export class ${pascalCaseName} extends Page {
   Title = '${pascalCaseName}';
   Route = (route: Route) => route.path === '/${camelCaseName}';
 
-  Html = async () => {
+  Template = async () => {
     return <div class={styles.container}>Hello ${name} page!</div>;
   }
 }
