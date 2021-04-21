@@ -1,6 +1,8 @@
 # fyord-cli
 A companion CLI to the Fyord framework.
 
+[Code of conduct](https://github.com/Fyord/fyord/blob/main/CODE_OF_CONDUCT.md)
+
 ## Installation
 - `npm i`
 
