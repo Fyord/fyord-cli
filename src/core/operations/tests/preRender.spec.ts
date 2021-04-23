@@ -1,9 +1,10 @@
 import { Strings } from 'tsbase';
-import { Mock } from 'tsmockit';
+import { Mock, Times } from 'tsmockit';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 import { Settings } from '../../../settings/settings';
 import { ISettingsService } from '../../../settings/settingsService';
 import { IBrowser, IPage, IPageRequest, IPuppeteer, PreRenderOperation } from '../preRender';
+import type { Express } from 'express/lib/express';
 
 const mockPageRequest = new Mock<IPageRequest>();
 
@@ -58,6 +59,9 @@ describe('PreRenderOperation', () => {
   const mockBrowser = new Mock<IBrowser>();
   const mockLocation = new Mock<Location>();
   const mockDocument = new Mock<Document>();
+  const mockExpress = new Mock<Express>();
+  const createExpressApp = () => mockExpress.Object;
+  const serveStatic = () => null;
   const fakePage = new FakePage();
 
   beforeAll(() => {
@@ -81,12 +85,17 @@ describe('PreRenderOperation', () => {
     mockDocument.Setup(d => d.querySelectorAll('a'), [
       { href: `${origin}/test`, pathname: '/test' }
     ]);
+    mockExpress.Setup(e => e.listen());
+    mockExpress.Setup(e => e.use());
+
   });
 
   beforeEach(() => {
     fakePage.renderMode = 'hybrid';
 
     classUnderTest = new PreRenderOperation(
+      createExpressApp as any,
+      serveStatic as any,
       mockPuppeteer.Object,
       mockFileSystemExtra.Object,
       mockSettingsService.Object,
@@ -98,67 +107,67 @@ describe('PreRenderOperation', () => {
     expect(new PreRenderOperation()).toBeDefined();
   });
 
-  // const minimumFilesOutput = 4;
-  // it('should pre render a page using hybrid mode', async () => {
-  //   fakePage.renderMode = 'hybrid';
+  const minimumFilesOutput = 4;
+  it('should pre render a page using hybrid mode', async () => {
+    fakePage.renderMode = 'hybrid';
 
-  //   const result = await classUnderTest.Execute();
+    const result = await classUnderTest.Execute();
 
-  //   expect(result).toBeTruthy();
-  //   mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput + 1);
-  // });
+    expect(result).toBeTruthy();
+    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput + 1);
+  });
 
-  // it('should pre render a page using dynamic mode', async () => {
-  //   fakePage.renderMode = 'dynamic';
+  it('should pre render a page using dynamic mode', async () => {
+    fakePage.renderMode = 'dynamic';
 
-  //   const result = await classUnderTest.Execute();
+    const result = await classUnderTest.Execute();
 
-  //   expect(result).toBeTruthy();
-  //   mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput * 2 + 2);
-  // });
+    expect(result).toBeTruthy();
+    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput * 2 + 2);
+  });
 
-  // it('should pre render a page using static mode', async () => {
-  //   fakePage.renderMode = 'static';
+  it('should pre render a page using static mode', async () => {
+    fakePage.renderMode = 'static';
 
-  //   const result = await classUnderTest.Execute();
+    const result = await classUnderTest.Execute();
 
-  //   expect(result).toBeTruthy();
-  //   mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput * 3 + 3);
-  // });
+    expect(result).toBeTruthy();
+    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput * 3 + 3);
+  });
 
-  // it('should NOT pre-render external pages (links with different origin)', async () => {
-  //   mockDocument.Setup(d => d.querySelectorAll('a'), [
-  //     { href: 'fake/test', pathname: '/external' }
-  //   ]);
-  //   mockFileSystemExtra.Setup(fse => fse.outputFile('/external', Strings.Empty));
+  it('should NOT pre-render external pages (links with different origin)', async () => {
+    mockDocument.Setup(d => d.querySelectorAll('a'), [
+      { href: 'fake/test', pathname: '/external' }
+    ]);
+    mockFileSystemExtra.Setup(fse => fse.outputFile('/external', Strings.Empty));
 
-  //   const result = await classUnderTest.Execute();
+    const result = await classUnderTest.Execute();
 
-  //   expect(result).toBeTruthy();
-  //   mockFileSystemExtra.Verify(fse => fse.outputFile('/external', Strings.Empty), minimumFilesOutput);
-  // });
+    expect(result).toBeTruthy();
+    mockFileSystemExtra.Verify(fse => fse.outputFile('/external', Strings.Empty), minimumFilesOutput);
+  });
 
-  // it('should abort page request on skipped resource', async () => {
-  //   mockPageRequest.Setup(r => r._url, 'skipped-resource');
+  it('should abort page request on skipped resource', async () => {
+    mockPageRequest.Setup(r => r._url, 'skipped-resource');
 
-  //   const result = await classUnderTest.Execute();
+    const result = await classUnderTest.Execute();
 
-  //   expect(result).toBeTruthy();
-  //   mockPageRequest.Verify(r => r.abort(), Times.Once);
-  // });
+    expect(result).toBeTruthy();
+    mockPageRequest.Verify(r => r.abort(), Times.Once);
+  });
 
-  // it('should abort page request on blocked resource', async () => {
-  //   mockPageRequest.Setup(r => r.resourceType(), 'blocked-resource');
+  it('should abort page request on blocked resource', async () => {
+    mockPageRequest.Setup(r => r.resourceType(), 'blocked-resource');
 
-  //   const result = await classUnderTest.Execute();
+    const result = await classUnderTest.Execute();
 
-  //   expect(result).toBeTruthy();
-  //   mockPageRequest.Verify(r => r.abort(), 2);
-  // });
+    expect(result).toBeTruthy();
+    mockPageRequest.Verify(r => r.abort(), 2);
+  });
 
-  // it('should log errors captured during crawling a page', async () => {
-  //   fakePage.renderMode = 'error';
-  //   const result = await classUnderTest.Execute();
-  //   expect(result.IsSuccess).toBeFalsy();
-  // });
+  it('should log errors captured during crawling a page', async () => {
+    fakePage.renderMode = 'error';
+    const result = await classUnderTest.Execute();
+    expect(result.IsSuccess).toBeFalsy();
+  });
 });

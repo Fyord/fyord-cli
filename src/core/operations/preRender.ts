@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import * as puppeteer from 'puppeteer';
-import * as express from 'express';
+import * as expressjs from 'express';
 import { AsyncCommand, Result, Strings } from 'tsbase';
 import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { ISettingsService, SettingsService, Settings } from '../../settings/module';
@@ -47,7 +47,10 @@ export class PreRenderOperation implements IOperation {
   private errors = new Array<{ page: string, error: string }>();
   private siteMap = new Array();
 
+  // eslint-disable-next-line max-params
   constructor(
+    private createExpressApp = expressjs,
+    private serveStatic = expressjs.static,
     private browser: IPuppeteer = puppeteer,
     private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
     settingsService: ISettingsService = SettingsService.Instance(),
@@ -85,9 +88,9 @@ export class PreRenderOperation implements IOperation {
       ${xmlEnd}`;
       };
 
-      const app = express();
+      const app = this.createExpressApp();
       const server = app.listen(7343, () => { });
-      app.use(express.static('public'));
+      app.use(this.serveStatic('public'));
       app.use((_req, res) => {
         res.status(404).redirect('/');
       });
