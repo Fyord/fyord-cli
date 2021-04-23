@@ -8,7 +8,7 @@ export enum Settings {
 }
 
 export const SettingsMap = new Map<string, string>([
-  [Settings.BaseUrl, 'http://localhost:4200'],
+  [Settings.BaseUrl, 'http://localhost:7343'],
   [Settings.OutputPathRoot, 'public/pre-render'],
   [Settings.BlockedResourceTypes, 'image, media, font'],
   [Settings.SkippedResources, 'google'],
