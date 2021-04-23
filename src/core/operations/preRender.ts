@@ -88,6 +88,9 @@ export class PreRenderOperation implements IOperation {
       const app = express();
       const server = app.listen(7343, () => { });
       app.use(express.static('public'));
+      app.use((_req, res) => {
+        res.status(404).redirect('/');
+      });
 
       const browser = await this.browser.launch();
       const page = await browser.newPage();
@@ -113,7 +116,7 @@ export class PreRenderOperation implements IOperation {
       await this.fse.outputFile(`${this.config.outputPathRoot}/sitemap.xml`, getXmlSiteMap());
       await this.fse.outputFile(`${this.config.outputPathRoot}/errors.json`, JSON.stringify(this.errors));
 
-      console.log(`Completed crawling ${this.crawledPages.length} pages with ${this.errors.length} errors.`);
+      console.log(`Completed crawling ${this.crawledPages.length} pages${this.errors.length > 0 ? ' with errors' : Strings.Empty}.`);
 
       await browser.close();
 
