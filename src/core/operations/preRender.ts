@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import * as puppeteer from 'puppeteer';
+import * as express from 'express';
 import { AsyncCommand, Result, Strings } from 'tsbase';
 import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { ISettingsService, SettingsService, Settings } from '../../settings/module';
@@ -40,6 +41,7 @@ export class PreRenderOperation implements IOperation {
     appRootString: string
   };
 
+  private expressServerBase = 'http://localhost:7343';
   private pagesToCrawl = ['/'];
   private crawledPages = new Array<string>();
   private errors = new Array<{ page: string, error: string }>();
@@ -83,6 +85,10 @@ export class PreRenderOperation implements IOperation {
       ${xmlEnd}`;
       };
 
+      const app = express();
+      const server = app.listen(7343, () => { });
+      app.use(express.static('public'));
+
       const browser = await this.browser.launch();
       const page = await browser.newPage();
       await this.excludeMediaAndIntegrations(page);
@@ -114,12 +120,14 @@ export class PreRenderOperation implements IOperation {
       if (this.errors.length) {
         throw new Error(this.errors.map(e => e.error).join('\n'));
       }
+
+      server.close();
     }).Execute();
   }
 
   private addEntrySiteMap(loc): void {
     this.siteMap.push({
-      loc: loc,
+      loc: loc.replace(this.expressServerBase, this.config.baseUrl),
       lastmod: (new Date().toLocaleDateString().replace(/\//g, '-')),
       changefreq: 'weekly',
       priority: 1
@@ -168,7 +176,7 @@ export class PreRenderOperation implements IOperation {
   private async renderPage(page: IPage, route: string) {
     this.crawledPages.push(route);
     const pageName = (route === Strings.Empty || route === '/') ? 'index' : route;
-    const url = `${this.config.baseUrl}${route}`;
+    const url = `${this.expressServerBase}${route}`;
 
     console.log(`| ========= Attempting to crawl: ${pageName} ========= |`);
 
