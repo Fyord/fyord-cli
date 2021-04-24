@@ -7,6 +7,8 @@ enum PipelineTypes {
   Azure = 'azure'
 }
 
+const properFormatExample = '(format example: fyord generate pipeline github master)';
+
 export class PipelineGenerator implements IGenerator {
   public Alias = 'pl';
 
@@ -27,15 +29,18 @@ export class PipelineGenerator implements IGenerator {
 
   private throwErrorsIfArgumentsInvalid(type: string, trunk: string) {
     if (!type) {
-      throw new Error(`No pipeline type argument given. Valid types: ${PipelineTypes.GitHub} & ${PipelineTypes.Azure}.`);
+      throw new Error(`No pipeline type argument given. Valid types: ${PipelineTypes.GitHub} & ${PipelineTypes.Azure}.
+${properFormatExample}`);
     }
 
     if (!trunk) {
-      throw new Error('No trunk branch specified. Specify a branch that will trigger builds (master, main, etc.).');
+      throw new Error(`No trunk branch specified. Specify a branch that will trigger builds (master, main, etc.).
+${properFormatExample}`);
     }
 
     if (type !== PipelineTypes.GitHub && type !== PipelineTypes.Azure) {
-      throw new Error(`Invalid pipeline type: "${type}" given. Valid types: ${PipelineTypes.GitHub} & ${PipelineTypes.Azure}.`);
+      throw new Error(`Invalid pipeline type: "${type}" given. Valid types: ${PipelineTypes.GitHub} & ${PipelineTypes.Azure}.
+${properFormatExample}`);
     }
   }
 }
