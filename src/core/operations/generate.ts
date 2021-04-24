@@ -12,7 +12,7 @@ export class GenerateOperation implements IOperation {
       const generator = GetAliasableValueFromMap<IGenerator>(GeneratorMap, generatorName);
 
       if (generator) {
-        generator.Generate(remainingArgs);
+        await generator.Generate(remainingArgs);
       } else {
         const error = `Unknown generator, "${generatorName}"`;
         console.error(error);

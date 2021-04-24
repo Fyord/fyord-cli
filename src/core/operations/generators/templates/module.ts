@@ -9,3 +9,6 @@ export * from './page/pageSpecTemplate';
 
 export * from './singleton/singletonTemplate';
 export * from './singleton/singletonSpecTemplate';
+
+export * from './pipeline/azurePipeline';
+export * from './pipeline/githubAction';
