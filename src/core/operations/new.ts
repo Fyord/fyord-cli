@@ -19,9 +19,7 @@ export class NewOperation implements IOperation {
       this.initializeNewBoilerplateRepoWithName(name);
 
       const filesWithDefaultName = [
-        `./${name}/src/index.html`,
-        `./${name}/src/pages/home/home.tsx`,
-        `./${name}/src/pages/home/home.spec.ts`
+        `./${name}/src/index.html`
       ];
 
       for (const fileName of filesWithDefaultName) {
