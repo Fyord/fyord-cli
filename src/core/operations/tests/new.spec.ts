@@ -13,6 +13,7 @@ describe('NewOperation', () => {
     mockFsExtra.Setup(fse => fse.outputFile(Strings.Empty, Strings.Empty));
     mockFsExtra.Setup(fse => fse.pathExists(Strings.Empty), false);
     mockFs.Setup(fs => fs.rmdirSync(Strings.Empty, {}));
+    mockFs.Setup(fs => fs.renameSync(Strings.Empty, Strings.Empty));
     mockFs.Setup(fs => fs.readFileSync(Strings.Empty, 'utf8'), Buffer.from(Strings.Empty, 'utf8'));
     mockChildProcess.Setup(cp => cp.execSync(Strings.Empty));
 
@@ -34,6 +35,16 @@ describe('NewOperation', () => {
 
   it('should execute with args and create the appropriate files when name replacement files do NOT exist', async () => {
     const result = await classUnderTest.Execute(['app']);
+    expect(result.IsSuccess).toBeTruthy();
+  });
+
+  it('should return failed result when executed with invalid styles extension arg', async () => {
+    const result = await classUnderTest.Execute(['app', 'fake']);
+    expect(result.IsSuccess).toBeFalsy();
+  });
+
+  it('should execute with valid styles extension arg', async () => {
+    const result = await classUnderTest.Execute(['app', 'scss']);
     expect(result.IsSuccess).toBeTruthy();
   });
 

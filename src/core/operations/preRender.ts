@@ -36,9 +36,7 @@ export class PreRenderOperation implements IOperation {
     baseUrl: string | string[],
     outputPathRoot: string | string[],
     blockedResourceTypes: string[],
-    skippedResources: string[],
-    bundleScriptRegex: RegExp,
-    appRootString: string
+    skippedResources: string[]
   };
 
   private expressServerBase = 'http://localhost:7343';
@@ -60,9 +58,7 @@ export class PreRenderOperation implements IOperation {
       baseUrl: settingsService.GetSettingOrDefault(Settings.BaseUrl),
       outputPathRoot: settingsService.GetSettingOrDefault(Settings.OutputPathRoot),
       blockedResourceTypes: settingsService.GetSettingOrDefault(Settings.BlockedResourceTypes)?.trim().split(','),
-      skippedResources: settingsService.GetSettingOrDefault(Settings.SkippedResources)?.trim().split(','),
-      bundleScriptRegex: new RegExp(settingsService.GetSettingOrDefault(Settings.BundleScriptRegex)),
-      appRootString: settingsService.GetSettingOrDefault(Settings.AppRootString)
+      skippedResources: settingsService.GetSettingOrDefault(Settings.SkippedResources)?.trim().split(',')
     };
   }
 
@@ -191,16 +187,17 @@ export class PreRenderOperation implements IOperation {
     let content = await page.content();
     content = content.replace(/\r?\n|\r/g, Strings.Empty).replace(/>\s+</g, '><');
 
+    const bundleScriptRegex = /<script src="\/bundle.js(.*?)"><\/script>/;
     if (content.indexOf('<!-- fyord-static-render -->') >= 0) {
-      content = content.replace(this.config.bundleScriptRegex, Strings.Empty);
+      content = content.replace(bundleScriptRegex, Strings.Empty);
     }
 
     if (content.indexOf('<!-- fyord-dynamic-render -->') < 0) {
       await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, content);
       this.addEntrySiteMap(url);
     } else {
-      const bundleScript = (content.match(this.config.bundleScriptRegex) as Array<string>)[0];
-      const appRootString = this.config.appRootString;
+      const bundleScript = (content.match(bundleScriptRegex) as Array<string>)[0];
+      const appRootString = '<div id="app-root">';
       const closingHtml = `${appRootString}</div>${bundleScript}</body></html>`;
 
       let unRenderedVersion = content.split(appRootString)[0];
