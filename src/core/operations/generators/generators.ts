@@ -1,3 +1,4 @@
+import { Result } from 'tsbase';
 import { ComponentGenerator } from './componentGenerator';
 import { PageGenerator } from './pageGenerator';
 import { PipelineGenerator } from './pipelineGenerator';
@@ -5,7 +6,7 @@ import { SingletonGenerator } from './singletonGenerator';
 
 export interface IGenerator {
   Alias: string;
-  Generate(args: string[]): Promise<void>;
+  Generate(args: string[]): Promise<Result>;
 }
 
 export enum Generators {
