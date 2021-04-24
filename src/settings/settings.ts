@@ -12,6 +12,5 @@ export const SettingsMap = new Map<string, string>([
   [Settings.OutputPathRoot, 'public/pre-render'],
   [Settings.BlockedResourceTypes, 'image, media, font'],
   [Settings.SkippedResources, 'google'],
-  [Settings.BundleScriptRegex, '<script src="\/bundle.js(.*?)"><\/script>'],
-  [Settings.AppRootString, '<div id="app-root">']
+  [Settings.BundleScriptRegex, '<script src="\/bundle.js(.*?)"><\/script>']
 ]);

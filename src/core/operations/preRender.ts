@@ -37,8 +37,7 @@ export class PreRenderOperation implements IOperation {
     outputPathRoot: string | string[],
     blockedResourceTypes: string[],
     skippedResources: string[],
-    bundleScriptRegex: RegExp,
-    appRootString: string
+    bundleScriptRegex: RegExp
   };
 
   private expressServerBase = 'http://localhost:7343';
@@ -61,8 +60,7 @@ export class PreRenderOperation implements IOperation {
       outputPathRoot: settingsService.GetSettingOrDefault(Settings.OutputPathRoot),
       blockedResourceTypes: settingsService.GetSettingOrDefault(Settings.BlockedResourceTypes)?.trim().split(','),
       skippedResources: settingsService.GetSettingOrDefault(Settings.SkippedResources)?.trim().split(','),
-      bundleScriptRegex: new RegExp(settingsService.GetSettingOrDefault(Settings.BundleScriptRegex)),
-      appRootString: settingsService.GetSettingOrDefault(Settings.AppRootString)
+      bundleScriptRegex: new RegExp(settingsService.GetSettingOrDefault(Settings.BundleScriptRegex))
     };
   }
 
@@ -200,7 +198,7 @@ export class PreRenderOperation implements IOperation {
       this.addEntrySiteMap(url);
     } else {
       const bundleScript = (content.match(this.config.bundleScriptRegex) as Array<string>)[0];
-      const appRootString = this.config.appRootString;
+      const appRootString = '<div id="app-root">';
       const closingHtml = `${appRootString}</div>${bundleScript}</body></html>`;
 
       let unRenderedVersion = content.split(appRootString)[0];
