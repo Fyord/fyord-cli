@@ -1,6 +1,7 @@
 import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
 import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { PageTemplate, CssModuleTemplate, PageSpecTemplate } from './templates/module';
+import { ISettingsService, Settings, SettingsService } from '../../../settings/module';
 import { IGenerator } from './generators';
 
 export class PageGenerator implements IGenerator {
@@ -8,10 +9,13 @@ export class PageGenerator implements IGenerator {
 
   constructor(
     private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
-    private fs: IFileSystemAdapter = FileSystemAdapter) { }
+    private fs: IFileSystemAdapter = FileSystemAdapter,
+    private settingsService: ISettingsService = SettingsService.Instance()) { }
 
   public async Generate(args: string[]): Promise<Result> {
     return new AsyncCommand(async () => {
+      const preferredStyleExtension = this.settingsService.GetSettingOrDefault(Settings.StyleExtension);
+
       const name = args[0];
       const camelCaseName = Strings.CamelCase(name);
       const pascalCaseName = Strings.PascalCase(name);
@@ -21,7 +25,7 @@ export class PageGenerator implements IGenerator {
       const pageSpecTemplate = PageSpecTemplate(args);
 
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, pageTemplate);
-      await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.scss`, cssModuleTemplate);
+      await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.${preferredStyleExtension}`, cssModuleTemplate);
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.spec.tsx`, pageSpecTemplate);
 
       const moduleFile = './module.ts';

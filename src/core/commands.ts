@@ -44,7 +44,7 @@ export const CommandMap = new Map<Commands, Command>([
     Name: Commands.New,
     Alias: 'n',
     Description: 'Creates a new fyord app',
-    Arguments: ['Name'],
+    Arguments: ['Name', 'Style Extension (css, scss) *optional'],
     Operation: new NewOperation(),
     Example: `${CliName} ${Commands.New} NewFyordApp`,
     AdditionalDetails: {

@@ -1,4 +1,5 @@
 export enum Settings {
+  StyleExtension = 'styleExtension',
   BaseUrl = 'baseUrl',
   OutputPathRoot = 'outputPathRoot',
   BlockedResourceTypes = 'blockedResourceTypes',
@@ -6,6 +7,7 @@ export enum Settings {
 }
 
 export const SettingsMap = new Map<string, string>([
+  [Settings.StyleExtension, 'css'],
   [Settings.BaseUrl, 'http://localhost:7343'],
   [Settings.OutputPathRoot, 'public/pre-render'],
   [Settings.BlockedResourceTypes, 'image, media, font'],
