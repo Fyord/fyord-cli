@@ -79,7 +79,8 @@ export class NewOperation implements IOperation {
 
   private async updateFilesWithStyleExtension(name: string, preferredStyleExtension: StyleExtensions) {
     const fileWithStyleExtension = [
-      `./${name}/index.ts`,
+      `./${name}/src/index.ts`,
+      `./${name}/src/styles/base.${preferredStyleExtension}`,
       `./${name}/src/pages/not-found/not-found.tsx`,
       `./${name}/src/pages/welcome/welcome.tsx`
     ];
