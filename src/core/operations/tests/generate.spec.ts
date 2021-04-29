@@ -10,11 +10,13 @@ describe('GenerateOperation', () => {
 
   beforeAll(() => {
     spyOn(console, 'error');
+
     mockGenerator.Setup(g => g.Generate([]), new Result());
     GeneratorMap.set(mockGeneratorKey as Generators, mockGenerator.Object);
   });
 
   beforeEach(() => {
+    spyOn(console, 'log');
     classUnderTest = new GenerateOperation();
   });
 

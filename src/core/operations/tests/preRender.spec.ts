@@ -75,7 +75,6 @@ describe('PreRenderOperation', () => {
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Strings.Empty as Settings), Strings.Empty);
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.BlockedResourceTypes), 'blocked-resource');
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.SkippedResources), 'skipped-resource');
-    mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.BundleScriptRegex), '<script src="/bundle.js(.*?)"></script>');
     mockPuppeteer.Setup(p => p.launch(), mockBrowser.Object);
     mockBrowser.Setup(b => b.close());
     mockBrowser.Setup(b => b.newPage(), fakePage);

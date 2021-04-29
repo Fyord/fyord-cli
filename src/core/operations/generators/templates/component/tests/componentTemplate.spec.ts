@@ -1,6 +1,10 @@
 import { ComponentTemplate } from '../componentTemplate';
 
 describe('ComponentTemplate', () => {
+  beforeAll(() => {
+    spyOn(console, 'log');
+  });
+
   it('should generate template without args', () => {
     expect(ComponentTemplate()).toBeDefined();
   });

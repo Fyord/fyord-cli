@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import * as puppeteer from 'puppeteer';
 import * as expressjs from 'express';
+import * as path from 'path';
 import { AsyncCommand, Result, Strings } from 'tsbase';
 import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { ISettingsService, SettingsService, Settings } from '../../settings/module';
@@ -88,7 +89,7 @@ export class PreRenderOperation implements IOperation {
       const server = app.listen(7343, () => { });
       app.use(this.serveStatic('public'));
       app.use((_req, res) => {
-        res.status(404).redirect('/');
+        res.status(404).sendFile(path.join(process.cwd() + '/public/index.html'));
       });
 
       const browser = await this.browser.launch();
@@ -156,8 +157,7 @@ export class PreRenderOperation implements IOperation {
       const pathNames = Array<string>();
       const linkElements = (this.windowDocument || document).querySelectorAll('a');
 
-      // @ts-ignore
-      for (const element of linkElements) {
+      for (const element of Array.from(linkElements)) {
         if (element.href.indexOf((this.windowDocument || document).location.origin) >= 0) {
           pathNames.push(element.pathname);
         }
