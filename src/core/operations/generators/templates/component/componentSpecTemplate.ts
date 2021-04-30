@@ -6,7 +6,7 @@ export const ComponentSpecTemplate: Template = (args?: string[]) => {
   const camelCaseName = Strings.CamelCase(name);
   const pascalCaseName = Strings.PascalCase(name);
 
-  return `import { TestHelpers } from 'fyord';
+  return `import { TestHelpers, Asap } from 'fyord';
 import { ${pascalCaseName} } from './${camelCaseName}';
 
 describe('${pascalCaseName}', () => {
@@ -27,7 +27,7 @@ describe('${pascalCaseName}', () => {
   it('should have appropriate behavior', async () => {
     document.body.innerHTML = await classUnderTest.Render();
 
-    setTimeout(() => {
+    Asap(() => {
       // fire any attached events
     });
 

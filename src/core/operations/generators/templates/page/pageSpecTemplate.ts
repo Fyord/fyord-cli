@@ -6,7 +6,7 @@ export const PageSpecTemplate: Template = (args?: string[]) => {
   const camelCaseName = Strings.CamelCase(name);
   const pascalCaseName = Strings.PascalCase(name);
 
-  return `import { RenderModes, Route, TestHelpers } from 'fyord';
+  return `import { RenderModes, Route, TestHelpers, Asap } from 'fyord';
 import { ${pascalCaseName} } from './${camelCaseName}';
 
 describe('${pascalCaseName}', () => {
@@ -44,7 +44,7 @@ describe('${pascalCaseName}', () => {
   it('should have appropriate behavior', async () => {
     document.body.innerHTML = await classUnderTest.Render();
 
-    setTimeout(() => {
+    Asap(() => {
       // fire any attached events
     });
 
