@@ -129,9 +129,13 @@ export class PreRenderOperation implements IOperation {
   }
 
   private addEntrySiteMap(loc): void {
+    const twoDigit = (value: number) => `${value < 10 ? '0' : ''}${value}`;
+    const currentDate = new Date();
+    const lastmodDate = `${currentDate.getFullYear()}-${twoDigit(currentDate.getMonth() + 1)}-${twoDigit(currentDate.getDate())}`;
+
     this.siteMap.push({
       loc: loc.replace(this.expressServerBase, this.config.baseUrl),
-      lastmod: (new Date().toLocaleDateString().replace(/\//g, '-')),
+      lastmod: lastmodDate,
       changefreq: 'weekly',
       priority: 1
     });
