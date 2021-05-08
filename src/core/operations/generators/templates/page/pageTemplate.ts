@@ -16,7 +16,7 @@ import styles from './${camelCaseName}.module.${preferredStyleExtension}';
 
 export class ${pascalCaseName} extends Page {
   Title = '${pascalCaseName}';
-  Route = (route: Route) => route.path === '/${camelCaseName}';
+  Route = async (route: Route) => route.path === '/${camelCaseName}';
 
   Template = async () => {
     return <div class={styles.container}>Hello ${name} page!</div>;
