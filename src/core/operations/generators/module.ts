@@ -4,3 +4,4 @@ export * from './updateModuleExports';
 export * from './componentGenerator';
 export * from './pageGenerator';
 export * from './singletonGenerator';
+export * from './debugGenerator';

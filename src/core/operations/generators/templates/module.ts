@@ -1,5 +1,6 @@
 export * from './template';
 export * from './ccsModuleTemplate';
+export * from './debugTemplate';
 
 export * from './component/componentTemplate';
 export * from './component/componentSpecTemplate';
