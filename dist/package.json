@@ -15,7 +15,7 @@
     "cli"
   ],
   "license": "MIT",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "A companion CLI to the Fyord framework",
   "private": false,
   "main": "./index.js",
