@@ -10,7 +10,8 @@ export const CustomElementTemplate: Template = (
   const name = args?.[0] || Strings.Empty;
   const selector = args?.[1] || Strings.Empty;
 
-  return `import styles from './${Strings.CamelCase(name)}.module.${preferredStyleExtension}';
+  return `import { JsxRenderer, ParseJsx } from 'fyord';
+import styles from './${Strings.CamelCase(name)}.module.${preferredStyleExtension}';
 
 export class ${Strings.PascalCase(name)} extends HTMLElement {
   private static attributes = {};
@@ -29,7 +30,7 @@ export class ${Strings.PascalCase(name)} extends HTMLElement {
   }
 
   render() {
-    this.innerHTML = /*html*/ \`<div class="\${styles.container}">Hello ${name} element!</div>\`;
+    this.innerHTML = JsxRenderer.RenderJsx(<div class={styles.container}>Hello ${name} element!</div>);
 
     try {
       // bind events handlers / do other post render stuff here

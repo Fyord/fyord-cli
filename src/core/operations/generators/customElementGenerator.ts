@@ -31,7 +31,7 @@ Example usage: fyord g ce className selector-name`);
       const cssModuleTemplate = CssModuleTemplate(args);
       const customElementSpecTemplate = CustomElementSpecTemplate(args);
 
-      await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.ts`, customElementTemplate);
+      await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, customElementTemplate);
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.${preferredStyleExtension}`, cssModuleTemplate);
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.spec.ts`, customElementSpecTemplate);
 
