@@ -29,7 +29,7 @@ export class ${Strings.PascalCase(name)} extends HTMLElement {
   }
 
   render() {
-    this.innerHTML = /*html*/ \`<div class="\${styles.container}"></div>\`;
+    this.innerHTML = /*html*/ \`<div class="\${styles.container}">Hello ${name} element!</div>\`;
 
     try {
       // bind events handlers / do other post render stuff here
