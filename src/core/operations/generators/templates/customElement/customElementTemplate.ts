@@ -34,6 +34,7 @@ export class ${Strings.PascalCase(name)} extends HTMLElement {
     try {
       // bind events handlers / do other post render stuff here
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log(error);
     }
   }
