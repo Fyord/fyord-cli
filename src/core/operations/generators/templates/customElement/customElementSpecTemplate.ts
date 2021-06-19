@@ -30,7 +30,6 @@ describe('${pascalCaseName}', () => {
     const content = componentUnderTest.innerHTML;
 
     expect(content).toBeDefined();
-    expect(content).toContain('dark');
   });
 
   it('should init with attributes', async () => {
