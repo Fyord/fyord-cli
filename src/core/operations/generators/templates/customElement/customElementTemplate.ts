@@ -14,30 +14,27 @@ export const CustomElementTemplate: Template = (
 import styles from './${Strings.CamelCase(name)}.module.${preferredStyleExtension}';
 
 export class ${Strings.PascalCase(name)} extends HTMLElement {
-  private static attributes = {};
+  private static attributes: Record<string, string> = {};
 
   constructor() {
     super();
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.render();
   }
 
-  static get observedAttributes() { return Object.keys(this.attributes); }
-  attributeChangedCallback() {
+  static get observedAttributes(): Array<string> { return Object.keys(this.attributes); }
+  attributeChangedCallback(): void {
     this.render();
   }
 
-  render() {
+  render(): void {
     this.innerHTML = JsxRenderer.RenderJsx(<div class={styles.container}>Hello ${name} element!</div>);
+  }
 
-    try {
-      // bind events handlers / do other post render stuff here
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    }
+  disconnectedCallback(): void {
+    // cleanup any resources opened by the element here
   }
 }
 
