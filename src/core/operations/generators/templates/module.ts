@@ -13,3 +13,6 @@ export * from './singleton/singletonSpecTemplate';
 
 export * from './pipeline/azurePipeline';
 export * from './pipeline/githubAction';
+
+export * from './customElement/customElementTemplate';
+export * from './customElement/customElementSpecTemplate';

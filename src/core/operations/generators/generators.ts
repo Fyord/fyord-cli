@@ -1,5 +1,6 @@
 import { Result } from 'tsbase';
 import { ComponentGenerator } from './componentGenerator';
+import { CustomElementGenerator } from './customElementGenerator';
 import { DebugGenerator } from './debugGenerator';
 import { PageGenerator } from './pageGenerator';
 import { PipelineGenerator } from './pipelineGenerator';
@@ -15,7 +16,8 @@ export enum Generators {
   Page = 'page',
   Singleton = 'singleton',
   Pipeline = 'pipeline',
-  Debug = 'debug'
+  Debug = 'debug',
+  CustomElement = 'customElement'
 }
 
 export const GeneratorMap = new Map<Generators, IGenerator>([
@@ -23,5 +25,6 @@ export const GeneratorMap = new Map<Generators, IGenerator>([
   [Generators.Page, new PageGenerator()],
   [Generators.Singleton, new SingletonGenerator()],
   [Generators.Pipeline, new PipelineGenerator()],
-  [Generators.Debug, new DebugGenerator()]
+  [Generators.Debug, new DebugGenerator()],
+  [Generators.CustomElement, new CustomElementGenerator()]
 ]);

@@ -1,5 +1,5 @@
-import { ISettingsService, Settings, SettingsService } from '../../../../../settings/module';
 import { Strings } from 'tsbase';
+import { ISettingsService, Settings, SettingsService } from '../../../../../settings/module';
 import { Template } from '../template';
 
 export const ComponentTemplate: Template = (

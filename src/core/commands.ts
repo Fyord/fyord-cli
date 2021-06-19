@@ -59,7 +59,14 @@ export const CommandMap = new Map<Commands, Command>([
     Operation: new GenerateOperation(),
     Example: `${CliName} ${Commands.Generate} component myComponent`,
     AdditionalDetails: {
-      'Available Types': ['component (c)', 'page (p)', 'singleton (s)', 'pipeline (pl)'],
+      'Available Types': [
+        'component (c)',
+        'page (p)',
+        'singleton (s)',
+        'pipeline (pl)',
+        'debug config (db)',
+        'custom element (ce) *requires "name" and "selector" args'
+      ],
       'Casing convention': 'PascalCase will be used in declarations and camelCase will be used in file names'
     }
   }],
