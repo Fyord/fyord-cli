@@ -1,6 +1,6 @@
 import { Template } from '../template';
 
-export const WebComponentSpecTemplate: Template = () => {
+export const WebComponentStylesTemplate: Template = () => {
   return `export const styles = /*html*/ \`<style>
   .container {
     display: block;

@@ -64,8 +64,9 @@ export const CommandMap = new Map<Commands, Command>([
         'page (p)',
         'singleton (s)',
         'pipeline (pl)',
-        'debug config (db)',
-        'custom element (ce) *requires "name" and "selector" args'
+        'debug (db)',
+        'customElement (ce)',
+        'webComponent (wc)'
       ],
       'Casing convention': 'PascalCase will be used in declarations and camelCase will be used in file names'
     }

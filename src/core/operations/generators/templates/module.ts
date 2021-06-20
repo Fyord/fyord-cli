@@ -16,3 +16,7 @@ export * from './pipeline/githubAction';
 
 export * from './customElement/customElementTemplate';
 export * from './customElement/customElementSpecTemplate';
+
+export * from './webComponent/webComponentSpecTemplate';
+export * from './webComponent/webComponentStylesTemplate';
+export * from './webComponent/webComponentTemplate';

@@ -5,6 +5,7 @@ import { DebugGenerator } from './debugGenerator';
 import { PageGenerator } from './pageGenerator';
 import { PipelineGenerator } from './pipelineGenerator';
 import { SingletonGenerator } from './singletonGenerator';
+import { WebComponentGenerator } from './webComponentGenerator';
 
 export interface IGenerator {
   Alias: string;
@@ -17,7 +18,8 @@ export enum Generators {
   Singleton = 'singleton',
   Pipeline = 'pipeline',
   Debug = 'debug',
-  CustomElement = 'customElement'
+  CustomElement = 'customElement',
+  WebComponent = 'webComponent'
 }
 
 export const GeneratorMap = new Map<Generators, IGenerator>([
@@ -26,5 +28,6 @@ export const GeneratorMap = new Map<Generators, IGenerator>([
   [Generators.Singleton, new SingletonGenerator()],
   [Generators.Pipeline, new PipelineGenerator()],
   [Generators.Debug, new DebugGenerator()],
-  [Generators.CustomElement, new CustomElementGenerator()]
+  [Generators.CustomElement, new CustomElementGenerator()],
+  [Generators.WebComponent, new WebComponentGenerator()]
 ]);
