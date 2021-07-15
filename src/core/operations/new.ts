@@ -1,8 +1,9 @@
 import * as child_process from 'child_process';
 import * as filesystem from 'fs';
-import { AsyncCommand, Result } from 'tsbase';
 import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
+import { AsyncCommand, Result } from 'tsbase';
 import { IOperation } from './operation';
+import { UpdateTextInFile, updateTextInFile as _updateTextInFile } from '../utility/updateTextInFile';
 
 const defaultName = 'fyord app';
 enum StyleExtensions {
@@ -14,7 +15,8 @@ export class NewOperation implements IOperation {
   constructor(
     private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
     private fs: any = filesystem,
-    private cp: any = child_process) { }
+    private cp: any = child_process,
+    private updateTextInFile: UpdateTextInFile = _updateTextInFile) { }
 
   public async Execute(args: string[]): Promise<Result> {
     return await new AsyncCommand(async () => {
@@ -51,14 +53,6 @@ export class NewOperation implements IOperation {
 
   private async initializeSettingsWithPreferredFileExtension(name: string, preferredStyleExtension: StyleExtensions) {
     await this.fse.outputFile(`./${name}/fyord.json`, `{"settings":[{"key":"styleExtension","value":"${preferredStyleExtension}"}]}`);
-  }
-
-  private async updateTextInFile(fileName: string, oldText: string, newText: string): Promise<void> {
-    if (await this.fse.pathExists(fileName)) {
-      let fileContents = this.fs.readFileSync(fileName, 'utf8').toString();
-      fileContents = fileContents.replace(oldText, newText);
-      await this.fse.outputFile(fileName, fileContents);
-    }
   }
 
   private updateStyleFileExtensions(name: string, preferredStyleExtension: StyleExtensions) {

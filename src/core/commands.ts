@@ -1,7 +1,7 @@
 import { CliName } from './constants';
 import {
   ConfigureOperation, GenerateOperation, HelpOperation, IOperation,
-  NewOperation, PreRenderOperation, VersionOperation
+  NewOperation, PreRenderOperation, VersionOperation, WasmInit
 } from './operations/module';
 
 export enum Commands {
@@ -10,7 +10,8 @@ export enum Commands {
   PreRender = 'prerender',
   Generate = 'generate',
   New = 'new',
-  Configure = 'configure'
+  Configure = 'configure',
+  WasmInit = 'wasmInit'
 }
 
 export type Command = {
@@ -87,6 +88,17 @@ export const CommandMap = new Map<Commands, Command>([
     Example: `${CliName} ${Commands.PreRender}`,
     AdditionalDetails: {
       'Utilizes config file if available': './fyord.json'
+    }
+  }],
+  [Commands.WasmInit, {
+    Name: Commands.WasmInit,
+    Alias: 'wi',
+    Description: 'Prepares a fyord project for wasm development using rust',
+    Arguments: [],
+    Operation: new WasmInit(),
+    Example: `${CliName} ${Commands.WasmInit}`,
+    AdditionalDetails: {
+      'Run this command in the same directory as': './package.json'
     }
   }]
 ]);
