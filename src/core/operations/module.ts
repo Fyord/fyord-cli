@@ -5,3 +5,4 @@ export * from './generate';
 export * from './version';
 export * from './configure';
 export * from './new';
+export * from './wasmInit/wasmInit';
