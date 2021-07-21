@@ -3,7 +3,7 @@ import { AsyncCommand, Result } from 'tsbase';
 import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { IOperation } from '../operation';
 import { UpdateTextInFile, updateTextInFile as _updateTextInFile } from '../../utility/updateTextInFile';
-import { CargoTomlTemplate, GreetTemplate, LibTemplate, ModTemplate, UtilsTemplate } from './templates/module';
+import { RustTsTemplate, CargoTomlTemplate, GreetTemplate, LibTemplate, ModTemplate, UtilsTemplate } from './templates/module';
 
 type Replacement = {
   filePath: string;
@@ -62,10 +62,16 @@ pkg`
       },
       {
         filePath: './src/index.ts',
+        oldValue: 'import { defaultLayout } from \'./layouts\';',
+        newValue: `import { defaultLayout } from './layouts';
+import { RustWindowKey, Rust } from './rust/rust';`
+      },
+      {
+        filePath: './src/index.ts',
         oldValue: '})();',
         newValue: `
-  const wasm = await import('../pkg/rust');
-  wasm.greet();
+  window[RustWindowKey] = await import('../pkg/rust');
+  Rust()?.greet();
 })();`
       }
     ];
@@ -81,7 +87,8 @@ pkg`
       { filePath: './src/lib.rs', template: LibTemplate },
       { filePath: './src/rust/greet.rs', template: GreetTemplate },
       { filePath: './src/rust/mod.rs', template: ModTemplate },
-      { filePath: './src/rust/utils.rs', template: UtilsTemplate }
+      { filePath: './src/rust/utils.rs', template: UtilsTemplate },
+      { filePath: './src/rust/rust.ts', template: RustTsTemplate }
     ];
 
     for (const file of filesToCreate) {

@@ -17,6 +17,7 @@ describe('WasmInit', () => {
   ): Promise<void> => { updateTextInFileCalledCount++; };
 
   beforeEach(() => {
+    updateTextInFileCalledCount = 0;
     mockFsExtra.Setup(fse => fse.outputFile(Strings.Empty, Strings.Empty));
     mockChildProcess.Setup(cp => cp.execSync(Strings.Empty));
 
@@ -38,6 +39,7 @@ describe('WasmInit', () => {
 
     expect(result.IsSuccess).toBeFalsy();
     mockFsExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), Times.Never);
+    expect(updateTextInFileCalledCount).toEqual(0);
   });
 
   it('should succeed when executed in a directory WITH a package.json', async () => {
@@ -46,6 +48,7 @@ describe('WasmInit', () => {
     const result = await classUnderTest.Execute();
 
     expect(result.IsSuccess).toBeTruthy();
-    mockFsExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), 5);
+    mockFsExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), 6);
+    expect(updateTextInFileCalledCount).toEqual(6);
   });
 });
