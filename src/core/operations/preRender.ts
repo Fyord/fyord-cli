@@ -119,12 +119,11 @@ export class PreRenderOperation implements IOperation {
       console.log(`Completed crawling ${this.crawledPages.length} pages${this.errors.length > 0 ? ' with errors' : Strings.Empty}.`);
 
       await browser.close();
+      server.close();
 
       if (this.errors.length) {
         throw new Error(this.errors.map(e => e.error).join('\n'));
       }
-
-      server.close();
     }).Execute();
   }
 
