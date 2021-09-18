@@ -30,7 +30,6 @@ class FakePage implements IPage {
     this.gotoCalls.push({ url, options });
   }
   async evaluate(callback: () => string[]): Promise<string[]> {
-    console.log('got here');
     return callback();
   }
   async content(): Promise<string> {

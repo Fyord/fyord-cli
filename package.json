@@ -28,7 +28,7 @@
     "ts-jest": "^26.4.4",
     "tsbase": "^3.4.0",
     "tslib": "^1.13.0",
-    "tsmockit": "^1.0.5",
+    "tsmockit": "^1.1.0",
     "typescript": "^4.2.3",
     "inquirer": "^8.0.0",
     "puppeteer": "^1.20.0",

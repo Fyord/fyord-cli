@@ -34,8 +34,8 @@ export interface IPuppeteer {
 
 export class PreRenderOperation implements IOperation {
   private config: {
-    baseUrl: string | string[],
-    outputPathRoot: string | string[],
+    baseUrl: string,
+    outputPathRoot: string,
     blockedResourceTypes: string[],
     skippedResources: string[]
   };
@@ -44,7 +44,12 @@ export class PreRenderOperation implements IOperation {
   private pagesToCrawl = ['/'];
   private crawledPages = new Array<string>();
   private errors = new Array<{ page: string, error: string }>();
-  private siteMap = new Array();
+  private siteMap = new Array<{
+    loc: string,
+    lastmod: string,
+    changefreq: string,
+    priority: number
+  }>();
 
   // eslint-disable-next-line max-params
   constructor(
@@ -108,7 +113,7 @@ export class PreRenderOperation implements IOperation {
             }
           });
         } catch (error) {
-          this.errors.push({ page: pageToCrawl, error: error.toString() });
+          this.errors.push({ page: pageToCrawl, error: (error as Error).toString() });
         }
       }
 
@@ -127,7 +132,7 @@ export class PreRenderOperation implements IOperation {
     }).Execute();
   }
 
-  private addEntrySiteMap(loc): void {
+  private addEntrySiteMap(loc: string): void {
     const twoDigit = (value: number) => `${value < 10 ? '0' : ''}${value}`;
     const currentDate = new Date();
     const lastmodDate = `${currentDate.getFullYear()}-${twoDigit(currentDate.getMonth() + 1)}-${twoDigit(currentDate.getDate())}`;
