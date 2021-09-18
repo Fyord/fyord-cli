@@ -1,6 +1,6 @@
 import { CliName } from './constants';
 import {
-  ConfigureOperation, GenerateOperation, HelpOperation, IOperation,
+  ConfigureOperation, DocsOperation, GenerateOperation, HelpOperation, IOperation,
   NewOperation, PreRenderOperation, VersionOperation, WasmInit
 } from './operations/module';
 
@@ -11,7 +11,8 @@ export enum Commands {
   Generate = 'generate',
   New = 'new',
   Configure = 'configure',
-  WasmInit = 'wasmInit'
+  WasmInit = 'wasmInit',
+  Docs = 'docs'
 }
 
 export type Command = {
@@ -101,5 +102,13 @@ export const CommandMap = new Map<Commands, Command>([
     AdditionalDetails: {
       'Run this command in the same directory as': './package.json'
     }
+  }],
+  [Commands.Docs, {
+    Name: Commands.Docs,
+    Alias: 'd',
+    Description: 'Opens the user\'s default browser to the fyord.dev docs page pre-filled with their query.',
+    Arguments: ['Query - topic of interest to search in the fyord docs'],
+    Operation: new DocsOperation(),
+    Example: `${CliName} ${Commands.Docs} sass`
   }]
 ]);
