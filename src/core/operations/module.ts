@@ -6,3 +6,4 @@ export * from './version';
 export * from './configure';
 export * from './new';
 export * from './wasmInit/wasmInit';
+export * from './docs';
