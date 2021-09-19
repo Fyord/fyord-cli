@@ -29,7 +29,7 @@ export interface IBrowser {
 }
 
 export interface IPuppeteer {
-  launch(): Promise<IBrowser>;
+  launch(options: any): Promise<IBrowser>;
 }
 
 export class PreRenderOperation implements IOperation {
@@ -97,7 +97,7 @@ export class PreRenderOperation implements IOperation {
         res.status(404).sendFile(path.join(process.cwd() + '/public/index.html'));
       });
 
-      const browser = await this.browser.launch();
+      const browser = await this.browser.launch({ args: ['--disable-gpu'] });
       const page = await browser.newPage();
       await this.excludeMediaAndIntegrations(page);
 
