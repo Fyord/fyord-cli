@@ -97,7 +97,7 @@ export class PreRenderOperation implements IOperation {
         res.status(404).sendFile(path.join(process.cwd() + '/public/index.html'));
       });
 
-      const browser = await this.browser.launch({ args: ['--disable-gpu'] });
+      const browser = await this.browser.launch({ args: ['--disable-gpu', '--disable-dev-shm-usage'] });
       const page = await browser.newPage();
       await this.excludeMediaAndIntegrations(page);
 
