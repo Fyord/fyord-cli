@@ -1,12 +1,17 @@
 import { Mock } from 'tsmockit';
 import { IFileSystemAdapter, Strings } from 'tsbase';
-import { IFileSystemExtraAdapter } from '../../../../fileSystem/module';
+import { setupSettingsServiceForTesting } from '../../../../tests/setupSettingsServiceForTesting.spec';
+import { IFileSystemExtraAdapter } from '../../../../fileSystem/fileSystemExtraAdapter';
 import { CustomElementGenerator } from '../customElementGenerator';
 
 describe('CustomElementGenerator', () => {
   let classUnderTest: CustomElementGenerator;
   const mockFileSystemExtra = new Mock<IFileSystemExtraAdapter>();
   const mockFileSystem = new Mock<IFileSystemAdapter>();
+
+  beforeAll(() => {
+    setupSettingsServiceForTesting();
+  });
 
   beforeEach(() => {
     spyOn(console, 'log');

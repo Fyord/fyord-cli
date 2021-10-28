@@ -74,7 +74,7 @@ describe('PreRenderOperation', () => {
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Strings.Empty as Settings), Strings.Empty);
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.BlockedResourceTypes), 'blocked-resource');
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.SkippedResources), 'skipped-resource');
-    mockPuppeteer.Setup(p => p.launch(), mockBrowser.Object);
+    mockPuppeteer.Setup(p => p.launch({}), mockBrowser.Object);
     mockBrowser.Setup(b => b.close());
     mockBrowser.Setup(b => b.newPage(), fakePage);
     const origin = 'testOrigin';
@@ -102,7 +102,6 @@ describe('PreRenderOperation', () => {
 
   it('should construct', () => {
     expect(classUnderTest).toBeDefined();
-    expect(new PreRenderOperation()).toBeDefined();
   });
 
   const minimumFilesOutput = 4;

@@ -1,8 +1,10 @@
+import { setupSettingsServiceForTesting } from '../../../../../../tests/setupSettingsServiceForTesting.spec';
 import { ComponentTemplate } from '../componentTemplate';
 
 describe('ComponentTemplate', () => {
   beforeAll(() => {
     spyOn(console, 'log');
+    setupSettingsServiceForTesting();
   });
 
   it('should generate template without args', () => {
