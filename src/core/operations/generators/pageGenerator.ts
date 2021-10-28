@@ -2,7 +2,7 @@ import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
 import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { PageTemplate, CssModuleTemplate, PageSpecTemplate } from './templates/module';
 import { ISettingsService, Settings, SettingsService } from '../../../settings/module';
-import { IGenerator } from './generators';
+import { IGenerator } from './iGenerator';
 
 export class PageGenerator implements IGenerator {
   public Alias = 'p';

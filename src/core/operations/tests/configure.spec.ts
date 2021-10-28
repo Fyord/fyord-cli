@@ -16,6 +16,7 @@ describe('ConfigureOperation', () => {
     mockRepository.Setup(r => r.push({ key: Strings.Empty, value: Strings.Empty }));
     mockRepository.Setup(r => r.indexOf({}, 0));
     mockRepository.Setup(r => r.SaveChanges());
+    mockRepository.Setup(r => r.splice(0, 1));
 
     classUnderTest = new ConfigureOperation(mockRepository.Object, mockInquirer.Object);
   });

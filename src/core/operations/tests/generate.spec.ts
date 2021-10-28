@@ -1,7 +1,18 @@
-import { Result } from 'tsbase';
+import { IPersister, Result } from 'tsbase';
 import { Mock, Times } from 'tsmockit';
+import { SettingsService } from '../../../settings/settingsService';
+
+(() => {
+  SettingsService.Destroy();
+  const mockPersister = new Mock<IPersister<any>>();
+  mockPersister.Setup(p => p.Retrieve(), []);
+  mockPersister.Setup(p => p['filePath'], '');
+  SettingsService.Instance(mockPersister.Object);
+})();
+
 import { GenerateOperation } from '../generate';
-import { GeneratorMap, Generators, IGenerator } from '../generators/generators';
+import { GeneratorMap, Generators } from '../generators/generators';
+import { IGenerator } from '../generators/iGenerator';
 
 describe('GenerateOperation', () => {
   let classUnderTest: GenerateOperation;

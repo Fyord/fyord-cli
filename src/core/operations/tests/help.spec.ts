@@ -1,5 +1,15 @@
-import { Strings } from 'tsbase';
+import { IPersister, Strings } from 'tsbase';
 import { Mock, Times } from 'tsmockit';
+import { SettingsService } from '../../../settings/settingsService';
+
+(() => {
+  SettingsService.Destroy();
+  const mockPersister = new Mock<IPersister<any>>();
+  mockPersister.Setup(p => p.Retrieve(), []);
+  mockPersister.Setup(p => p['filePath'], '');
+  SettingsService.Instance(mockPersister.Object);
+})();
+
 import { CommandMap, Commands } from '../../commands';
 import { HelpOperation } from '../help';
 

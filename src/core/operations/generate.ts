@@ -1,6 +1,7 @@
 import { AsyncCommand, Result } from 'tsbase';
 import { GetAliasableValueFromMap } from '../utility/getAliasableValueFromMap';
-import { GeneratorMap, IGenerator } from './generators/module';
+import { IGenerator } from './generators/iGenerator';
+import { GeneratorMap } from './generators/module';
 import { IOperation } from './operation';
 
 export class GenerateOperation implements IOperation {

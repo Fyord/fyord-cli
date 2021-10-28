@@ -1,16 +1,11 @@
-import { Result } from 'tsbase';
 import { ComponentGenerator } from './componentGenerator';
 import { CustomElementGenerator } from './customElementGenerator';
 import { DebugGenerator } from './debugGenerator';
+import { IGenerator } from './iGenerator';
 import { PageGenerator } from './pageGenerator';
 import { PipelineGenerator } from './pipelineGenerator';
 import { SingletonGenerator } from './singletonGenerator';
 import { WebComponentGenerator } from './webComponentGenerator';
-
-export interface IGenerator {
-  Alias: string;
-  Generate(args: string[]): Promise<Result>;
-}
 
 export enum Generators {
   Component = 'component',

@@ -1,7 +1,17 @@
-import { Strings } from 'tsbase';
+import { IPersister, Strings } from 'tsbase';
 import { Mock } from 'tsmockit';
 import { IFileSystemExtraAdapter } from '../../../../fileSystem/module';
-import { DebugGenerator } from '../module';
+import { SettingsService } from '../../../../settings/settingsService';
+
+(() => {
+  SettingsService.Destroy();
+  const mockPersister = new Mock<IPersister<any>>();
+  mockPersister.Setup(p => p.Retrieve(), []);
+  mockPersister.Setup(p => p['filePath'], '');
+  SettingsService.Instance(mockPersister.Object);
+})();
+
+import { DebugGenerator } from '../debugGenerator';
 
 describe('DebugGenerator', () => {
   let classUnderTest: DebugGenerator;

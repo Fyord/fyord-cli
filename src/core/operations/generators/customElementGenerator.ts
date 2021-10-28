@@ -1,7 +1,7 @@
 import { Settings, ISettingsService, SettingsService } from '../../../settings/module';
 import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
 import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
-import { IGenerator } from './generators';
+import { IGenerator } from './iGenerator';
 import { CssModuleTemplate, CustomElementSpecTemplate, CustomElementTemplate } from './templates/module';
 import { updateModuleExports } from './updateModuleExports';
 

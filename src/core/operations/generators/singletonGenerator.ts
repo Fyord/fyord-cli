@@ -1,7 +1,7 @@
 import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
 import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { SingletonSpecTemplate, SingletonTemplate } from './templates/module';
-import { IGenerator } from './generators';
+import { IGenerator } from './iGenerator';
 import { updateModuleExports } from './updateModuleExports';
 
 export class SingletonGenerator implements IGenerator {
