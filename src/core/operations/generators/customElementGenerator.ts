@@ -27,7 +27,7 @@ Example usage: fyord g ce className selector-name`);
 
       const camelCaseName = Strings.CamelCase(name);
 
-      const customElementTemplate = CustomElementTemplate(args);
+      const customElementTemplate = CustomElementTemplate(args, this.settingsService);
       const cssModuleTemplate = CssModuleTemplate(args);
       const customElementSpecTemplate = CustomElementSpecTemplate(args);
 

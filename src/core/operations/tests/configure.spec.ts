@@ -4,7 +4,7 @@ import { ConfigureOperation, IInquirer } from '../configure';
 
 describe('ConfigureOperation', () => {
   let classUnderTest: ConfigureOperation;
-  const mockRepository = new Mock<Repository<KeyValue>>();
+  const mockRepository = new Mock<Repository<Record<string, string>>>();
   const mockInquirer = new Mock<IInquirer>();
 
   beforeEach(() => {
@@ -14,6 +14,7 @@ describe('ConfigureOperation', () => {
 
     mockRepository.Setup(r => r.find(() => true), null);
     mockRepository.Setup(r => r.push({ key: Strings.Empty, value: Strings.Empty }));
+    mockRepository.Setup(r => r.indexOf({}, 0));
     mockRepository.Setup(r => r.SaveChanges());
 
     classUnderTest = new ConfigureOperation(mockRepository.Object, mockInquirer.Object);
@@ -53,7 +54,6 @@ describe('ConfigureOperation', () => {
 
     expect(result.IsSuccess).toBeTruthy();
     mockRepository.Verify(r => r.find(s => s.key === 'baseUrl'), Times.Once);
-    // mockRepository.Verify(r => r.Remove({ key: Strings.Empty, value: Strings.Empty }), Times.Once);
     mockRepository.Verify(r => r.SaveChanges(), Times.Once);
     mockRepository.Verify(r => r.push({ key: Strings.Empty, value: Strings.Empty }), Times.Never);
   });

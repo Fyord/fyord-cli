@@ -1,6 +1,5 @@
 import { Result } from 'tsbase';
 import { Mock, Times } from 'tsmockit';
-import { setupSettingsServiceForTesting } from '../../../tests/setupSettingsServiceForTesting.spec';
 import { GenerateOperation } from '../generate';
 import { GeneratorMap, Generators, IGenerator } from '../generators/generators';
 
@@ -11,7 +10,6 @@ describe('GenerateOperation', () => {
 
   beforeAll(() => {
     spyOn(console, 'error');
-    setupSettingsServiceForTesting();
 
     mockGenerator.Setup(g => g.Generate([]), new Result());
     GeneratorMap.set(mockGeneratorKey as Generators, mockGenerator.Object);

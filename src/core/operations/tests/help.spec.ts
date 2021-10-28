@@ -1,16 +1,11 @@
 import { Strings } from 'tsbase';
 import { Mock, Times } from 'tsmockit';
-import { setupSettingsServiceForTesting } from '../../../tests/setupSettingsServiceForTesting.spec';
 import { CommandMap, Commands } from '../../commands';
 import { HelpOperation } from '../help';
 
 describe('HelpOperation', () => {
   let classUnderTest: HelpOperation;
   const mockConsole = new Mock<Console>();
-
-  beforeAll(() => {
-    setupSettingsServiceForTesting();
-  });
 
   beforeEach(() => {
     spyOn(console, 'log');
