@@ -1,6 +1,7 @@
 import { Mock } from 'tsmockit';
 import { Settings } from '../../../../../../settings/settings';
 import { ISettingsService } from '../../../../../../settings/settingsService';
+import { setupSettingsServiceForTests } from '../../../../../../setupSettingsServiceForTests';
 import { CustomElementTemplate } from '../customElementTemplate';
 
 describe('CustomElementTemplate', () => {
@@ -9,6 +10,11 @@ describe('CustomElementTemplate', () => {
 
   beforeAll(() => {
     spyOn(console, 'log');
+  });
+
+  it('should run with default args', () => {
+    setupSettingsServiceForTests();
+    expect(CustomElementTemplate()).toBeDefined();
   });
 
   it('should generate template without args', () => {

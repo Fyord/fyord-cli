@@ -1,6 +1,7 @@
 import { Mock } from 'tsmockit';
 import { Settings } from '../../../../../../settings/settings';
 import { ISettingsService } from '../../../../../../settings/settingsService';
+import { setupSettingsServiceForTests } from '../../../../../../setupSettingsServiceForTests';
 import { PageTemplate } from '../pageTemplate';
 
 describe('PageTemplate', () => {
@@ -9,6 +10,11 @@ describe('PageTemplate', () => {
 
   beforeAll(() => {
     spyOn(console, 'log');
+  });
+
+  it('should run with default args', () => {
+    setupSettingsServiceForTests();
+    expect(PageTemplate()).toBeDefined();
   });
 
   it('should generate template without args', () => {
