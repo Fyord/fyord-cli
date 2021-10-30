@@ -2,7 +2,7 @@ import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
 import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { PageTemplate, CssModuleTemplate, PageSpecTemplate } from './templates/module';
 import { ISettingsService, Settings, SettingsService } from '../../../settings/module';
-import { IGenerator } from './generators';
+import { IGenerator } from './iGenerator';
 
 export class PageGenerator implements IGenerator {
   public Alias = 'p';
@@ -20,9 +20,9 @@ export class PageGenerator implements IGenerator {
       const camelCaseName = Strings.CamelCase(name);
       const pascalCaseName = Strings.PascalCase(name);
 
-      const pageTemplate = PageTemplate(args);
-      const cssModuleTemplate = CssModuleTemplate(args);
-      const pageSpecTemplate = PageSpecTemplate(args);
+      const pageTemplate = PageTemplate(args, this.settingsService);
+      const cssModuleTemplate = CssModuleTemplate(args, this.settingsService);
+      const pageSpecTemplate = PageSpecTemplate(args, this.settingsService);
 
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, pageTemplate);
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.${preferredStyleExtension}`, cssModuleTemplate);

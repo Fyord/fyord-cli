@@ -1,7 +1,11 @@
 import { Strings } from 'tsbase';
 import { Mock } from 'tsmockit';
 import { IFileSystemExtraAdapter } from '../../../../fileSystem/module';
-import { DebugGenerator } from '../module';
+import { setupSettingsServiceForTests } from '../../../../setupSettingsServiceForTests';
+
+setupSettingsServiceForTests();
+
+import { DebugGenerator } from '../debugGenerator';
 
 describe('DebugGenerator', () => {
   let classUnderTest: DebugGenerator;

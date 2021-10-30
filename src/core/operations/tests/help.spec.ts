@@ -1,5 +1,9 @@
 import { Strings } from 'tsbase';
 import { Mock, Times } from 'tsmockit';
+import { setupSettingsServiceForTests } from '../../../setupSettingsServiceForTests';
+
+setupSettingsServiceForTests();
+
 import { CommandMap, Commands } from '../../commands';
 import { HelpOperation } from '../help';
 

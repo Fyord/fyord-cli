@@ -1,7 +1,12 @@
 import { Result } from 'tsbase';
 import { Mock, Times } from 'tsmockit';
+import { setupSettingsServiceForTests } from '../../../setupSettingsServiceForTests';
+
+setupSettingsServiceForTests();
+
 import { GenerateOperation } from '../generate';
-import { GeneratorMap, Generators, IGenerator } from '../generators/generators';
+import { GeneratorMap, Generators } from '../generators/generators';
+import { IGenerator } from '../generators/iGenerator';
 
 describe('GenerateOperation', () => {
   let classUnderTest: GenerateOperation;

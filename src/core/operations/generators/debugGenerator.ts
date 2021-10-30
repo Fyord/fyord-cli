@@ -1,6 +1,6 @@
 import { AsyncCommand, Result } from 'tsbase';
 import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
-import { IGenerator } from './generators';
+import { IGenerator } from './iGenerator';
 import { DebugTemplate } from './templates/debugTemplate';
 
 export class DebugGenerator implements IGenerator {

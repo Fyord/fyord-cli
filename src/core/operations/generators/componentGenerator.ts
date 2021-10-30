@@ -1,7 +1,7 @@
 import { Settings, ISettingsService, SettingsService } from '../../../settings/module';
 import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
 import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
-import { IGenerator } from './generators';
+import { IGenerator } from './iGenerator';
 import { ComponentSpecTemplate, ComponentTemplate, CssModuleTemplate } from './templates/module';
 import { updateModuleExports } from './updateModuleExports';
 
@@ -20,9 +20,9 @@ export class ComponentGenerator implements IGenerator {
       const name = args[0];
       const camelCaseName = Strings.CamelCase(name);
 
-      const componentTemplate = ComponentTemplate(args);
-      const cssModuleTemplate = CssModuleTemplate(args);
-      const componentSpecTemplate = ComponentSpecTemplate(args);
+      const componentTemplate = ComponentTemplate(args, this.settingsService);
+      const cssModuleTemplate = CssModuleTemplate(args, this.settingsService);
+      const componentSpecTemplate = ComponentSpecTemplate(args, this.settingsService);
 
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, componentTemplate);
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.${preferredStyleExtension}`, cssModuleTemplate);

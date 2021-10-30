@@ -1,18 +1,18 @@
-import { FSPersister, IPersister, KeyValue, Repository, Strings } from 'tsbase';
+import { FSPersister, IPersister, Repository, Strings } from 'tsbase';
 import { FileSystemAdapter } from '../fileSystem/fileSystemAdapter';
 import { PathResolver } from '../fileSystem/pathResolver';
 import { Settings, SettingsMap } from './settings';
 import { GetConfigurationFileName } from './getConfigurationFileName';
 
 export interface ISettingsService {
-  Repository: Repository<KeyValue>;
+  Repository: Repository<Record<string, string>>;
   GetSettingOrDefault(settingName: Settings): string;
 }
 
 export class SettingsService implements ISettingsService {
   private static instance: ISettingsService | null = null;
   public static Instance(
-    persister: IPersister = new FSPersister(
+    persister: IPersister<Record<string, string>> = new FSPersister(
       './',
       GetConfigurationFileName(),
       'settings',
@@ -23,15 +23,15 @@ export class SettingsService implements ISettingsService {
   }
   public static Destroy(): void { this.instance = null; }
 
-  public Repository: Repository<KeyValue>;
+  public Repository: Repository<Record<string, string>>;
 
-  private constructor(persister: IPersister) {
+  private constructor(persister: IPersister<Record<string, string>>) {
     console.log(`Using configuration file at ${persister['filePath']}`);
-    this.Repository = new Repository<KeyValue>(persister);
+    this.Repository = Repository.New(persister);
   }
 
   public GetSettingOrDefault(settingName: Settings): string {
-    const setting = this.Repository.Find(s => s.key === settingName);
+    const setting = this.Repository.find(s => s.key === settingName);
     return setting && (typeof setting.value === 'object' || !Strings.IsEmptyOrWhiteSpace(setting.value)) ?
       setting.value :
       SettingsMap.get(settingName) || Strings.Empty;
