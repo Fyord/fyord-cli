@@ -13,7 +13,7 @@
     "build": "tsc --sourceMap",
     "build-prod": "tsc",
     "publish": "npm publish dist",
-    "unlink": "npm unlink --no-save fyord && npm unlink",
+    "unlink": "npm unlink --no-save fyord && npm unlink fyord",
     "start": "npm run unlink && npm run build-prod && npm link"
   },
   "devDependencies": {
@@ -30,12 +30,12 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "tsbase": "^4.0.5",
-    "puppeteer": "^1.20.0",
-    "tslib": "^2.3.1",
     "express": "^4.17.1",
     "fs-extra": "^9.1.0",
-    "inquirer": "^8.1.5"
+    "inquirer": "^8.1.5",
+    "puppeteer": "^1.20.0",
+    "tsbase": "^4.0.5",
+    "tslib": "^2.3.1"
   },
   "bin": {
     "fyord": "./dist/index.js"
