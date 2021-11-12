@@ -1,5 +1,6 @@
 import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
 import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { AddImportEntryTip } from './constants';
 import { IGenerator } from './iGenerator';
 import { WebComponentSpecTemplate, WebComponentStylesTemplate, WebComponentTemplate } from './templates/module';
 import { updateModuleExports } from './updateModuleExports';
@@ -32,6 +33,8 @@ Example usage: fyord g wc className selector-name`);
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.spec.ts`, webComponentSpecTemplate);
 
       await updateModuleExports(this.fse, this.fs, camelCaseName);
+
+      console.log(AddImportEntryTip('wc', selector));
     }).Execute();
   }
 }

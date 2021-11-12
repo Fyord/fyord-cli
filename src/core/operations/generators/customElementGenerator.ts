@@ -4,6 +4,7 @@ import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } fr
 import { IGenerator } from './iGenerator';
 import { CssModuleTemplate, CustomElementSpecTemplate, CustomElementTemplate } from './templates/module';
 import { updateModuleExports } from './updateModuleExports';
+import { AddImportEntryTip } from './constants';
 
 export class CustomElementGenerator implements IGenerator {
   public Alias = 'ce';
@@ -36,6 +37,8 @@ Example usage: fyord g ce className selector-name`);
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.spec.ts`, customElementSpecTemplate);
 
       await updateModuleExports(this.fse, this.fs, camelCaseName);
+
+      console.log(AddImportEntryTip('ce', selector));
     }).Execute();
   }
 }
