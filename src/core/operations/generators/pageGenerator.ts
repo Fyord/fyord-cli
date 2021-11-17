@@ -21,8 +21,8 @@ export class PageGenerator implements IGenerator {
       const pascalCaseName = Strings.PascalCase(name);
 
       const pageTemplate = PageTemplate(args, this.settingsService);
-      const cssModuleTemplate = CssModuleTemplate(args, this.settingsService);
-      const pageSpecTemplate = PageSpecTemplate(args, this.settingsService);
+      const cssModuleTemplate = CssModuleTemplate();
+      const pageSpecTemplate = PageSpecTemplate(args);
 
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, pageTemplate);
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.${preferredStyleExtension}`, cssModuleTemplate);

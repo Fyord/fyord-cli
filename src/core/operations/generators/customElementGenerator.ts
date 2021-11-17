@@ -29,7 +29,7 @@ Example usage: fyord g ce className selector-name`);
       const camelCaseName = Strings.CamelCase(name);
 
       const customElementTemplate = CustomElementTemplate(args, this.settingsService);
-      const cssModuleTemplate = CssModuleTemplate(args);
+      const cssModuleTemplate = CssModuleTemplate();
       const customElementSpecTemplate = CustomElementSpecTemplate(args);
 
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, customElementTemplate);

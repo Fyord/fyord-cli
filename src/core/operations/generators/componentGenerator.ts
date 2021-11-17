@@ -21,8 +21,8 @@ export class ComponentGenerator implements IGenerator {
       const camelCaseName = Strings.CamelCase(name);
 
       const componentTemplate = ComponentTemplate(args, this.settingsService);
-      const cssModuleTemplate = CssModuleTemplate(args, this.settingsService);
-      const componentSpecTemplate = ComponentSpecTemplate(args, this.settingsService);
+      const cssModuleTemplate = CssModuleTemplate();
+      const componentSpecTemplate = ComponentSpecTemplate(args);
 
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, componentTemplate);
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.module.${preferredStyleExtension}`, cssModuleTemplate);

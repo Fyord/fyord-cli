@@ -25,7 +25,7 @@ Example usage: fyord g wc className selector-name`);
       const camelCaseName = Strings.CamelCase(name);
 
       const webComponentTemplate = WebComponentTemplate(args);
-      const webComponentStylesTemplate = WebComponentStylesTemplate(args);
+      const webComponentStylesTemplate = WebComponentStylesTemplate();
       const webComponentSpecTemplate = WebComponentSpecTemplate(args);
 
       await this.fse.outputFile(`./${camelCaseName}/${camelCaseName}.tsx`, webComponentTemplate);
