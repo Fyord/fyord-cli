@@ -195,7 +195,7 @@ export class PreRenderOperation implements IOperation {
     let content = await page.content();
     content = content.replace(/\r?\n|\r/g, Strings.Empty).replace(/>\s+</g, '><');
 
-    const bundleScriptRegex = /<script src="\/bundle.js(.*?)"><\/script>/;
+    const bundleScriptRegex = /<script src="bundle.js?(?:.*)"><\/script>/;
     if (content.indexOf('<!-- fyord-static-render -->') >= 0) {
       content = content.replace(bundleScriptRegex, Strings.Empty);
     }
@@ -204,9 +204,9 @@ export class PreRenderOperation implements IOperation {
       await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, content);
       this.addEntrySiteMap(url);
     } else {
-      const bundleScript = (content.match(bundleScriptRegex) as Array<string>)[0];
+      const bundleScript: string | undefined = (content.match(bundleScriptRegex) || [])[0];
       const appRootString = '<div id="app-root">';
-      const closingHtml = `${appRootString}</div>${bundleScript}</body></html>`;
+      const closingHtml = `${appRootString}</div>${bundleScript || Strings.Empty}</body></html>`;
 
       let unRenderedVersion = content.split(appRootString)[0];
       unRenderedVersion = `${unRenderedVersion}${closingHtml}`;
