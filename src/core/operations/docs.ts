@@ -4,7 +4,7 @@ import { IOperation } from './operation';
 
 export class DocsOperation implements IOperation {
   constructor(
-    private cp: any = child_process
+    private cp = child_process
   ) { }
 
   public async Execute(args: string[]): Promise<Result> {
