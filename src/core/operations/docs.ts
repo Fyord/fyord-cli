@@ -4,7 +4,8 @@ import { IOperation } from './operation';
 
 export class DocsOperation implements IOperation {
   constructor(
-    private cp = child_process
+    private cp = child_process,
+    private mainConsole = console
   ) { }
 
   public async Execute(args: string[]): Promise<Result> {
@@ -13,20 +14,15 @@ export class DocsOperation implements IOperation {
       const query = encodeURIComponent(args.join(' '));
       const docsPageUrl = `${docsPageOrigin}${query}`;
 
-      await this.cp.exec(`open ${docsPageUrl}`, async stderr => {
-        if (stderr) {
-          this.executeUsingStartCommand(docsPageUrl);
-        }
+      const executeUsingCommand = (command: 'open' | 'start', errorHandler: () => void) =>
+        this.cp.exec(`${command} ${docsPageUrl}`, stderr => stderr && errorHandler());
+
+      executeUsingCommand('open', async () => {
+        executeUsingCommand('start', () => {
+          this.mainConsole.error(`Unable to open system browser via terminal using "open" or "start" command(s).
+You may still visit the docs page via this url: ${docsPageUrl}`);
+        });
       });
     }).Execute();
-  }
-
-  private async executeUsingStartCommand(docsPageUrl: string): Promise<void> {
-    await this.cp.exec(`start ${docsPageUrl}`, stderr => {
-      if (stderr) {
-        throw new Error(`Unable to open system browser via terminal using "open" or "start" command(s).
-You may still visit the docs page directly at: ${docsPageUrl}`);
-      }
-    });
   }
 }
