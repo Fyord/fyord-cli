@@ -187,33 +187,36 @@ export class PreRenderOperation implements IOperation {
     this.crawledPages.push(route);
     const pageName = (route === Strings.Empty || route === '/') ? 'index' : route;
     const url = `${this.expressServerBase}${route}`;
+    this.addEntrySiteMap(url);
 
     console.log(`| ========= Attempting to crawl: ${pageName} ========= |`);
 
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    if (!/.*\..*/.test(route)) {
+      await page.goto(url, { waitUntil: 'networkidle2' });
 
-    let content = await page.content();
-    content = content.replace(/\r?\n|\r/g, Strings.Empty).replace(/>\s+</g, '><');
+      let content = await page.content();
+      content = content.replace(/\r?\n|\r/g, Strings.Empty).replace(/>\s+</g, '><');
 
-    const bundleScriptRegex = /<script src="bundle.js?(?:.*)"><\/script>/;
-    if (content.indexOf('<!-- fyord-static-render -->') >= 0) {
-      content = content.replace(bundleScriptRegex, Strings.Empty);
+      const bundleScriptRegex = /<script src="bundle.js?(?:.*)"><\/script>/;
+      if (content.indexOf('<!-- fyord-static-render -->') >= 0) {
+        content = content.replace(bundleScriptRegex, Strings.Empty);
+      }
+
+      if (content.indexOf('<!-- fyord-dynamic-render -->') < 0) {
+        await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, content);
+      } else {
+        const bundleScript: string | undefined = (content.match(bundleScriptRegex) || [])[0];
+        const appRootString = '<div id="app-root">';
+        const closingHtml = `${appRootString}</div>${bundleScript || Strings.Empty}</body></html>`;
+
+        let unRenderedVersion = content.split(appRootString)[0];
+        unRenderedVersion = `${unRenderedVersion}${closingHtml}`;
+        await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, unRenderedVersion);
+      }
+
+      return await this.getPathsForLinksOnPage(page);
     }
 
-    if (content.indexOf('<!-- fyord-dynamic-render -->') < 0) {
-      await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, content);
-      this.addEntrySiteMap(url);
-    } else {
-      const bundleScript: string | undefined = (content.match(bundleScriptRegex) || [])[0];
-      const appRootString = '<div id="app-root">';
-      const closingHtml = `${appRootString}</div>${bundleScript || Strings.Empty}</body></html>`;
-
-      let unRenderedVersion = content.split(appRootString)[0];
-      unRenderedVersion = `${unRenderedVersion}${closingHtml}`;
-      await this.fse.outputFile(`${this.config.outputPathRoot}/${pageName}.html`, unRenderedVersion);
-      this.addEntrySiteMap(url);
-    }
-
-    return await this.getPathsForLinksOnPage(page);
+    return [];
   }
 }
