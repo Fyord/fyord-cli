@@ -9,10 +9,19 @@ export const ComponentTemplate: Template = (
 
   const name = args?.[0] || Strings.Empty;
 
-  return `import { Component, ParseJsx } from 'fyord';
+  return `import { Component, ParseJsx, Jsx } from 'fyord';
 import styles from './${Strings.CamelCase(name)}.module.${preferredStyleExtension}';
 
+type Props = {}
+
 export class ${Strings.PascalCase(name)} extends Component {
+  constructor(
+    private props: Props = {},
+    private children?: Jsx
+  ) {
+    super();
+  }
+
   Template = async () => <div class={styles.container}>Hello ${name} component!</div>;
 }
 `;
