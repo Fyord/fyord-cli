@@ -17,7 +17,17 @@ describe('ComponentTemplate', () => {
     expect(ComponentTemplate(undefined, mockSettingsService.Object)).toBeDefined();
   });
 
-  it('should generate template with args', () => {
-    expect(ComponentTemplate(['name'], mockSettingsService.Object)).toBeDefined();
+  it('should generate template with just name arg', () => {
+    const templateValue = ComponentTemplate(['name'], mockSettingsService.Object);
+
+    expect(templateValue).toBeDefined();
+    expect(templateValue.includes('Props')).toBeFalsy();
+  });
+
+  it('should generate template with name and props args', () => {
+    const templateValue = ComponentTemplate(['name', 'props'], mockSettingsService.Object);
+
+    expect(templateValue).toBeDefined();
+    expect(templateValue.includes('Props')).toBeTruthy();
   });
 });
