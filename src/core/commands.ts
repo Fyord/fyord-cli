@@ -62,7 +62,7 @@ export const CommandMap = new Map<Commands, Command>([
     Example: `${CliName} ${Commands.Generate} component myComponent`,
     AdditionalDetails: {
       'Available Types': [
-        'component (c)',
+        'component (c) | add "props" arg to generate with props and children',
         'page (p)',
         'singleton (s)',
         'pipeline (pl)',
