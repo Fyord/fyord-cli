@@ -1,8 +1,8 @@
 import { FSPersister, IPersister, Repository, Strings } from 'tsbase';
-import { FileSystemAdapter } from '../fileSystem/fileSystemAdapter';
 import { PathResolver } from '../fileSystem/pathResolver';
 import { Settings, SettingsMap } from './settings';
 import { GetConfigurationFileName } from './getConfigurationFileName';
+import { DIModule } from '../diModule';
 
 export interface ISettingsService {
   Repository: Repository<Record<string, string>>;
@@ -17,7 +17,7 @@ export class SettingsService implements ISettingsService {
       GetConfigurationFileName(),
       'settings',
       PathResolver,
-      FileSystemAdapter)
+      DIModule.FileSystemAdapter)
   ): ISettingsService {
     return this.instance || (this.instance = new SettingsService(persister));
   }

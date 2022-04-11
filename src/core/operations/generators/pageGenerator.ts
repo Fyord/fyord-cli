@@ -1,15 +1,16 @@
 import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
-import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { PageTemplate, CssModuleTemplate, PageSpecTemplate } from './templates/module';
 import { ISettingsService, Settings, SettingsService } from '../../../settings/module';
 import { IGenerator } from './iGenerator';
+import { DIModule } from '../../../diModule';
 
 export class PageGenerator implements IGenerator {
   public Alias = 'p';
 
   constructor(
-    private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
-    private fs: IFileSystemAdapter = FileSystemAdapter,
+    private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
+    private fs: IFileSystemAdapter = DIModule.FileSystemAdapter,
     private settingsService: ISettingsService = SettingsService.Instance()) { }
 
   public async Generate(args: string[]): Promise<Result> {

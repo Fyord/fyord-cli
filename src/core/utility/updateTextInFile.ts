@@ -1,5 +1,6 @@
 import * as filesystem from 'fs';
-import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
+import { DIModule } from '../../diModule';
+import { IFileSystemExtraAdapter } from '../../fileSystem/module';
 
 export type UpdateTextInFile = (
   fileName: string,
@@ -13,7 +14,7 @@ export const updateTextInFile: UpdateTextInFile = async (
   fileName: string,
   oldText: string,
   newText: string,
-  fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
+  fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
   fs: any = filesystem
 ): Promise<void> => {
   if (await fse.pathExists(fileName)) {

@@ -1,5 +1,6 @@
 import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
-import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { DIModule } from '../../../diModule';
+import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { AddImportEntryTip } from './constants';
 import { IGenerator } from './iGenerator';
 import { WebComponentSpecTemplate, WebComponentStylesTemplate, WebComponentTemplate } from './templates/module';
@@ -9,8 +10,8 @@ export class WebComponentGenerator implements IGenerator {
   public Alias = 'wc';
 
   constructor(
-    private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
-    private fs: IFileSystemAdapter = FileSystemAdapter) { }
+    private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
+    private fs: IFileSystemAdapter = DIModule.FileSystemAdapter) { }
 
   public async Generate(args: string[]): Promise<Result> {
     return new AsyncCommand(async () => {
