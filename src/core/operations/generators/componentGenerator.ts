@@ -1,6 +1,7 @@
 import { Settings, ISettingsService, SettingsService } from '../../../settings/module';
 import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
-import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { DIModule } from '../../../diModule';
 import { IGenerator } from './iGenerator';
 import { ComponentSpecTemplate, ComponentTemplate, CssModuleTemplate } from './templates/module';
 import { updateModuleExports } from './updateModuleExports';
@@ -9,8 +10,8 @@ export class ComponentGenerator implements IGenerator {
   public Alias = 'c';
 
   constructor(
-    private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
-    private fs: IFileSystemAdapter = FileSystemAdapter,
+    private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
+    private fs: IFileSystemAdapter = DIModule.FileSystemAdapter,
     private settingsService: ISettingsService = SettingsService.Instance()) { }
 
   public async Generate(args: string[]): Promise<Result> {

@@ -3,8 +3,9 @@ import * as puppeteer from 'puppeteer';
 import * as expressjs from 'express';
 import * as path from 'path';
 import { AsyncCommand, Result, Strings } from 'tsbase';
-import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
+import { IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { ISettingsService, SettingsService, Settings } from '../../settings/module';
+import { DIModule } from '../../diModule';
 import { IOperation } from './operation';
 
 export interface IPageRequest {
@@ -56,7 +57,7 @@ export class PreRenderOperation implements IOperation {
     private createExpressApp = expressjs,
     private serveStatic = expressjs.static,
     private browser: IPuppeteer = puppeteer,
-    private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
+    private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     settingsService: ISettingsService = SettingsService.Instance(),
     private windowDocument?: Document
   ) {

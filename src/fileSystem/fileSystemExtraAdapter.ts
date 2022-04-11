@@ -6,3 +6,9 @@ export interface IFileSystemExtraAdapter {
 }
 
 export const FileSystemExtraAdapter: IFileSystemExtraAdapter = fse;
+
+export const FileSystemExtraDryRunAdapter: IFileSystemExtraAdapter = {
+  pathExists: FileSystemExtraAdapter.pathExists,
+  outputFile: async (filePath: string, _content: string) =>
+    console.log(`Write file - ${filePath}`)
+};

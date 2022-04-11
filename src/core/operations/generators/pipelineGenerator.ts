@@ -1,5 +1,6 @@
 import { AsyncCommand, Result } from 'tsbase';
-import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { DIModule } from '../../../diModule';
+import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { IGenerator } from './iGenerator';
 import { AzurePipelineTemplate, GitHubActionTemplate } from './templates/module';
 
@@ -13,7 +14,7 @@ const properFormatExample = '(format example: fyord generate pipeline github mas
 export class PipelineGenerator implements IGenerator {
   public Alias = 'pl';
 
-  constructor(private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter) { }
+  constructor(private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter) { }
 
   public async Generate(args: string[]): Promise<Result> {
     return new AsyncCommand(async () => {

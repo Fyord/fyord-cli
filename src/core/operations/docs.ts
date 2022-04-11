@@ -1,10 +1,10 @@
-import * as child_process from 'child_process';
 import { AsyncCommand, Result } from 'tsbase';
+import { DIModule } from '../../diModule';
 import { IOperation } from './operation';
 
 export class DocsOperation implements IOperation {
   constructor(
-    private cp = child_process
+    private cp = DIModule.ChildProcess
   ) { }
 
   public async Execute(args: string[]): Promise<Result> {

@@ -1,8 +1,8 @@
 import { IFileSystemAdapter } from 'tsbase';
-import { FileSystemAdapter } from '../fileSystem/fileSystemAdapter';
 import { ConfigurationFileName } from '../core/constants';
+import { DIModule } from '../diModule';
 
-export const GetConfigurationFileName = (fs: IFileSystemAdapter = FileSystemAdapter): string => {
+export const GetConfigurationFileName = (fs: IFileSystemAdapter = DIModule.FileSystemAdapter): string => {
   let depth = 0;
   let relativePath = './';
 

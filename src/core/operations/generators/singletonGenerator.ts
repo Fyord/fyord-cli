@@ -1,5 +1,6 @@
 import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
-import { FileSystemAdapter, FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { DIModule } from '../../../diModule';
 import { SingletonSpecTemplate, SingletonTemplate } from './templates/module';
 import { IGenerator } from './iGenerator';
 import { updateModuleExports } from './updateModuleExports';
@@ -8,8 +9,8 @@ export class SingletonGenerator implements IGenerator {
   public Alias = 's';
 
   constructor(
-    private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
-    private fs: IFileSystemAdapter = FileSystemAdapter) { }
+    private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
+    private fs: IFileSystemAdapter = DIModule.FileSystemAdapter) { }
 
   public async Generate(args: string[]): Promise<Result> {
     return new AsyncCommand(async () => {

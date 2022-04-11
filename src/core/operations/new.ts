@@ -1,9 +1,8 @@
-import * as child_process from 'child_process';
-import * as filesystem from 'fs';
-import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { AsyncCommand, Result } from 'tsbase';
-import { IOperation } from './operation';
+import { IFileSystemExtraAdapter } from '../../fileSystem/module';
 import { UpdateTextInFile, updateTextInFile as _updateTextInFile } from '../utility/updateTextInFile';
+import { DIModule } from '../../diModule';
+import { IOperation } from './operation';
 
 const defaultName = 'fyord app';
 enum StyleExtensions {
@@ -13,9 +12,9 @@ enum StyleExtensions {
 
 export class NewOperation implements IOperation {
   constructor(
-    private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
-    private fs: any = filesystem,
-    private cp: any = child_process,
+    private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
+    private fs: any = DIModule.FileSystemAdapter,
+    private cp: any = DIModule.ChildProcess,
     private updateTextInFile: UpdateTextInFile = _updateTextInFile) { }
 
   public async Execute(args: string[]): Promise<Result> {

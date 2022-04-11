@@ -1,7 +1,7 @@
-import * as child_process from 'child_process';
 import { AsyncCommand, Result } from 'tsbase';
-import { FileSystemExtraAdapter, IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { IOperation } from '../operation';
+import { DIModule } from '../../../diModule';
 import { UpdateTextInFile, updateTextInFile as _updateTextInFile } from '../../utility/updateTextInFile';
 import { RustTsTemplate, CargoTomlTemplate, GreetTemplate, LibTemplate, ModTemplate, UtilsTemplate } from './templates/module';
 
@@ -15,8 +15,8 @@ const packageJsonPath = './package.json';
 
 export class WasmInit implements IOperation {
   constructor(
-    private fse: IFileSystemExtraAdapter = FileSystemExtraAdapter,
-    private cp: any = child_process,
+    private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
+    private cp: any = DIModule.ChildProcess,
     private updateTextInFile: UpdateTextInFile = _updateTextInFile) { }
 
   public Execute(): Promise<Result> {
