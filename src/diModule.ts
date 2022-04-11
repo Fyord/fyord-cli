@@ -15,7 +15,7 @@ const liveModule: DIModuleDependencies = {
   ChildProcess: child_process
 };
 
-const dryRunModule: DIModuleDependencies = {
+export const dryRunModule: DIModuleDependencies = {
   FileSystemAdapter: FileSystemDryRunAdapter,
   FileSystemExtraAdapter: FileSystemExtraDryRunAdapter,
   ChildProcess: {
@@ -50,8 +50,6 @@ export class DIModule {
   }
 }
 
-const switchToDryRunModule = () => DIModule.DryRunMode = true;
-
 if (process.argv.includes(dryRunKey)) {
-  switchToDryRunModule();
+  DIModule.DryRunMode = true;
 }
