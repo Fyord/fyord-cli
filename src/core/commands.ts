@@ -1,7 +1,7 @@
 import { CliName } from './constants';
 import {
   ConfigureOperation, DocsOperation, GenerateOperation, HelpOperation, IOperation,
-  NewOperation, PreRenderOperation, VersionOperation, WasmInit
+  NewOperation, PreRenderOperation, VersionOperation, WasmInit, BuildStaticOperation
 } from './operations/module';
 
 export enum Commands {
@@ -12,7 +12,8 @@ export enum Commands {
   New = 'new',
   Configure = 'configure',
   WasmInit = 'wasmInit',
-  Docs = 'docs'
+  Docs = 'docs',
+  BuildStatic = 'buildstatic'
 }
 
 export type Command = {
@@ -110,5 +111,16 @@ export const CommandMap = new Map<Commands, Command>([
     Arguments: ['Query - topic of interest to search in the fyord docs'],
     Operation: new DocsOperation(),
     Example: `${CliName} ${Commands.Docs} sass`
+  }],
+  [Commands.BuildStatic, {
+    Name: Commands.BuildStatic,
+    Alias: 'bs',
+    Description: 'Builds resources following the "static" resources convention.',
+    Arguments: [],
+    Operation: new BuildStaticOperation(),
+    Example: `${CliName} ${Commands.BuildStatic}`,
+    AdditionalDetails: {
+      'See docs for more info': 'fyord docs **** OR https://fyord.dev/docs/***'
+    }
   }]
 ]);
