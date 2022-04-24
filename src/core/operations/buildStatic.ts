@@ -10,7 +10,7 @@ export class BuildStaticOperation implements IOperation {
 
   public async Execute(_args: string[]): Promise<Result> {
     return await new AsyncCommand(async () => {
-      this.cp.execSync('npm run build-static');
+      this.cp.execSync('./node_modules/typescript/bin/tsc -p ./static/tsconfig.json');
     }).Execute();
   }
 }
