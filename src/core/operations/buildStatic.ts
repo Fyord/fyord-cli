@@ -1,9 +1,12 @@
-import { AsyncCommand, Result } from 'tsbase';
+import 'isomorphic-fetch';
+import { AsyncCommand, HttpClient, Result } from 'tsbase';
 import * as child_process from 'child_process';
 import { DIModule } from '../../diModule';
 import { IOperation } from './operation';
 
-const staticTsConfig = './static/tsconfig.json';
+const staticDir = './static';
+const publicDir = './public';
+const staticTsConfig = `${staticDir}/tsconfig.json`;
 
 export class BuildStaticOperation implements IOperation {
   constructor(
@@ -15,7 +18,35 @@ export class BuildStaticOperation implements IOperation {
   public async Execute(_args: string[]): Promise<Result> {
     return await new AsyncCommand(async () => {
       if (await this.fse.pathExists(staticTsConfig)) {
+        const processDirectory = process.cwd();
         this.cp.execSync(`./node_modules/typescript/bin/tsc -p ${staticTsConfig}`);
+
+        const functionModules = this.getAllFiles(staticDir)
+          .filter(f => f.endsWith('js'))
+          .map(f => f.replace('.', processDirectory));
+
+        for (const module of functionModules) {
+          const { default: func } = await import(module);
+
+          if (typeof func === 'function') {
+            console.log(`Executing: ${module.replace(`${processDirectory}/static/`, '')}`);
+
+            const httpClient = new HttpClient({}, fetch);
+            const result = await func(httpClient);
+
+            const moduleNameParts = module.split('.');
+            const name = moduleNameParts[0]
+              .replace(processDirectory, '')
+              .replace(staticDir.replace('.', ''), publicDir.replace('.', ''));
+            const extension = moduleNameParts[1];
+            const outputFileName = `.${name}.${extension}`;
+
+            console.log(`Outputting: ${outputFileName}`);
+            this.fse.outputFile(outputFileName, result);
+          } else {
+            throw new Error(`${module} does not export a "default" function.`);
+          }
+        }
       } else {
         console.warn(`"${staticTsConfig}" not found. Aborting operation.`);
       }
