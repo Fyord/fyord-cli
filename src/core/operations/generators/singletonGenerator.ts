@@ -1,4 +1,4 @@
-import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
+import { AsyncCommand, Result, Strings } from 'tsbase';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { DIModule } from '../../../diModule';
 import { SingletonSpecTemplate, SingletonTemplate } from './templates/module';
@@ -10,7 +10,7 @@ export class SingletonGenerator implements IGenerator {
 
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
-    private fs: IFileSystemAdapter = DIModule.FileSystemAdapter) { }
+    private fs = DIModule.FileSystemAdapter) { }
 
   public async Generate(args: string[]): Promise<Result> {
     return new AsyncCommand(async () => {

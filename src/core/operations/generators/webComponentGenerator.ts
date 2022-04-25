@@ -1,4 +1,4 @@
-import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
+import { AsyncCommand, Result, Strings } from 'tsbase';
 import { DIModule } from '../../../diModule';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { AddImportEntryTip } from './constants';
@@ -11,7 +11,7 @@ export class WebComponentGenerator implements IGenerator {
 
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
-    private fs: IFileSystemAdapter = DIModule.FileSystemAdapter) { }
+    private fs = DIModule.FileSystemAdapter) { }
 
   public async Generate(args: string[]): Promise<Result> {
     return new AsyncCommand(async () => {

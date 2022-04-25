@@ -120,6 +120,7 @@ export const CommandMap = new Map<Commands, Command>([
     Operation: new BuildStaticOperation(),
     Example: `${CliName} ${Commands.BuildStatic}`,
     AdditionalDetails: {
+      'Requires': ['npm dependencies installed - uses typescript binary at ./node_modules/typescript/bin/tsc'],
       'See docs for more info': 'fyord docs **** OR https://fyord.dev/docs/***'
     }
   }]
