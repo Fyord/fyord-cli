@@ -3,7 +3,7 @@ import { AsyncCommand, HttpClient, Result } from 'tsbase';
 import * as child_process from 'child_process';
 import { DIModule } from '../../diModule';
 import { IOperation } from './operation';
-import { Directories } from '../../enums/module';
+import { Directories, Errors } from '../../enums/module';
 
 const publicDir = './public';
 const staticTsConfig = `${Directories.Static}/tsconfig.json`;
@@ -48,7 +48,8 @@ export class BuildStaticOperation implements IOperation {
           }
         }
       } else {
-        console.warn(`"${staticTsConfig}" not found. Aborting operation.`);
+        console.warn(`"${staticTsConfig}" not found. Aborting operation.
+${Errors.NotInRoot}`);
       }
     }).Execute();
   }

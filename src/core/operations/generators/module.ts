@@ -7,3 +7,4 @@ export * from './pageGenerator';
 export * from './singletonGenerator';
 export * from './debugGenerator';
 export * from './customElementGenerator';
+export * from './staticFunctionGenerator';

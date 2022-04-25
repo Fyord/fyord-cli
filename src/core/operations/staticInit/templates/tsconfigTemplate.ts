@@ -1,4 +1,5 @@
 export const TsconfigTemplate = `{
+  "exclude": ["**/*.spec.ts"],
 	"compilerOptions": {
     "lib": ["es2015", "dom"],
     "outDir": "",

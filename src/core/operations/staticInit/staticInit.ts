@@ -21,8 +21,9 @@ export class StaticInit implements IOperation {
       const staticAlreadyExists = await this.fse.pathExists(Directories.Static);
       if (inRootDir && !staticAlreadyExists) {
         this.fse.outputFile(staticTsConfig, TsconfigTemplate);
-        this.updateTextInFile(Directories.RootPackage, '"build": "', '"build": "fyord bs && ');
-        this.updateTextInFile(Directories.RootPackage, '"start": "', '"start": "fyord bs && ');
+        await this.updateTextInFile(Directories.RootPackage, '"build": "', '"build": "fyord bs && ');
+        await this.updateTextInFile(Directories.RootPackage, '"start": "', '"start": "fyord bs && ');
+        await this.updateTextInFile('./.gitignore', 'public', 'public\nstatic/**/*.js');
       } else {
         throw new Error(
           inRootDir ? 'This project is already ran the "staticInit" command.' : Errors.NotInRoot
