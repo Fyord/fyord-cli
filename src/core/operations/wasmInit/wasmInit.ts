@@ -1,4 +1,5 @@
 import { AsyncCommand, Result } from 'tsbase';
+import { Directories, Errors } from '../../../enums/module';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { IOperation } from '../operation';
 import { DIModule } from '../../../diModule';
@@ -11,8 +12,6 @@ type Replacement = {
   newValue: string;
 };
 
-const packageJsonPath = './package.json';
-
 export class WasmInit implements IOperation {
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
@@ -21,14 +20,14 @@ export class WasmInit implements IOperation {
 
   public Execute(): Promise<Result> {
     return new AsyncCommand(async () => {
-      if (await this.fse.pathExists(packageJsonPath)) {
+      if (await this.fse.pathExists(Directories.RootPackage)) {
         await this.updateFilesWhereChangesNeeded();
         await this.scaffoldNewFiles();
 
         this.cp.execSync('npm i');
         this.cp.execSync('npm run build');
       } else {
-        throw new Error('This command must be executed at the root of a fyord project (directory with package.json).');
+        throw new Error(Errors.NotInRoot);
       }
     }).Execute();
   }
@@ -41,7 +40,7 @@ target
 pkg`
       },
       {
-        filePath: packageJsonPath,
+        filePath: Directories.RootPackage,
         oldValue: `"build": "webpack --config webpack.prod.js",
     "start": "webpack serve --config webpack.dev.js",`,
         newValue: ` "build-rust": "wasm-pack build",
@@ -49,7 +48,7 @@ pkg`
     "start": "npm run build-rust && webpack serve --config webpack.dev.js",`
       },
       {
-        filePath: packageJsonPath,
+        filePath: Directories.RootPackage,
         oldValue: '"devDependencies": {',
         newValue: `"devDependencies": {
     "wasm-pack": "^0.10.0",`

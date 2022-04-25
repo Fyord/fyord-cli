@@ -1,7 +1,8 @@
 import { CliName } from './constants';
 import {
   ConfigureOperation, DocsOperation, GenerateOperation, HelpOperation, IOperation,
-  NewOperation, PreRenderOperation, VersionOperation, WasmInit, BuildStaticOperation
+  NewOperation, PreRenderOperation, VersionOperation, WasmInit, BuildStaticOperation,
+  StaticInit
 } from './operations/module';
 
 export enum Commands {
@@ -13,7 +14,8 @@ export enum Commands {
   Configure = 'configure',
   WasmInit = 'wasmInit',
   Docs = 'docs',
-  BuildStatic = 'buildstatic'
+  StaticInit = 'staticInit',
+  BuildStatic = 'buildStatic'
 }
 
 export type Command = {
@@ -111,6 +113,17 @@ export const CommandMap = new Map<Commands, Command>([
     Arguments: ['Query - topic of interest to search in the fyord docs'],
     Operation: new DocsOperation(),
     Example: `${CliName} ${Commands.Docs} sass`
+  }],
+  [Commands.StaticInit, {
+    Name: Commands.StaticInit,
+    Alias: 'si',
+    Description: 'Prepares a fyord project for the static build-time assets convention.',
+    Arguments: [],
+    Operation: new StaticInit(),
+    Example: `${CliName} ${Commands.StaticInit}`,
+    AdditionalDetails: {
+      'Run this command in the same directory as': './package.json'
+    }
   }],
   [Commands.BuildStatic, {
     Name: Commands.BuildStatic,

@@ -7,4 +7,5 @@ export * from './configure';
 export * from './new';
 export * from './wasmInit/wasmInit';
 export * from './docs';
+export * from './staticInit/staticInit';
 export * from './buildStatic';

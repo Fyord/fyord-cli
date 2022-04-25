@@ -3,10 +3,10 @@ import { AsyncCommand, HttpClient, Result } from 'tsbase';
 import * as child_process from 'child_process';
 import { DIModule } from '../../diModule';
 import { IOperation } from './operation';
+import { Directories } from '../../enums/module';
 
-const staticDir = './static';
 const publicDir = './public';
-const staticTsConfig = `${staticDir}/tsconfig.json`;
+const staticTsConfig = `${Directories.Static}/tsconfig.json`;
 
 export class BuildStaticOperation implements IOperation {
   constructor(
@@ -21,7 +21,7 @@ export class BuildStaticOperation implements IOperation {
         const processDirectory = process.cwd();
         this.cp.execSync(`./node_modules/typescript/bin/tsc -p ${staticTsConfig}`);
 
-        const functionModules = this.getAllFiles(staticDir)
+        const functionModules = this.getAllFiles(Directories.Static)
           .filter(f => f.endsWith('js'))
           .map(f => f.replace('.', processDirectory));
 
@@ -37,7 +37,7 @@ export class BuildStaticOperation implements IOperation {
             const moduleNameParts = module.split('.');
             const name = moduleNameParts[0]
               .replace(processDirectory, '')
-              .replace(staticDir.replace('.', ''), publicDir.replace('.', ''));
+              .replace(Directories.Static.replace('.', ''), publicDir.replace('.', ''));
             const extension = moduleNameParts[1];
             const outputFileName = `.${name}.${extension}`;
 
