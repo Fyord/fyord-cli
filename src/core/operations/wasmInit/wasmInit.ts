@@ -16,7 +16,8 @@ export class WasmInit implements IOperation {
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     private cp: any = DIModule.ChildProcess,
-    private updateTextInFile: UpdateTextInFile = _updateTextInFile) { }
+    private updateTextInFile: UpdateTextInFile = _updateTextInFile
+  ) { }
 
   public Execute(): Promise<Result> {
     return new AsyncCommand(async () => {
