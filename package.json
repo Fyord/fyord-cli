@@ -34,6 +34,7 @@
     "express": "^4.17.1",
     "fs-extra": "^9.1.0",
     "inquirer": "^8.1.5",
+    "isomorphic-fetch": "^3.0.0",
     "puppeteer": "^1.20.0",
     "tsbase": "^4.0.5",
     "tslib": "^2.3.1"
