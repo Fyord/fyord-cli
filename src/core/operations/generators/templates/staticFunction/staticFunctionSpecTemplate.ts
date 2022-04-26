@@ -41,7 +41,7 @@ describe('${camelCaseName}.${extension}', () => {
       let error = '';
       try {
         await ${pascalCaseName}(mockHttpClient.Object);
-      } catch (e) {
+      } catch (e: any) {
         error = e.message;
       }
       return error;

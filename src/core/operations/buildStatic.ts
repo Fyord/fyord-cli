@@ -1,6 +1,5 @@
 import 'isomorphic-fetch';
 import { AsyncCommand, HttpClient, Result } from 'tsbase';
-import * as child_process from 'child_process';
 import { DIModule } from '../../diModule';
 import { IOperation } from './operation';
 import { Directories, Errors } from '../../enums/module';
@@ -10,7 +9,7 @@ const staticTsConfig = `${Directories.Static}/tsconfig.json`;
 
 export class BuildStaticOperation implements IOperation {
   constructor(
-    private cp: typeof child_process = DIModule.ChildProcess,
+    private cp = DIModule.ChildProcess,
     private fse = DIModule.FileSystemExtraAdapter,
     private fs = DIModule.FileSystemAdapter
   ) { }

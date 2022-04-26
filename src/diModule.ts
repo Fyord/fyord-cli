@@ -1,18 +1,19 @@
 import * as child_process from 'child_process';
 import * as fs from 'fs';
+import { ChildProcessAdapter } from './fileSystem/childProcessAdapter';
 import { FileSystemAdapter, FileSystemDryRunAdapter } from './fileSystem/fileSystemAdapter';
 import { FileSystemExtraAdapter, FileSystemExtraDryRunAdapter, IFileSystemExtraAdapter } from './fileSystem/fileSystemExtraAdapter';
 
 type DIModuleDependencies = {
   FileSystemAdapter: typeof fs,
   FileSystemExtraAdapter: IFileSystemExtraAdapter,
-  ChildProcess: typeof child_process
+  ChildProcess: ChildProcessAdapter
 };
 
 const liveModule: DIModuleDependencies = {
   FileSystemAdapter: FileSystemAdapter,
   FileSystemExtraAdapter: FileSystemExtraAdapter,
-  ChildProcess: child_process
+  ChildProcess: child_process as ChildProcessAdapter
 };
 
 export const dryRunModule: DIModuleDependencies = {
@@ -23,7 +24,7 @@ export const dryRunModule: DIModuleDependencies = {
       console.log(`Execute command: ${command}`),
     execSync: (command: string) =>
       console.log(`Execute command: ${command}`)
-  } as typeof child_process
+  } as ChildProcessAdapter
 };
 
 export const dryRunKey = 'dry-run';
