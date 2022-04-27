@@ -1,9 +1,14 @@
 import { AsyncCommand, Result } from 'tsbase';
-import { Directories, Errors } from '../../../enums/module';
+import { Commands, Directories, Errors } from '../../../enums/module';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
-import { IOperation } from '../operation';
 import { DIModule } from '../../../diModule';
-import { UpdateTextInFile, updateTextInFile as _updateTextInFile } from '../../utility/updateTextInFile';
+import {
+  addWebpackOnBuildStartCommand,
+  UpdateTextInFile,
+  updateTextInFile as _updateTextInFile,
+  installDependencyIfNotInstalled
+} from '../../utility/module';
+import { IOperation } from '../operation';
 import { RustTsTemplate, CargoTomlTemplate, GreetTemplate, LibTemplate, ModTemplate, UtilsTemplate } from './templates/module';
 
 type Replacement = {
@@ -15,20 +20,24 @@ type Replacement = {
 export class WasmInit implements IOperation {
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
-    private cp: any = DIModule.ChildProcess,
-    private updateTextInFile: UpdateTextInFile = _updateTextInFile
+    private updateTextInFile: UpdateTextInFile = _updateTextInFile,
+    private installDependencyIfNotInstalledFunc = installDependencyIfNotInstalled,
+    private addWebpackOnBuildStartCommandFunc = addWebpackOnBuildStartCommand
   ) { }
 
   public Execute(): Promise<Result> {
     return new AsyncCommand(async () => {
-      if (await this.fse.pathExists(Directories.RootPackage)) {
+      const inRootDir = await this.fse.pathExists(Directories.RootPackage);
+      const cargoLockAlreadyExists = await this.fse.pathExists(Directories.CargoLock);
+
+      if (inRootDir && !cargoLockAlreadyExists) {
+        await this.installDependencyIfNotInstalledFunc(Directories.WebpackShellPlugin, Commands.InstallWebpackShellPlugin);
+        await this.installDependencyIfNotInstalledFunc(Directories.WasmPack, Commands.InstallWasmPack);
+        this.addWebpackOnBuildStartCommandFunc(Commands.WasmPackBuild);
         await this.updateFilesWhereChangesNeeded();
         await this.scaffoldNewFiles();
-
-        this.cp.execSync('npm i');
-        this.cp.execSync('npm run build');
       } else {
-        throw new Error(Errors.NotInRoot);
+        throw new Error(cargoLockAlreadyExists ? 'This project already ran the "wasmInit" command.' : Errors.NotInRoot);
       }
     }).Execute();
   }
@@ -36,23 +45,9 @@ export class WasmInit implements IOperation {
   private async updateFilesWhereChangesNeeded() {
     const replacements: Replacement[] = [
       {
-        filePath: './.gitignore', oldValue: '.vscode', newValue: `.vscode
+        filePath: Directories.Gitignore, oldValue: '.vscode', newValue: `.vscode
 target
 pkg`
-      },
-      {
-        filePath: Directories.RootPackage,
-        oldValue: `"build": "webpack --config webpack.prod.js",
-    "start": "webpack serve --config webpack.dev.js",`,
-        newValue: ` "build-rust": "wasm-pack build",
-    "build": "npm run build-rust && webpack --config webpack.prod.js",
-    "start": "npm run build-rust && webpack serve --config webpack.dev.js",`
-      },
-      {
-        filePath: Directories.RootPackage,
-        oldValue: '"devDependencies": {',
-        newValue: `"devDependencies": {
-    "wasm-pack": "^0.10.0",`
       },
       {
         filePath: './src/index.html',

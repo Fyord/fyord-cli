@@ -42,6 +42,7 @@ export class BuildStaticOperation implements IOperation {
 
             console.log(`Outputting: ${outputFileName}`);
             this.fse.outputFile(outputFileName, result);
+            this.fs.rmSync(module);
           } else {
             throw new Error(`${module} does not export a "default" function.`);
           }
