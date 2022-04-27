@@ -103,7 +103,10 @@ export const CommandMap = new Map<Commands, Command>([
     Operation: new WasmInit(),
     Example: `${CliName} ${Commands.WasmInit}`,
     AdditionalDetails: {
-      'Run this command in the same directory as': './package.json'
+      'Requires': [
+        'Run this command in root directory',
+        'Cargo: https://doc.rust-lang.org/cargo/getting-started/installation.html'
+      ]
     }
   }],
   [Commands.Docs, {
@@ -133,8 +136,10 @@ export const CommandMap = new Map<Commands, Command>([
     Operation: new BuildStaticOperation(),
     Example: `${CliName} ${Commands.BuildStatic}`,
     AdditionalDetails: {
-      'Requires': ['npm dependencies installed - uses typescript binary at ./node_modules/typescript/bin/tsc'],
-      'See docs for more info': 'fyord docs **** OR https://fyord.dev/docs/***'
+      'Requires': [
+        'Run this command in root directory',
+        'npm dependencies installed - uses typescript binary at ./node_modules/typescript/bin/tsc'
+      ]
     }
   }]
 ]);
