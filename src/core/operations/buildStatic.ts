@@ -3,6 +3,7 @@ import { AsyncCommand, HttpClient, Result } from 'tsbase';
 import { DIModule } from '../../diModule';
 import { IOperation } from './operation';
 import { Directories, Errors } from '../../enums/module';
+import { getAllFiles } from '../utility/getAllFiles';
 
 const publicDir = './public';
 const staticTsConfig = `${Directories.Static}/tsconfig.json`;
@@ -11,21 +12,24 @@ export class BuildStaticOperation implements IOperation {
   constructor(
     private cp = DIModule.ChildProcess,
     private fse = DIModule.FileSystemExtraAdapter,
-    private fs = DIModule.FileSystemAdapter
+    private fs = DIModule.FileSystemAdapter,
+    private mainProcess = process,
+    private getAllFilesFunc = getAllFiles,
+    private importFunc = async (path: string) => await import(path)
   ) { }
 
   public async Execute(_args: string[]): Promise<Result> {
     return await new AsyncCommand(async () => {
       if (await this.fse.pathExists(staticTsConfig)) {
-        const processDirectory = process.cwd();
+        const processDirectory = this.mainProcess.cwd();
         this.cp.execSync(`./node_modules/typescript/bin/tsc -p ${staticTsConfig}`);
 
-        const functionModules = this.getAllFiles(Directories.Static)
+        const functionModules = this.getAllFilesFunc(Directories.Static)
           .filter(f => f.endsWith('js'))
           .map(f => f.replace('.', processDirectory));
 
         for (const module of functionModules) {
-          const { default: func } = await import(module);
+          const { default: func } = await this.importFunc(module);
 
           if (typeof func === 'function') {
             console.log(`Executing: ${module.replace(`${processDirectory}/static/`, '')}`);
@@ -52,21 +56,5 @@ export class BuildStaticOperation implements IOperation {
 ${Errors.NotInRoot}`);
       }
     }).Execute();
-  }
-
-  private getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
-    const files = this.fs.readdirSync(dirPath);
-
-    arrayOfFiles = arrayOfFiles;
-
-    files.forEach((file) => {
-      if (this.fs.statSync(dirPath + '/' + file).isDirectory()) {
-        arrayOfFiles = this.getAllFiles(dirPath + '/' + file, arrayOfFiles);
-      } else {
-        arrayOfFiles.push(`${dirPath}/${file}`);
-      }
-    });
-
-    return arrayOfFiles;
   }
 }
