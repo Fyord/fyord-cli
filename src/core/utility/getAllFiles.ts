@@ -11,7 +11,7 @@ export const getAllFiles = (
 
   files.forEach((file) => {
     if (fs.statSync(dirPath + '/' + file).isDirectory()) {
-      arrayOfFiles = getAllFiles(dirPath + '/' + file, arrayOfFiles);
+      arrayOfFiles = getAllFiles(dirPath + '/' + file, arrayOfFiles, fs);
     } else {
       arrayOfFiles.push(`${dirPath}/${file}`);
     }
