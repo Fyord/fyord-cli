@@ -1,12 +1,8 @@
 import * as fs from 'fs';
-import { IFileSystemAdapter } from 'tsbase/Persistence/Repository/Persisters/FSPersister/IFileSystemAdapter';
 
-export const FileSystemAdapter: IFileSystemAdapter = fs;
+export const FileSystemAdapter = fs;
 
-export const FileSystemDryRunAdapter: IFileSystemAdapter & {
-  rmdirSync: typeof fs.rmdirSync,
-  renameSync: typeof fs.renameSync
-} = {
+export const FileSystemDryRunAdapter = {
   accessSync: FileSystemAdapter.accessSync,
   constants: FileSystemAdapter.constants,
   existsSync: FileSystemAdapter.existsSync,
@@ -18,5 +14,7 @@ export const FileSystemDryRunAdapter: IFileSystemAdapter & {
   rmdirSync: (path: any, _options: any) =>
     console.log(`Remove directory - ${path}`),
   renameSync: (oldPath: any, newPath: any) =>
-    console.log(`Rename ${oldPath} to ${newPath}`)
+    console.log(`Rename ${oldPath} to ${newPath}`),
+  readdirSync: FileSystemAdapter.readdirSync,
+  statSync: FileSystemAdapter.statSync
 };

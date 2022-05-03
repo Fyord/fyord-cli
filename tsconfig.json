@@ -23,6 +23,8 @@
     "moduleResolution": "node",
     "removeComments": true,
     "experimentalDecorators": true,
+    "incremental": true,
+    "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
       "*": [

@@ -1,5 +1,5 @@
 import { Settings, ISettingsService, SettingsService } from '../../../settings/module';
-import { AsyncCommand, IFileSystemAdapter, Result, Strings } from 'tsbase';
+import { AsyncCommand, Result, Strings } from 'tsbase';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { DIModule } from '../../../diModule';
 import { IGenerator } from './iGenerator';
@@ -12,7 +12,7 @@ export class CustomElementGenerator implements IGenerator {
 
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
-    private fs: IFileSystemAdapter = DIModule.FileSystemAdapter,
+    private fs = DIModule.FileSystemAdapter,
     private settingsService: ISettingsService = SettingsService.Instance()) { }
 
   public async Generate(args: string[]): Promise<Result> {

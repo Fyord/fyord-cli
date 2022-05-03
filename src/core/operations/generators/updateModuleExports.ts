@@ -1,9 +1,9 @@
-import { IFileSystemAdapter } from 'tsbase';
+import * as fsLib from 'fs';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 
 export const updateModuleExports = async (
   fse: IFileSystemExtraAdapter,
-  fs: IFileSystemAdapter,
+  fs: typeof fsLib,
   camelCaseName: string
 ) => {
   const moduleFile = './module.ts';

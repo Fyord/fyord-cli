@@ -1,7 +1,8 @@
 import { CliName } from './constants';
 import {
   ConfigureOperation, DocsOperation, GenerateOperation, HelpOperation, IOperation,
-  NewOperation, PreRenderOperation, VersionOperation, WasmInit
+  NewOperation, PreRenderOperation, VersionOperation, WasmInit, BuildStaticOperation,
+  StaticInit
 } from './operations/module';
 
 export enum Commands {
@@ -12,7 +13,9 @@ export enum Commands {
   New = 'new',
   Configure = 'configure',
   WasmInit = 'wasmInit',
-  Docs = 'docs'
+  Docs = 'docs',
+  StaticInit = 'staticInit',
+  BuildStatic = 'buildStatic'
 }
 
 export type Command = {
@@ -100,7 +103,10 @@ export const CommandMap = new Map<Commands, Command>([
     Operation: new WasmInit(),
     Example: `${CliName} ${Commands.WasmInit}`,
     AdditionalDetails: {
-      'Run this command in the same directory as': './package.json'
+      'Requires': [
+        'Run this command in root directory',
+        'Cargo: https://doc.rust-lang.org/cargo/getting-started/installation.html'
+      ]
     }
   }],
   [Commands.Docs, {
@@ -110,5 +116,30 @@ export const CommandMap = new Map<Commands, Command>([
     Arguments: ['Query - topic of interest to search in the fyord docs'],
     Operation: new DocsOperation(),
     Example: `${CliName} ${Commands.Docs} sass`
+  }],
+  [Commands.StaticInit, {
+    Name: Commands.StaticInit,
+    Alias: 'si',
+    Description: 'Prepares a fyord project for the static build-time assets convention.',
+    Arguments: [],
+    Operation: new StaticInit(),
+    Example: `${CliName} ${Commands.StaticInit}`,
+    AdditionalDetails: {
+      'Run this command in the same directory as': './package.json'
+    }
+  }],
+  [Commands.BuildStatic, {
+    Name: Commands.BuildStatic,
+    Alias: 'bs',
+    Description: 'Builds resources following the "static" resources convention.',
+    Arguments: [],
+    Operation: new BuildStaticOperation(),
+    Example: `${CliName} ${Commands.BuildStatic}`,
+    AdditionalDetails: {
+      'Requires': [
+        'Run this command in root directory',
+        'npm dependencies installed - uses typescript binary at ./node_modules/typescript/bin/tsc'
+      ]
+    }
   }]
 ]);
