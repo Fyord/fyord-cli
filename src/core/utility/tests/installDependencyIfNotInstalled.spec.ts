@@ -38,6 +38,6 @@ describe('installDependencyIfNotInstalled', () => {
     mockFseAdapter.Verify(f => f.pathExists(''), Times.Once);
     mockChildProcess.Verify(c => c.execSync(''), Times.Never);
     expect(consoleSpy).toHaveBeenCalledWith(
-      `Skipping "${Commands.InstallWebpackShellPlugin}" as "${Directories.WebpackShellPlugin}" already exists.`)
+      `Skipping "${Commands.InstallWebpackShellPlugin}" as "${Directories.WebpackShellPlugin}" already exists.`);
   });
 });
