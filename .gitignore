@@ -9,3 +9,4 @@ dist/**/*.js
 dist/**/*.ts
 dist/**/*.map
 workspace.*
+*.tsbuildinfo
