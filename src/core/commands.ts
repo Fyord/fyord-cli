@@ -12,10 +12,10 @@ export enum Commands {
   Generate = 'generate',
   New = 'new',
   Configure = 'configure',
-  WasmInit = 'wasmInit',
+  WasmInit = 'wasminit',
   Docs = 'docs',
-  StaticInit = 'staticInit',
-  BuildStatic = 'buildStatic'
+  StaticInit = 'staticinit',
+  BuildStatic = 'buildstatic'
 }
 
 export type Command = {
@@ -138,7 +138,8 @@ export const CommandMap = new Map<Commands, Command>([
     AdditionalDetails: {
       'Requires': [
         'Run this command in root directory',
-        'npm dependencies installed - uses typescript binary at ./node_modules/typescript/bin/tsc'
+        'npm dependencies installed - uses typescript binary at ./node_modules/typescript/bin/tsc',
+        'fyord-cli version 1.3.1 or greater'
       ]
     }
   }]
