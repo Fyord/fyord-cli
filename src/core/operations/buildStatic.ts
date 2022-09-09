@@ -18,7 +18,7 @@ export class BuildStaticOperation implements IOperation {
     private importFunc = async (path: string) => await import(path)
   ) { }
 
-  public async Execute(_args: string[]): Promise<Result> {
+  public async Execute(_args: string[]): Promise<Result<null>> {
     return await new AsyncCommand(async () => {
       if (await this.fse.pathExists(staticTsConfig)) {
         const processDirectory = this.mainProcess.cwd();

@@ -13,7 +13,7 @@ export class ConfigureOperation implements IOperation {
     private inquirer: IInquirer = _inquirer
   ) { }
 
-  public async Execute(): Promise<Result> {
+  public async Execute(): Promise<Result<null>> {
     return await new AsyncCommand(async () => {
       const questions = Array.from(SettingsMap.keys()).map(sk => ({
         type: 'input',

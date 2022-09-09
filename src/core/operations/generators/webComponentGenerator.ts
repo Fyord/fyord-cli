@@ -13,7 +13,7 @@ export class WebComponentGenerator implements IGenerator {
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     private fs = DIModule.FileSystemAdapter) { }
 
-  public async Generate(args: string[]): Promise<Result> {
+  public async Generate(args: string[]): Promise<Result<null>> {
     return new AsyncCommand(async () => {
       const name = args[0];
       const selector = args[1];

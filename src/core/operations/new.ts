@@ -17,7 +17,7 @@ export class NewOperation implements IOperation {
     private cp: any = DIModule.ChildProcess,
     private updateTextInFile: UpdateTextInFile = _updateTextInFile) { }
 
-  public async Execute(args: string[]): Promise<Result> {
+  public async Execute(args: string[]): Promise<Result<null>> {
     return await new AsyncCommand(async () => {
       const name = args[0];
       const preferredStyleExtension = args[1] || StyleExtensions.Css;

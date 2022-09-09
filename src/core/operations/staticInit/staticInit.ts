@@ -22,7 +22,7 @@ export class StaticInit implements IOperation {
     private addWebpackOnBuildStartCommandFunc = addWebpackOnBuildStartCommand
   ) { }
 
-  public Execute(): Promise<Result> {
+  public Execute(): Promise<Result<null>> {
     return new AsyncCommand(async () => {
       const inRootDir = await this.fse.pathExists(Directories.RootPackage);
       const staticAlreadyExists = await this.fse.pathExists(Directories.Static);

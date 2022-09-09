@@ -16,7 +16,7 @@ export class PipelineGenerator implements IGenerator {
 
   constructor(private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter) { }
 
-  public async Generate(args: string[]): Promise<Result> {
+  public async Generate(args: string[]): Promise<Result<null>> {
     return new AsyncCommand(async () => {
 
       const type = args[0];

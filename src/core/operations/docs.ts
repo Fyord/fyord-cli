@@ -7,7 +7,7 @@ export class DocsOperation implements IOperation {
     private cp = DIModule.ChildProcess
   ) { }
 
-  public async Execute(args: string[]): Promise<Result> {
+  public async Execute(args: string[]): Promise<Result<null>> {
     return await new AsyncCommand(async () => {
       const docsPageOrigin = 'https://fyord.dev/docs?search=';
       const query = encodeURIComponent(args.join(' '));

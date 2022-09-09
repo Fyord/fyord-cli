@@ -8,7 +8,7 @@ export class HelpOperation implements IOperation {
     private mainConsole: Console = console
   ) { }
 
-  public async Execute(args?: string[]): Promise<Result> {
+  public async Execute(args?: string[]): Promise<Result<null>> {
     return await new AsyncCommand(async () => {
       const commandNameArgument = args?.[0] as Commands;
       if (!commandNameArgument) {

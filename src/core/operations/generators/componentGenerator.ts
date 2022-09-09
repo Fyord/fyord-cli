@@ -14,7 +14,7 @@ export class ComponentGenerator implements IGenerator {
     private fs = DIModule.FileSystemAdapter,
     private settingsService: ISettingsService = SettingsService.Instance()) { }
 
-  public async Generate(args: string[]): Promise<Result> {
+  public async Generate(args: string[]): Promise<Result<null>> {
     return new AsyncCommand(async () => {
       const preferredStyleExtension = this.settingsService.GetSettingOrDefault(Settings.StyleExtension);
 

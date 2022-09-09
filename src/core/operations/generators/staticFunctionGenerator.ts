@@ -12,7 +12,7 @@ export class StaticFunctionGenerator implements IGenerator {
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter
   ) { }
 
-  public async Generate(args: string[]): Promise<Result> {
+  public async Generate(args: string[]): Promise<Result<null>> {
     return new AsyncCommand(async () => {
       const name = args[0];
       const extension = args[1];

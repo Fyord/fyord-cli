@@ -9,7 +9,7 @@ export class DebugGenerator implements IGenerator {
 
   constructor(private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter) { }
 
-  public async Generate(): Promise<Result> {
+  public async Generate(): Promise<Result<null>> {
     return new AsyncCommand(async () => {
       await this.fse.outputFile('.vscode/launch.json', DebugTemplate());
     }).Execute();

@@ -69,7 +69,7 @@ export class PreRenderOperation implements IOperation {
     };
   }
 
-  public async Execute(): Promise<Result> {
+  public async Execute(): Promise<Result<null>> {
     return await new AsyncCommand(async () => {
       const getXmlSiteMap = () => {
         const xmlStart = `<?xml version="1.0" encoding="UTF-8"?>
