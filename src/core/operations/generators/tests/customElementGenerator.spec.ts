@@ -1,21 +1,22 @@
-import { Mock } from 'tsmockit';
-import { IFileSystemAdapter, Strings } from 'tsbase';
+import { Any, Mock } from 'tsmockit';
+import { Strings } from 'tsbase';
 import { IFileSystemExtraAdapter } from '../../../../fileSystem/fileSystemExtraAdapter';
 import { CustomElementGenerator } from '../customElementGenerator';
 import { ISettingsService } from '../../../../settings/settingsService';
 import { Settings } from '../../../../settings/settings';
+import { FileSystemAdapter } from '../../../../fileSystem/fileSystemAdapter';
 
 describe('CustomElementGenerator', () => {
   let classUnderTest: CustomElementGenerator;
   const mockFileSystemExtra = new Mock<IFileSystemExtraAdapter>();
-  const mockFileSystem = new Mock<IFileSystemAdapter>();
+  const mockFileSystem = new Mock<typeof FileSystemAdapter>();
   const mockSettingsService = new Mock<ISettingsService>();
 
   beforeEach(() => {
     spyOn(console, 'log');
-    mockFileSystemExtra.Setup(fse => fse.outputFile(Strings.Empty, Strings.Empty));
-    mockFileSystemExtra.Setup(fse => fse.pathExists(Strings.Empty), true);
-    mockFileSystem.Setup(fs => fs.readFileSync(Strings.Empty, 'utf8'), Buffer.from(Strings.Empty, 'utf8'));
+    mockFileSystemExtra.Setup(fse => fse.outputFile(Any<string>(), Any<string>()));
+    mockFileSystemExtra.Setup(fse => fse.pathExists(Any<string>()), true);
+    mockFileSystem.Setup(fs => fs.readFileSync(Any<string>(), 'utf8'), Buffer.from(Any<string>(), 'utf8'));
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.StyleExtension), 'css');
 
     classUnderTest = new CustomElementGenerator(mockFileSystemExtra.Object, mockFileSystem.Object, mockSettingsService.Object);

@@ -1,5 +1,5 @@
 import { Strings } from 'tsbase';
-import { Mock, Times } from 'tsmockit';
+import { Any, Mock, Times } from 'tsmockit';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 import { Settings } from '../../../settings/settings';
 import { ISettingsService } from '../../../settings/settingsService';
@@ -53,7 +53,7 @@ class FakePage implements IPage {
 describe('PreRenderOperation', () => {
   let classUnderTest: PreRenderOperation;
   const mockPuppeteer = new Mock<IPuppeteer>();
-  const mockFileSystemExtra = new Mock<IFileSystemExtraAdapter>();
+  let mockFileSystemExtra: Mock<IFileSystemExtraAdapter>;
   const mockSettingsService = new Mock<ISettingsService>();
   const mockBrowser = new Mock<IBrowser>();
   const mockLocation = new Mock<Location>();
@@ -66,15 +66,14 @@ describe('PreRenderOperation', () => {
   beforeAll(() => {
     spyOn(console, 'log');
     spyOn(console, 'error');
-    mockFileSystemExtra.Setup(fse => fse.outputFile(Strings.Empty, Strings.Empty));
     mockPageRequest.Setup(r => r._url, '/test?query=test#test');
     mockPageRequest.Setup(r => r.abort());
     mockPageRequest.Setup(r => r.continue());
     mockPageRequest.Setup(r => r.resourceType(), 'test');
-    mockSettingsService.Setup(s => s.GetSettingOrDefault(Strings.Empty as Settings), Strings.Empty);
+    mockSettingsService.Setup(s => s.GetSettingOrDefault(Any<Settings>()), Any<string>());
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.BlockedResourceTypes), 'blocked-resource');
     mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.SkippedResources), 'skipped-resource');
-    mockPuppeteer.Setup(p => p.launch({}), mockBrowser.Object);
+    mockPuppeteer.Setup(p => p.launch(Any<{}>()), mockBrowser.Object);
     mockBrowser.Setup(b => b.close());
     mockBrowser.Setup(b => b.newPage(), fakePage);
     const origin = 'testOrigin';
@@ -85,10 +84,11 @@ describe('PreRenderOperation', () => {
     ]);
     mockExpress.Setup(e => e.listen());
     mockExpress.Setup(e => e.use());
-
   });
 
   beforeEach(() => {
+    mockFileSystemExtra = new Mock<IFileSystemExtraAdapter>();
+    mockFileSystemExtra.Setup(fse => fse.outputFile(Any<string>(), Any<string>()));
     fakePage.renderMode = 'hybrid';
 
     classUnderTest = new PreRenderOperation(
@@ -104,14 +104,13 @@ describe('PreRenderOperation', () => {
     expect(classUnderTest).toBeDefined();
   });
 
-  const minimumFilesOutput = 4;
   it('should pre render a page using hybrid mode', async () => {
     fakePage.renderMode = 'hybrid';
 
     const result = await classUnderTest.Execute();
 
     expect(result).toBeTruthy();
-    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput + 1);
+    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), 5);
   });
 
   it('should pre render a page using dynamic mode', async () => {
@@ -120,7 +119,7 @@ describe('PreRenderOperation', () => {
     const result = await classUnderTest.Execute();
 
     expect(result).toBeTruthy();
-    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput * 2 + 2);
+    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), 5);
   });
 
   it('should pre render a page using static mode', async () => {
@@ -129,19 +128,19 @@ describe('PreRenderOperation', () => {
     const result = await classUnderTest.Execute();
 
     expect(result).toBeTruthy();
-    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), minimumFilesOutput * 3 + 3);
+    mockFileSystemExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), 5);
   });
 
   it('should NOT pre-render external pages (links with different origin)', async () => {
     mockDocument.Setup(d => d.querySelectorAll('a'), [
       { href: 'fake/test', pathname: '/external' }
     ]);
-    mockFileSystemExtra.Setup(fse => fse.outputFile('/external', Strings.Empty));
+    mockFileSystemExtra.Setup(fse => fse.outputFile('/external', Any<string>()));
 
     const result = await classUnderTest.Execute();
 
     expect(result).toBeTruthy();
-    mockFileSystemExtra.Verify(fse => fse.outputFile('/external', Strings.Empty), minimumFilesOutput);
+    mockFileSystemExtra.Verify(fse => fse.outputFile('/external', Strings.Empty), 4);
   });
 
   it('should abort page request on skipped resource', async () => {

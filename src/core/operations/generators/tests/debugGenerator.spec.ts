@@ -1,5 +1,5 @@
 import { Strings } from 'tsbase';
-import { Mock } from 'tsmockit';
+import { Any, Mock } from 'tsmockit';
 import { IFileSystemExtraAdapter } from '../../../../fileSystem/module';
 import { setupSettingsServiceForTests } from '../../../../setupSettingsServiceForTests';
 
@@ -12,7 +12,7 @@ describe('DebugGenerator', () => {
   const mockFileSystemExtra = new Mock<IFileSystemExtraAdapter>();
 
   beforeEach(() => {
-    mockFileSystemExtra.Setup(fse => fse.outputFile(Strings.Empty, Strings.Empty));
+    mockFileSystemExtra.Setup(fse => fse.outputFile(Any<string>(), Any<string>()));
     classUnderTest = new DebugGenerator(mockFileSystemExtra.Object);
   });
 
@@ -23,7 +23,7 @@ describe('DebugGenerator', () => {
 
 
   it('should generate debug launch file', async () => {
-    mockFileSystemExtra.Setup(fse => fse.pathExists(Strings.Empty), true);
+    mockFileSystemExtra.Setup(fse => fse.pathExists(Any<string>()), true);
 
     const result = await classUnderTest.Generate();
 

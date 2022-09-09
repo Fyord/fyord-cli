@@ -1,5 +1,5 @@
 import { Strings } from 'tsbase';
-import { Mock, Times } from 'tsmockit';
+import { Any, Mock, Times } from 'tsmockit';
 import { setupSettingsServiceForTests } from '../../../setupSettingsServiceForTests';
 
 setupSettingsServiceForTests();
@@ -13,7 +13,7 @@ describe('HelpOperation', () => {
 
   beforeEach(() => {
     spyOn(console, 'log');
-    mockConsole.Setup(c => c.log(Strings.Empty));
+    mockConsole.Setup(c => c.log(Any<string>()));
     classUnderTest = new HelpOperation(mockConsole.Object);
   });
 
@@ -33,7 +33,7 @@ describe('HelpOperation', () => {
   });
 
   it('should execute with args, and log a warning when the given command is unknown', async () => {
-    mockConsole.Setup(s => s.error(Strings.Empty));
+    mockConsole.Setup(s => s.error(Any<string>()));
     await classUnderTest.Execute(['fake']);
     mockConsole.Verify(c => c.log(Strings.Empty), Times.Never);
     mockConsole.Verify(c => c.error(Strings.Empty), Times.Once);

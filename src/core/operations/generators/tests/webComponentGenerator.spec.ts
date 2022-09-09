@@ -1,18 +1,18 @@
-import { Mock } from 'tsmockit';
-import { IFileSystemAdapter, Strings } from 'tsbase';
-import { IFileSystemExtraAdapter } from '../../../../fileSystem/module';
+import { Any, Mock } from 'tsmockit';
+import { Strings } from 'tsbase/System/Strings';
+import { FileSystemAdapter, IFileSystemExtraAdapter } from '../../../../fileSystem/module';
 import { WebComponentGenerator } from '../webComponentGenerator';
 
 describe('WebComponentGenerator', () => {
   let classUnderTest: WebComponentGenerator;
   const mockFileSystemExtra = new Mock<IFileSystemExtraAdapter>();
-  const mockFileSystem = new Mock<IFileSystemAdapter>();
+  const mockFileSystem = new Mock<typeof FileSystemAdapter>();
 
   beforeEach(() => {
     spyOn(console, 'log');
-    mockFileSystemExtra.Setup(fse => fse.outputFile(Strings.Empty, Strings.Empty));
-    mockFileSystemExtra.Setup(fse => fse.pathExists(Strings.Empty), true);
-    mockFileSystem.Setup(fs => fs.readFileSync(Strings.Empty, 'utf8'), Buffer.from(Strings.Empty, 'utf8'));
+    mockFileSystemExtra.Setup(fse => fse.outputFile(Any<string>(), Any<string>()));
+    mockFileSystemExtra.Setup(fse => fse.pathExists(Any<string>()), true);
+    mockFileSystem.Setup(fs => fs.readFileSync(Any<string>(), 'utf8'), Buffer.from(Any<string>(), 'utf8'));
 
     classUnderTest = new WebComponentGenerator(mockFileSystemExtra.Object, mockFileSystem.Object);
   });

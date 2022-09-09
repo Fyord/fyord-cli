@@ -1,4 +1,5 @@
-import { Mock, Times } from 'tsmockit';
+import { Strings } from 'tsbase/System/Strings';
+import { Any, Mock, Times } from 'tsmockit';
 import { Directories } from '../../../../enums/directories';
 import { Errors } from '../../../../enums/errors';
 import { IFileSystemExtraAdapter } from '../../../../fileSystem/fileSystemExtraAdapter';
@@ -20,7 +21,7 @@ describe('staticInit', () => {
     updateTextInFileCalledTimes = 0;
     installWebpackShellPluginCalledTimes = 0;
     addWebpackOnBuildStartCommandCalledTimes = 0;
-    mockFseAdapter.Setup(f => f.pathExists(''), false);
+    mockFseAdapter.Setup(f => f.pathExists(Any<string>()), false);
 
     classUnderTest = new StaticInit(
       mockFseAdapter.Object,
@@ -52,12 +53,12 @@ describe('staticInit', () => {
   it('should return successful result when ran in root dir and static dir does not already exist', async () => {
     mockFseAdapter.Setup(f => f.pathExists(Directories.RootPackage), true);
     mockFseAdapter.Setup(f => f.pathExists(Directories.Static), false);
-    mockFseAdapter.Setup(f => f.outputFile('', ''));
+    mockFseAdapter.Setup(f => f.outputFile(Any<string>(), Any<string>()));
 
     const result = await classUnderTest.Execute();
 
     expect(result.IsSuccess).toBeTruthy();
-    mockFseAdapter.Verify(f => f.outputFile('', ''), Times.Once);
+    mockFseAdapter.Verify(f => f.outputFile(Strings.Empty, Strings.Empty), Times.Once);
     expect(updateTextInFileCalledTimes).toEqual(1);
     expect(addWebpackOnBuildStartCommandCalledTimes).toEqual(1);
     expect(installWebpackShellPluginCalledTimes).toEqual(1);

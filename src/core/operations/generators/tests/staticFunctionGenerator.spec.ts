@@ -1,4 +1,5 @@
-import { Mock } from 'tsmockit';
+import { Strings } from 'tsbase/System/Strings';
+import { Any, Mock } from 'tsmockit';
 import { IFileSystemExtraAdapter } from '../../../../fileSystem/fileSystemExtraAdapter';
 import { StaticFunctionGenerator } from '../staticFunctionGenerator';
 
@@ -25,11 +26,11 @@ describe('StaticFunctionGenerator', () => {
   });
 
   it('should return successful result and output two files when name and extension args are given', async () => {
-    mockFseAdapter.Setup(f => f.outputFile('', ''));
+    mockFseAdapter.Setup(f => f.outputFile(Any<string>(), Any<string>()));
 
     const result = await classUnderTest.Generate(['name', 'json']);
 
-    mockFseAdapter.Verify(f => f.outputFile('', ''), 2);
+    mockFseAdapter.Verify(f => f.outputFile(Strings.Empty, Strings.Empty), 2);
     expect(result.IsSuccess).toBeTruthy();
   });
 });
