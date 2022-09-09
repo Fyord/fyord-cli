@@ -6,7 +6,8 @@ export const PageSpecTemplate: Template = (args?: string[]) => {
   const camelCaseName = Strings.CamelCase(name);
   const pascalCaseName = Strings.PascalCase(name);
 
-  return `import { RenderModes, Route, TestHelpers, Asap } from 'fyord';
+  return `import { Expect } from 'tsmockit';
+import { RenderModes, Route, TestHelpers, Asap } from 'fyord';
 import { ${pascalCaseName} } from './${camelCaseName}';
 
 describe('${pascalCaseName}', () => {
@@ -48,10 +49,9 @@ describe('${pascalCaseName}', () => {
       // fire any attached events
     });
 
-    const behaviorExpectationsMet = await TestHelpers.TimeLapsedCondition(() => {
-      return true; // assertions proving expected behavior was met
-    });
-    expect(behaviorExpectationsMet).toBeTruthy();
+    await Expect(
+      () => true, // returns the result of this function once truthy to the following function for assertions
+      (m) => m.toBeTruthy());
   });
 });
 `;

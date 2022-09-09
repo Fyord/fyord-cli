@@ -3,7 +3,6 @@ import { Template } from '../template';
 
 export const CustomElementSpecTemplate: Template = (args?: string[]) => {
   const name = args?.[0] || Strings.Empty;
-  const selector = args?.[1] || Strings.Empty;
 
   const camelCaseName = Strings.CamelCase(name);
   const pascalCaseName = Strings.PascalCase(name);
@@ -12,12 +11,10 @@ export const CustomElementSpecTemplate: Template = (args?: string[]) => {
 import { ${pascalCaseName} } from './${camelCaseName}';
 
 describe('${pascalCaseName}', () => {
-  const fakeBody = document.createElement('div');
   let componentUnderTest: ${pascalCaseName};
 
   beforeEach(() => {
     componentUnderTest = new ${pascalCaseName}();
-    fakeBody.innerHTML = '';
   });
 
   it('should construct', () => {
@@ -26,21 +23,18 @@ describe('${pascalCaseName}', () => {
 
   it('should init without attributes', async () => {
     await componentUnderTest.connectedCallback();
-
     const content = componentUnderTest.innerHTML;
-
     expect(content).toBeDefined();
   });
 
   it('should init with attributes', async () => {
-    const selector = /*html*/ \`
-      <${selector} myAttribute="test"></${selector}>\`;
-    fakeBody.innerHTML = selector;
+    componentUnderTest.setAttribute('myAttribute', 'test');
+    componentUnderTest.attributeChangedCallback();
 
-    const rendersExpectedValue = await TestHelpers.TimeLapsedCondition(() => {
-      return fakeBody.innerHTML.includes('test');
-    });
-    expect(rendersExpectedValue).toBeTruthy();
+    await componentUnderTest.connectedCallback();
+
+    const content = componentUnderTest.innerHTML;
+    expect(content).toBeDefined();
   });
 });
 `;
