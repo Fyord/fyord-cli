@@ -1,5 +1,5 @@
 import { Strings } from 'tsbase';
-import { Mock } from 'tsmockit';
+import { Any, Mock } from 'tsmockit';
 import { IFileSystemExtraAdapter } from '../../../../fileSystem/module';
 import { PipelineGenerator, PipelineTypes } from '../pipelineGenerator';
 
@@ -10,7 +10,7 @@ describe('PipelineGenerator', () => {
   const mockFileSystemExtra = new Mock<IFileSystemExtraAdapter>();
 
   beforeEach(() => {
-    mockFileSystemExtra.Setup(fse => fse.outputFile(Strings.Empty, Strings.Empty));
+    mockFileSystemExtra.Setup(fse => fse.outputFile(Any<string>(), Any<string>()));
     classUnderTest = new PipelineGenerator(mockFileSystemExtra.Object);
   });
 
@@ -20,7 +20,7 @@ describe('PipelineGenerator', () => {
 
 
   it('should generate github pipeline when given trunk branch', async () => {
-    mockFileSystemExtra.Setup(fse => fse.pathExists(Strings.Empty), true);
+    mockFileSystemExtra.Setup(fse => fse.pathExists(Any<string>()), true);
 
     const result = await classUnderTest.Generate([PipelineTypes.GitHub, trunk]);
 
@@ -29,7 +29,7 @@ describe('PipelineGenerator', () => {
   });
 
   it('should generate azure pipeline when given trunk branch', async () => {
-    mockFileSystemExtra.Setup(fse => fse.pathExists(Strings.Empty), true);
+    mockFileSystemExtra.Setup(fse => fse.pathExists(Any<string>()), true);
 
 
     const result = await classUnderTest.Generate([PipelineTypes.Azure, trunk]);
@@ -39,7 +39,7 @@ describe('PipelineGenerator', () => {
   });
 
   it('should return a failed result when no pipeline type argument is given', async () => {
-    mockFileSystemExtra.Setup(fse => fse.pathExists(Strings.Empty), true);
+    mockFileSystemExtra.Setup(fse => fse.pathExists(Any<string>()), true);
     const result = await classUnderTest.Generate([]);
     expect(result.IsSuccess).toBeFalsy();
   });

@@ -10,11 +10,10 @@ describe('getAllFiles', () => {
 
   beforeEach(() => {
     mockFsAdapter.Setup(f => f.readdirSync(firstDir), [secondDir]);
-    mockFsAdapter.Setup(f => f.readdirSync(secondDir), [testFile]);
-
+    mockFsAdapter.Setup(f => f.readdirSync(`${firstDir}/${secondDir}`), [testFile]);
     mockFsAdapter.Setup(f => f.statSync(firstDir), { isDirectory: () => true });
     mockFsAdapter.Setup(f => f.statSync(`${firstDir}/${secondDir}`), { isDirectory: () => true });
-    mockFsAdapter.Setup(f => f.statSync(testFile), { isDirectory: () => false });
+    mockFsAdapter.Setup(f => f.statSync(`${firstDir}/${secondDir}/${testFile}`), { isDirectory: () => false });
   });
 
   it('should get a list of all files', () => {

@@ -1,5 +1,5 @@
 import { Strings } from 'tsbase';
-import { Mock, Times } from 'tsmockit';
+import { Any, Mock, Times } from 'tsmockit';
 import { Directories } from '../../../enums/directories';
 import { Errors } from '../../../enums/module';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
@@ -18,8 +18,8 @@ describe('WasmInit', () => {
     installDependencyCalledTimes = 0;
     addWebpackOnBuildCalledTimes = 0;
 
-    mockFsExtra.Setup(fse => fse.outputFile(Strings.Empty, Strings.Empty));
-    mockFsExtra.Setup(fse => fse.pathExists(Strings.Empty), false);
+    mockFsExtra.Setup(fse => fse.outputFile(Any<string>(), Any<string>()));
+    mockFsExtra.Setup(fse => fse.pathExists(Any<string>()), false);
     mockFsExtra.Setup(fse => fse.pathExists(Directories.CargoLock), false);
     mockFsExtra.Setup(fse => fse.pathExists(Directories.RootPackage), false);
 

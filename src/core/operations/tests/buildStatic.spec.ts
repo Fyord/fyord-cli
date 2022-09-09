@@ -1,4 +1,5 @@
-import { Mock, Times } from 'tsmockit';
+import { Strings } from 'tsbase/System/Strings';
+import { Any, Mock, Times } from 'tsmockit';
 import { DIModule } from '../../../diModule';
 import { Directories } from '../../../enums/directories';
 import { Errors } from '../../../enums/errors';
@@ -20,9 +21,9 @@ describe('BuildStatic', () => {
   beforeEach(() => {
     fakeGetAllFilesResponse = [];
 
-    mockFileSystemExtraAdapter.Setup(f => f.pathExists(''), false);
-    mockChildProcess.Setup(cp => cp.execSync(''));
-    mockProcess.Setup(p => p.cwd(), '');
+    mockFileSystemExtraAdapter.Setup(f => f.pathExists(Any<string>()), false);
+    mockChildProcess.Setup(cp => cp.execSync(Any<string>()));
+    mockProcess.Setup(p => p.cwd(), Any<string>());
 
     classUnderTest = new BuildStaticOperation(
       mockChildProcess.Object,
@@ -47,7 +48,7 @@ describe('BuildStatic', () => {
   });
 
   it('should return false when type of default import is not function', async () => {
-    mockFileSystemExtraAdapter.Setup(f => f.pathExists(''), true);
+    mockFileSystemExtraAdapter.Setup(f => f.pathExists(Any<string>()), true);
     fakeGetAllFilesResponse = ['test.json.ts', 'test.json.js'];
     fakeImportResponse = 'test';
 
@@ -59,16 +60,16 @@ describe('BuildStatic', () => {
   });
 
   it('should return true and output/remove files when type of default import is function', async () => {
-    mockFileSystemExtraAdapter.Setup(f => f.outputFile('', ''));
-    mockFileSystemExtraAdapter.Setup(f => f.pathExists(''), true);
-    mockFileSystemAdapter.Setup(f => f.rmSync(''));
+    mockFileSystemExtraAdapter.Setup(f => f.outputFile(Any<string>(), Any<string>()));
+    mockFileSystemExtraAdapter.Setup(f => f.pathExists(Any<string>()), true);
+    mockFileSystemAdapter.Setup(f => f.rmSync(Any<string>()));
     fakeGetAllFilesResponse = ['test.json.ts', 'test.json.js'];
     fakeImportResponse = { default: () => 'test' };
 
     const result = await classUnderTest.Execute([]);
 
     expect(result.IsSuccess).toBeTruthy();
-    mockFileSystemExtraAdapter.Verify(f => f.outputFile('', ''), Times.Once);
-    mockFileSystemAdapter.Verify(f => f.rmSync(''), Times.Once);
+    mockFileSystemExtraAdapter.Verify(f => f.outputFile(Strings.Empty, Strings.Empty), Times.Once);
+    mockFileSystemAdapter.Verify(f => f.rmSync(Strings.Empty), Times.Once);
   });
 });
