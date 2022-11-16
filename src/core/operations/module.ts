@@ -9,3 +9,4 @@ export * from './wasmInit/wasmInit';
 export * from './docs';
 export * from './staticInit/staticInit';
 export * from './buildStatic';
+export * from './electronInit/electronInit';
