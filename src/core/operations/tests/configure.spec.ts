@@ -48,7 +48,7 @@ describe('ConfigureOperation', () => {
 
   it('should return a successful result after executing when a previously SET setting is UNSET', async () => {
     mockInquirer.Setup(i => i.prompt([]), {
-      baseUrl: ''
+      baseUrl: Strings.Empty
     } as Record<string, string>);
     mockRepository.Setup(r => r.find(s => s.key === 'baseUrl'), { key: 'baseUrl', value: 'localhost' });
 

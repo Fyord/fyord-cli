@@ -1,4 +1,4 @@
-import { IPersister } from 'tsbase';
+import { IPersister, Strings } from 'tsbase';
 import { Mock } from 'tsmockit';
 import { SettingsService } from './settings/settingsService';
 
@@ -6,6 +6,6 @@ export const setupSettingsServiceForTests = () => {
   SettingsService.Destroy();
   const mockPersister = new Mock<IPersister<any>>();
   mockPersister.Setup(p => p.Retrieve(), []);
-  mockPersister.Setup(p => p['filePath'], '');
+  mockPersister.Setup(p => p['filePath'], Strings.Empty);
   SettingsService.Instance(mockPersister.Object);
 };

@@ -9,5 +9,6 @@ export enum Directories {
   WebpackProd = './webpack.prod.js',
   CargoLock = './Cargo.lock',
   HtmlIndex = './src/index.html',
+  TsIndex = './src/index.ts',
   WebManifest = './src/wwwroot/manifest.webmanifest'
 }

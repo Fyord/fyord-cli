@@ -134,7 +134,7 @@ export class PreRenderOperation implements IOperation {
   }
 
   private addEntrySiteMap(loc: string): void {
-    const twoDigit = (value: number) => `${value < 10 ? '0' : ''}${value}`;
+    const twoDigit = (value: number) => `${value < 10 ? '0' : Strings.Empty}${value}`;
     const currentDate = new Date();
     const lastmodDate = `${currentDate.getFullYear()}-${twoDigit(currentDate.getMonth() + 1)}-${twoDigit(currentDate.getDate())}`;
 

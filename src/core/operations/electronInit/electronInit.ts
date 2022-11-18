@@ -1,17 +1,19 @@
-import { AsyncCommand, Result } from 'tsbase';
+/* eslint-disable max-lines */
+import { AsyncCommand, Result, Strings } from 'tsbase';
 import { DIModule } from '../../../diModule';
 import { Commands, Directories } from '../../../enums/module';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 import { TextReplacement } from '../../../types/module';
 import { installDependencyIfNotInstalled, updateTextInFile, UpdateTextInFile } from '../../utility/module';
 import { IOperation } from '../operation';
-import { ElectronMain, ElectronPreload, ElectronRenderer } from './templates/module';
+import { ElectronMain, ElectronPreload, ElectronRenderer, Routes } from './templates/module';
 
 export class ElectronInitOperation implements IOperation {
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     private installDependencyIfNotInstalledFunc = installDependencyIfNotInstalled,
-    private updateTextInFileFunc: UpdateTextInFile = updateTextInFile
+    private updateTextInFileFunc: UpdateTextInFile = updateTextInFile,
+    private fs = DIModule.FileSystemAdapter
   ) { }
 
   public Execute(): Promise<Result<null>> {
@@ -25,11 +27,16 @@ export class ElectronInitOperation implements IOperation {
 
         await this.updateFilesWhereChangesNeeded();
         await this.scaffoldNewFiles();
+        this.deleteFiles();
       }
     }).Execute();
   }
 
   private async updateFilesWhereChangesNeeded() {
+    const notFoundPage = './src/pages/not-found/not-found.tsx';
+    const notFoundPageSpec = './src/pages/not-found/not-found.spec.tsx';
+    const welcomePage = './src/pages/welcome/welcome.tsx';
+
     const replacements: TextReplacement[] = [
       {
         filePath: Directories.RootPackage,
@@ -54,7 +61,7 @@ export class ElectronInitOperation implements IOperation {
       {
         filePath: Directories.WebpackCommon,
         oldValue: '\'service-worker\': \'./src/service-worker.ts\'',
-        newValue: ''
+        newValue: Strings.Empty
       },
       {
         filePath: Directories.WebpackCommon,
@@ -66,7 +73,7 @@ export class ElectronInitOperation implements IOperation {
       disableDotRule: true
     }
   }`,
-        newValue: ''
+        newValue: Strings.Empty
       },
       {
         filePath: Directories.WebpackDev,
@@ -114,6 +121,63 @@ const WebpackShellPlugin = require('webpack-shell-plugin');`
       'tsc src/electron/renderer.ts --outDir ./public'
     ]
   })`
+      },
+      {
+        filePath: Directories.TsIndex,
+        oldValue: `if (navigator.serviceWorker) {
+    await navigator.serviceWorker.register(
+      '/service-worker.js', { scope: '/' });
+  }`,
+        newValue: Strings.Empty
+      },
+      {
+        filePath: notFoundPageSpec,
+        oldValue: 'const route = { path: \'fake%20page\' } as Route;',
+        newValue: 'const route = { href: \'fake%20page\' } as Route;'
+      },
+      {
+        filePath: notFoundPage,
+        oldValue: 'import { ParseJsx, Page, RenderModes, Route } from \'fyord\';',
+        newValue: `import { ParseJsx, Page, RenderModes, Route, Asap } from 'fyord';
+import { baseUrl, Routes } from '../../routes';`
+      },
+      {
+        filePath: notFoundPage,
+        oldValue: 'Route = async () => true;',
+        newValue: `Route = async (route?: Route) => {
+    this.recoverFromNonReLoadableState(route);
+    return true;
+  };`
+      },
+      {
+        filePath: notFoundPage,
+        oldValue: ` <p>Could not find content matching, "{decodeURI(route?.path || '')}"</p>
+      <p>Please check spelling. Otherwise the resource may have been moved.</p>
+    </div>;
+  }`,
+        newValue: `<p>Could not find content matching, "{decodeURI(route?.href || '')}"</p>
+      <p>Please check spelling. Otherwise the resource may have been moved.</p>
+    </div>;
+  }
+
+  private recoverFromNonReLoadableState(route?: Route) {
+    Asap(() => {
+      if (!location.href.includes(baseUrl)) {
+        location.href = \`\${Routes.NotFound\}?originalRoute=\${route?.href\}\`;
+      }
+    });
+  }`
+      },
+      {
+        filePath: welcomePage,
+        oldValue: 'import { ParseJsx, Page, Route } from \'fyord\';',
+        newValue: `import { ParseJsx, Page, Route } from 'fyord';
+import { Routes } from '../../routes';`
+      },
+      {
+        filePath: welcomePage,
+        oldValue: 'Route = async (route: Route) => route.path === document.baseURI.split(location.origin)[1];',
+        newValue: 'Route = async (route: Route) => route.href === Routes.Home;'
       }
     ];
 
@@ -126,11 +190,22 @@ const WebpackShellPlugin = require('webpack-shell-plugin');`
     const filesToCreate: { filePath: string; template: string; }[] = [
       { filePath: './src/electron/main.ts', template: ElectronMain },
       { filePath: './src/electron/preload.ts', template: ElectronPreload },
-      { filePath: './src/electron/renderer.ts', template: ElectronRenderer }
+      { filePath: './src/electron/renderer.ts', template: ElectronRenderer },
+      { filePath: './src/routes.ts', template: Routes }
     ];
 
     for (const file of filesToCreate) {
       await this.fse.outputFile(file.filePath, file.template);
     }
+  }
+
+  private deleteFiles() {
+    const paths = [
+      './src/service-worker.ts'
+    ];
+
+    paths.forEach(path => {
+      this.fs.rmSync(path);
+    });
   }
 }
