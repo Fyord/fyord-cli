@@ -13,6 +13,8 @@ export const FileSystemDryRunAdapter = {
     console.log(`Write file - "${path}"`),
   rmdirSync: (path: any, _options: any) =>
     console.log(`Remove directory - ${path}`),
+  rmSync: (path: any, _options: any) =>
+    console.log(`Remove file - ${path}`),
   renameSync: (oldPath: any, newPath: any) =>
     console.log(`Rename ${oldPath} to ${newPath}`),
   readdirSync: FileSystemAdapter.readdirSync,

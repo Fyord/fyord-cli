@@ -22,8 +22,8 @@ export class ElectronInitOperation implements IOperation {
 
       if (inRootDir) {
         await this.installDependencyIfNotInstalledFunc(Directories.WebpackShellPlugin, Commands.InstallWebpackShellPlugin);
-        await this.installDependencyIfNotInstalledFunc(Directories.WebpackShellPlugin, Commands.InstallElectron);
-        await this.installDependencyIfNotInstalledFunc(Directories.WebpackShellPlugin, Commands.InstallElectronPackager);
+        await this.installDependencyIfNotInstalledFunc(Directories.Electron, Commands.InstallElectron);
+        await this.installDependencyIfNotInstalledFunc(Directories.ElectronPackager, Commands.InstallElectronPackager);
 
         await this.updateFilesWhereChangesNeeded();
         await this.scaffoldNewFiles();
@@ -60,19 +60,21 @@ export class ElectronInitOperation implements IOperation {
       },
       {
         filePath: Directories.WebpackCommon,
-        oldValue: '\'service-worker\': \'./src/service-worker.ts\'',
+        oldValue: `,
+'service-worker': './src/service-worker.ts'`,
         newValue: Strings.Empty
       },
       {
         filePath: Directories.WebpackCommon,
-        oldValue: `devServer: {
+        oldValue: `
+  devServer: {
     contentBase: './public',
     compress: true,
     port: 4200,
     historyApiFallback: {
       disableDotRule: true
     }
-  }`,
+  },`,
         newValue: Strings.Empty
       },
       {
@@ -98,12 +100,12 @@ const WebpackShellPlugin = require('webpack-shell-plugin');`
     })
   ]`
       },
-      {
-        filePath: Directories.WebpackProd,
-        oldValue: 'const HtmlWebpackPlugin = require(\'html-webpack-plugin\');',
-        newValue: `const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WebpackShellPlugin = require('webpack-shell-plugin');`
-      },
+      //       {
+      //         filePath: Directories.WebpackProd,
+      //         oldValue: 'const HtmlWebpackPlugin = require(\'html-webpack-plugin\');',
+      //         newValue: `const HtmlWebpackPlugin = require('html-webpack-plugin');
+      // const WebpackShellPlugin = require('webpack-shell-plugin');`
+      //       },
       {
         filePath: Directories.WebpackProd,
         oldValue: `new HtmlWebpackPlugin({
@@ -124,7 +126,8 @@ const WebpackShellPlugin = require('webpack-shell-plugin');`
       },
       {
         filePath: Directories.TsIndex,
-        oldValue: `if (navigator.serviceWorker) {
+        oldValue: `
+  if (navigator.serviceWorker) {
     await navigator.serviceWorker.register(
       '/service-worker.js', { scope: '/' });
   }`,
@@ -151,7 +154,7 @@ import { baseUrl, Routes } from '../../routes';`
       },
       {
         filePath: notFoundPage,
-        oldValue: ` <p>Could not find content matching, "{decodeURI(route?.path || '')}"</p>
+        oldValue: `<p>Could not find content matching, "{decodeURI(route?.path || '')}"</p>
       <p>Please check spelling. Otherwise the resource may have been moved.</p>
     </div>;
   }`,
