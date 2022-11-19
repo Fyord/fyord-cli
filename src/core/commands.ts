@@ -2,7 +2,8 @@ import { CliName } from './constants';
 import {
   ConfigureOperation, DocsOperation, GenerateOperation, HelpOperation, IOperation,
   NewOperation, PreRenderOperation, VersionOperation, WasmInit, BuildStaticOperation,
-  StaticInit
+  StaticInit,
+  ElectronInitOperation
 } from './operations/module';
 
 export enum Commands {
@@ -15,7 +16,8 @@ export enum Commands {
   WasmInit = 'wasminit',
   Docs = 'docs',
   StaticInit = 'staticinit',
-  BuildStatic = 'buildstatic'
+  BuildStatic = 'buildstatic',
+  ElectronInit = 'electroninit'
 }
 
 export type Command = {
@@ -141,6 +143,21 @@ export const CommandMap = new Map<Commands, Command>([
         'Run this command in root directory',
         'npm dependencies installed - uses typescript binary at ./node_modules/typescript/bin/tsc',
         'fyord-cli version 1.3.1 or greater'
+      ]
+    }
+  }],
+  [Commands.ElectronInit, {
+    Name: Commands.ElectronInit,
+    Alias: 'ei',
+    Description: 'Modifies a fyord project to produce an electron app.',
+    Arguments: [],
+    Operation: new ElectronInitOperation(),
+    Example: `${CliName} ${Commands.ElectronInit}`,
+    AdditionalDetails: {
+      'Requires': [
+        'Run this command in root directory',
+        'npm dependencies installed - uses typescript binary at ./node_modules/typescript/bin/tsc',
+        'fyord-cli version 1.5.0 or greater'
       ]
     }
   }]

@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { AsyncCommand, HttpClient, Result } from 'tsbase';
+import { AsyncCommand, HttpClient, Result, Strings } from 'tsbase';
 import { DIModule } from '../../diModule';
 import { IOperation } from './operation';
 import { Directories, Errors } from '../../enums/module';
@@ -32,15 +32,15 @@ export class BuildStaticOperation implements IOperation {
           const { default: func } = await this.importFunc(module);
 
           if (typeof func === 'function') {
-            console.log(`Executing: ${module.replace(`${processDirectory}/static/`, '')}`);
+            console.log(`Executing: ${module.replace(`${processDirectory}/static/`, Strings.Empty)}`);
 
             const httpClient = new HttpClient({}, fetch);
             const result = await func(httpClient);
 
             const moduleNameParts = module.split('.');
             const name = moduleNameParts[0]
-              .replace(processDirectory, '')
-              .replace(Directories.Static.replace('.', ''), publicDir.replace('.', ''));
+              .replace(processDirectory, Strings.Empty)
+              .replace(Directories.Static.replace('.', Strings.Empty), publicDir.replace('.', Strings.Empty));
             const extension = moduleNameParts[1];
             const outputFileName = `.${name}.${extension}`;
 

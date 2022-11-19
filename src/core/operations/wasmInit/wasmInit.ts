@@ -1,5 +1,6 @@
 import { AsyncCommand, Result } from 'tsbase';
 import { Commands, Directories, Errors } from '../../../enums/module';
+import { TextReplacement } from '../../../types/module';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { DIModule } from '../../../diModule';
 import {
@@ -10,12 +11,6 @@ import {
 } from '../../utility/module';
 import { IOperation } from '../operation';
 import { RustTsTemplate, CargoTomlTemplate, GreetTemplate, LibTemplate, ModTemplate, UtilsTemplate } from './templates/module';
-
-type Replacement = {
-  filePath: string;
-  oldValue: string;
-  newValue: string;
-};
 
 export class WasmInit implements IOperation {
   constructor(
@@ -43,7 +38,7 @@ export class WasmInit implements IOperation {
   }
 
   private async updateFilesWhereChangesNeeded() {
-    const replacements: Replacement[] = [
+    const replacements: TextReplacement[] = [
       {
         filePath: Directories.Gitignore, oldValue: '.vscode', newValue: `.vscode
 target
