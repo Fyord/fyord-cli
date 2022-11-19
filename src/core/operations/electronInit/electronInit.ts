@@ -100,12 +100,6 @@ const WebpackShellPlugin = require('webpack-shell-plugin');`
     })
   ]`
       },
-      //       {
-      //         filePath: Directories.WebpackProd,
-      //         oldValue: 'const HtmlWebpackPlugin = require(\'html-webpack-plugin\');',
-      //         newValue: `const HtmlWebpackPlugin = require('html-webpack-plugin');
-      // const WebpackShellPlugin = require('webpack-shell-plugin');`
-      //       },
       {
         filePath: Directories.WebpackProd,
         oldValue: `new HtmlWebpackPlugin({
