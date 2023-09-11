@@ -37,7 +37,7 @@
     "express": "^4.17.1",
     "fs-extra": "^9.1.0",
     "isomorphic-fetch": "^3.0.0",
-    "puppeteer": "^6.0.0"
+    "puppeteer": "^19.6.3"
   },
   "bin": {
     "fyord": "./dist/index.js"

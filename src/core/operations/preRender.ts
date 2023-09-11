@@ -8,31 +8,6 @@ import { ISettingsService, SettingsService, Settings } from '../../settings/modu
 import { DIModule } from '../../diModule';
 import { IOperation } from './operation';
 
-export interface IPageRequest {
-  _url: string,
-  resourceType: () => string,
-  abort: () => void,
-  continue: () => void
-}
-
-export interface IPage {
-  on(event: string, callback: (request: any) => void);
-  setRequestInterception(on: boolean): void;
-  waitForSelector(selector: string, options: any): Promise<void>;
-  goto(url: string, options: any): Promise<void>;
-  evaluate(callback: () => any): Promise<string[]>;
-  content(): Promise<string>;
-}
-
-export interface IBrowser {
-  newPage(): Promise<IPage>;
-  close(): Promise<void>;
-}
-
-export interface IPuppeteer {
-  launch(options: any): Promise<IBrowser>;
-}
-
 export class PreRenderOperation implements IOperation {
   private config: {
     baseUrl: string,
@@ -56,7 +31,7 @@ export class PreRenderOperation implements IOperation {
   constructor(
     private createExpressApp = expressjs,
     private serveStatic = expressjs.static,
-    private browser: IPuppeteer = puppeteer,
+    private browser = puppeteer,
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     settingsService: ISettingsService = SettingsService.Instance(),
     private windowDocument?: Document
@@ -146,11 +121,11 @@ export class PreRenderOperation implements IOperation {
     });
   }
 
-  private async excludeMediaAndIntegrations(page: IPage) {
+  private async excludeMediaAndIntegrations(page: puppeteer.Page) {
     await page.setRequestInterception(true);
 
-    page.on('request', (pageRequest: IPageRequest) => {
-      const url = pageRequest._url.split('?')[0].split('#')[0];
+    page.on('request', (pageRequest) => {
+      const url = pageRequest.url().split('?')[0].split('#')[0];
       if (this.requestIsMediaOrBlockedResource(pageRequest, url)) {
         pageRequest.abort();
       } else {
@@ -159,7 +134,7 @@ export class PreRenderOperation implements IOperation {
     });
   }
 
-  private async getPathsForLinksOnPage(page: IPage) {
+  private async getPathsForLinksOnPage(page: puppeteer.Page) {
     await page.waitForSelector('a', { timeout: 5000 });
 
     const linkPaths = await page.evaluate(() => {
@@ -178,13 +153,13 @@ export class PreRenderOperation implements IOperation {
     return linkPaths;
   }
 
-  private requestIsMediaOrBlockedResource(pageRequest: IPageRequest, url: string) {
+  private requestIsMediaOrBlockedResource(pageRequest: puppeteer.HTTPRequest, url: string) {
     return this.config.blockedResourceTypes.indexOf(pageRequest.resourceType()) !== -1 ||
       this.config.skippedResources.some(resource => url.indexOf(resource) !== -1);
   }
 
   // eslint-disable-next-line complexity
-  private async renderPage(page: IPage, route: string) {
+  private async renderPage(page: puppeteer.Page, route: string) {
     this.crawledPages.push(route);
     const pageName = (route === Strings.Empty || route === '/') ? 'index' : route;
     const url = `${this.expressServerBase}${route}`;
