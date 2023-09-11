@@ -1,16 +1,16 @@
 import { Strings } from 'tsbase';
 import { Any, Mock, Times } from 'tsmockit';
+import type { Express } from 'express/lib/express';
+import * as puppeteer from 'puppeteer';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 import { Settings } from '../../../settings/settings';
 import { ISettingsService } from '../../../settings/settingsService';
-import { IBrowser, IPage, IPageRequest, IPuppeteer, PreRenderOperation } from '../preRender';
-import type { Express } from 'express/lib/express';
+import { PreRenderOperation } from '../preRender';
 
-const mockPageRequest = new Mock<IPageRequest>();
+const mockPageRequest = new Mock<puppeteer.HTTPRequest>();
 
-class FakePage implements IPage {
+class FakePage {
   renderMode: 'dynamic' | 'hybrid' | 'static' | 'error' = 'hybrid';
-
   gotoCalls = new Array<{ url: string, options: any }>();
   waitForSelectorCalls = new Array<{ selector: string, options: any }>();
   setRequestInterceptionCalls = new Array<boolean>();
@@ -52,10 +52,10 @@ class FakePage implements IPage {
 
 describe('PreRenderOperation', () => {
   let classUnderTest: PreRenderOperation;
-  const mockPuppeteer = new Mock<IPuppeteer>();
+  const mockPuppeteer = new Mock<typeof puppeteer>();
   let mockFileSystemExtra: Mock<IFileSystemExtraAdapter>;
   const mockSettingsService = new Mock<ISettingsService>();
-  const mockBrowser = new Mock<IBrowser>();
+  const mockBrowser = new Mock<puppeteer.Browser>();
   const mockLocation = new Mock<Location>();
   const mockDocument = new Mock<Document>();
   const mockExpress = new Mock<Express>();
@@ -66,7 +66,7 @@ describe('PreRenderOperation', () => {
   beforeAll(() => {
     jest.spyOn(console, 'log');
     jest.spyOn(console, 'error');
-    mockPageRequest.Setup(r => r._url, '/test?query=test#test');
+    mockPageRequest.Setup(r => r.url(), '/test?query=test#test');
     mockPageRequest.Setup(r => r.abort());
     mockPageRequest.Setup(r => r.continue());
     mockPageRequest.Setup(r => r.resourceType(), 'test');
@@ -144,7 +144,7 @@ describe('PreRenderOperation', () => {
   });
 
   it('should abort page request on skipped resource', async () => {
-    mockPageRequest.Setup(r => r._url, 'skipped-resource');
+    mockPageRequest.Setup(r => r.url(), 'skipped-resource');
 
     const result = await classUnderTest.Execute();
 
