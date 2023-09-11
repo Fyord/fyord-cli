@@ -15,7 +15,7 @@
     "cli"
   ],
   "license": "MIT",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "A companion CLI to the Fyord framework",
   "private": false,
   "main": "./index.js",
@@ -24,7 +24,7 @@
     "express": "^4.17.1",
     "fs-extra": "^9.1.0",
     "isomorphic-fetch": "^3.0.0",
-    "puppeteer": "^6.0.0"
+    "puppeteer": "^19.6.3"
   },
   "bin": {
     "fyord": "./index.js"
