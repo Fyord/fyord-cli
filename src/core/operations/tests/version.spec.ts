@@ -12,7 +12,7 @@ describe('VersionOperation', () => {
   });
 
   it('should execute', async () => {
-    spyOn(console, 'log');
+    jest.spyOn(console, 'log');
     const result = await classUnderTest.Execute();
     expect(result.IsSuccess).toBeTruthy();
   });

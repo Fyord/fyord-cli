@@ -27,7 +27,7 @@ describe('installDependencyIfNotInstalled', () => {
   });
 
   it('should NOT install dependency when already installed', async () => {
-    const consoleSpy = spyOn(console, 'log');
+    const consoleSpy = jest.spyOn(console, 'log');
     mockFseAdapter.Setup(f => f.pathExists(Any<string>()), true);
 
     await installDependencyIfNotInstalled(

@@ -14,14 +14,14 @@ describe('GenerateOperation', () => {
   const mockGenerator = new Mock<IGenerator>();
 
   beforeAll(() => {
-    spyOn(console, 'error');
+    jest.spyOn(console, 'error');
 
     mockGenerator.Setup(g => g.Generate([]), new Result());
     GeneratorMap.set(mockGeneratorKey as Generators, mockGenerator.Object);
   });
 
   beforeEach(() => {
-    spyOn(console, 'log');
+    jest.spyOn(console, 'log');
     classUnderTest = new GenerateOperation();
   });
 

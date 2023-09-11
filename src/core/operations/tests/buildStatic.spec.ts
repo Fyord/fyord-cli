@@ -39,7 +39,7 @@ describe('BuildStatic', () => {
   });
 
   it('should return true and log warning when no static tsconfig file found', async () => {
-    const consoleSpy = spyOn(console, 'warn');
+    const consoleSpy = jest.spyOn(console, 'warn');
 
     const result = await classUnderTest.Execute([]);
 

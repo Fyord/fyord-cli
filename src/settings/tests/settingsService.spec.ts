@@ -8,7 +8,7 @@ describe('SettingsService', () => {
   let classUnderTest: SettingsService;
 
   beforeEach(() => {
-    spyOn(console, 'log');
+    jest.spyOn(console, 'log');
     mockPersister.Setup(p => p.Retrieve(), []);
     mockPersister.Setup(p => p['filePath'], '');
 
