@@ -9,7 +9,7 @@ describe('WebComponentGenerator', () => {
   const mockFileSystem = new Mock<typeof FileSystemAdapter>();
 
   beforeEach(() => {
-    spyOn(console, 'log');
+    jest.spyOn(console, 'log');
     mockFileSystemExtra.Setup(fse => fse.outputFile(Any<string>(), Any<string>()));
     mockFileSystemExtra.Setup(fse => fse.pathExists(Any<string>()), true);
     mockFileSystem.Setup(fs => fs.readFileSync(Any<string>(), 'utf8'), Buffer.from(Any<string>(), 'utf8'));

@@ -2,7 +2,7 @@ import { WebComponentTemplate } from '../../module';
 
 describe('WebComponentTemplate', () => {
   beforeAll(() => {
-    spyOn(console, 'log');
+    jest.spyOn(console, 'log');
   });
 
   it('should generate template without args', () => {

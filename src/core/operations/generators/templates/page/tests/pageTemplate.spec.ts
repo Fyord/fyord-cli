@@ -9,7 +9,7 @@ describe('PageTemplate', () => {
   mockSettingsService.Setup(s => s.GetSettingOrDefault(Settings.StyleExtension), 'css');
 
   beforeAll(() => {
-    spyOn(console, 'log');
+    jest.spyOn(console, 'log');
   });
 
   it('should run with default args', () => {

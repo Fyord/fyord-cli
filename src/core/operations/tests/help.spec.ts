@@ -12,7 +12,7 @@ describe('HelpOperation', () => {
   const mockConsole = new Mock<Console>();
 
   beforeEach(() => {
-    spyOn(console, 'log');
+    jest.spyOn(console, 'log');
     mockConsole.Setup(c => c.log(Any<string>()));
     classUnderTest = new HelpOperation(mockConsole.Object);
   });

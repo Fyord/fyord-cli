@@ -64,8 +64,8 @@ describe('PreRenderOperation', () => {
   const fakePage = new FakePage();
 
   beforeAll(() => {
-    spyOn(console, 'log');
-    spyOn(console, 'error');
+    jest.spyOn(console, 'log');
+    jest.spyOn(console, 'error');
     mockPageRequest.Setup(r => r._url, '/test?query=test#test');
     mockPageRequest.Setup(r => r.abort());
     mockPageRequest.Setup(r => r.continue());

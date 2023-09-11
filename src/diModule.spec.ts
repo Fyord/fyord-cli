@@ -9,7 +9,7 @@ describe('DIModule', () => {
   });
 
   it('child process should log commands to be executed', () => {
-    const logSpy = spyOn(console, 'log');
+    const logSpy = jest.spyOn(console, 'log');
     DIModule.DryRunMode = true;
     const cp = DIModule.ChildProcess;
 
