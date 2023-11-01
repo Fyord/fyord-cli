@@ -7,7 +7,8 @@ export const ComponentSpecTemplate: Template = (args?: string[]) => {
   const pascalCaseName = Strings.PascalCase(name);
 
   return `import { Expect } from 'tsmockit';
-import { TestHelpers, Asap } from 'fyord';
+import { Asap } from 'fyord';
+import { TestHelpers } from 'fyord/utilities/testHelpers';
 import { ${pascalCaseName} } from './${camelCaseName}';
 
 describe('${pascalCaseName}', () => {

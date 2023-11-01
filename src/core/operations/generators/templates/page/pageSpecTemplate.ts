@@ -7,7 +7,8 @@ export const PageSpecTemplate: Template = (args?: string[]) => {
   const pascalCaseName = Strings.PascalCase(name);
 
   return `import { Expect } from 'tsmockit';
-import { RenderModes, Route, TestHelpers, Asap } from 'fyord';
+import { RenderModes, Route, Asap } from 'fyord';
+import { TestHelpers } from 'fyord/utilities/testHelpers';
 import { ${pascalCaseName} } from './${camelCaseName}';
 
 describe('${pascalCaseName}', () => {

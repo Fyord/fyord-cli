@@ -7,7 +7,7 @@ export const CustomElementSpecTemplate: Template = (args?: string[]) => {
   const camelCaseName = Strings.CamelCase(name);
   const pascalCaseName = Strings.PascalCase(name);
 
-  return `import { TestHelpers } from 'fyord';
+  return `import { TestHelpers } from 'fyord/utilities/testHelpers';
 import { ${pascalCaseName} } from './${camelCaseName}';
 
 describe('${pascalCaseName}', () => {
