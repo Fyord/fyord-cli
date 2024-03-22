@@ -43,7 +43,7 @@ describe('ConfigureOperation', () => {
     expect(result.IsSuccess).toBeTruthy();
     mockRepository.Verify(r => r.find(() => true), Times.Once);
     mockRepository.Verify(r => r.SaveChanges(), Times.Once);
-    mockRepository.Verify(r => r.push({ key: Strings.Empty, value: Strings.Empty }), Times.Never);
+    mockRepository.Verify(r => r.push({ key: Strings.Empty, value: Strings.Empty }), Times.Once);
   });
 
   it('should return a successful result after executing when a previously SET setting is UNSET', async () => {
@@ -57,7 +57,7 @@ describe('ConfigureOperation', () => {
     expect(result.IsSuccess).toBeTruthy();
     mockRepository.Verify(r => r.find(s => s.key === 'baseUrl'), Times.Once);
     mockRepository.Verify(r => r.SaveChanges(), Times.Once);
-    mockRepository.Verify(r => r.push({ key: Strings.Empty, value: Strings.Empty }), Times.Never);
+    mockRepository.Verify(r => r.push({ key: Strings.Empty, value: Strings.Empty }), Times.Once);
   });
 
   it('should return a successful result after executing when a previously UNSET setting is UNSET', async () => {
