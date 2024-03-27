@@ -4,7 +4,6 @@ import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { DIModule } from '../../../diModule';
 import { Commands, Errors } from '../../../enums/module';
 import {
-  addWebpackOnBuildStartCommand,
   installDependencyIfNotInstalled,
   UpdateTextInFile,
   updateTextInFile as _updateTextInFile
@@ -18,8 +17,7 @@ export class StaticInit implements IOperation {
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     private updateTextInFile: UpdateTextInFile = _updateTextInFile,
-    private installWebpackShellPluginFunc = installDependencyIfNotInstalled,
-    private addWebpackOnBuildStartCommandFunc = addWebpackOnBuildStartCommand
+    private installWebpackShellPluginFunc = installDependencyIfNotInstalled
   ) { }
 
   public Execute(): Promise<Result<null>> {

@@ -4,7 +4,6 @@ import { TextReplacement } from '../../../types/module';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { DIModule } from '../../../diModule';
 import {
-  addWebpackOnBuildStartCommand,
   UpdateTextInFile,
   updateTextInFile as _updateTextInFile,
   installDependencyIfNotInstalled
@@ -16,8 +15,7 @@ export class WasmInit implements IOperation {
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     private updateTextInFile: UpdateTextInFile = _updateTextInFile,
-    private installDependencyIfNotInstalledFunc = installDependencyIfNotInstalled,
-    private addWebpackOnBuildStartCommandFunc = addWebpackOnBuildStartCommand
+    private installDependencyIfNotInstalledFunc = installDependencyIfNotInstalled
   ) { }
 
   public Execute(): Promise<Result<null>> {
