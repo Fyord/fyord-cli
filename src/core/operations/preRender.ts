@@ -173,7 +173,7 @@ export class PreRenderOperation implements IOperation {
       let content = await page.content();
       content = content.replace(/\r?\n|\r/g, Strings.Empty).replace(/>\s+</g, '><');
 
-      const bundleScriptRegex = /<script src="bundle.js?(?:.*)"><\/script>/;
+      const bundleScriptRegex = /<script src="index.js?(?:.*)"><\/script>/;
       if (content.indexOf('<!-- fyord-static-render -->') >= 0) {
         content = content.replace(bundleScriptRegex, Strings.Empty);
       }
