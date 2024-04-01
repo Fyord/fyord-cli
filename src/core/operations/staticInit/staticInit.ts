@@ -4,9 +4,9 @@ import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { DIModule } from '../../../diModule';
 import { Commands, Errors } from '../../../enums/module';
 import {
-  installDependencyIfNotInstalled,
   UpdateTextInFile,
-  updateTextInFile as _updateTextInFile
+  updateTextInFile as _updateTextInFile,
+  addEsbuildOnStartCommand as _addEsbuildOnStartCommand
 } from '../../utility/module';
 import { IOperation } from '../operation';
 import { TsconfigTemplate } from './templates/tsconfigTemplate';
@@ -16,8 +16,8 @@ const staticTsConfig = `${Directories.Static}/tsconfig.json`;
 export class StaticInit implements IOperation {
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
-    private updateTextInFile: UpdateTextInFile = _updateTextInFile,
-    private installWebpackShellPluginFunc = installDependencyIfNotInstalled
+    private addEsbuildOnStartCommand = _addEsbuildOnStartCommand,
+    private updateTextInFile: UpdateTextInFile = _updateTextInFile
   ) { }
 
   public Execute(): Promise<Result<null>> {
@@ -28,8 +28,7 @@ export class StaticInit implements IOperation {
       if (inRootDir && !staticAlreadyExists) {
         this.fse.outputFile(staticTsConfig, TsconfigTemplate);
 
-        await this.installWebpackShellPluginFunc(Directories.WebpackShellPlugin, Commands.InstallWebpackShellPlugin);
-        this.addWebpackOnBuildStartCommandFunc(Commands.FyordBuildStatic);
+        this.addEsbuildOnStartCommand(Commands.FyordBuildStatic);
 
         await this.updateTextInFile(Directories.Gitignore, 'public', 'public\nstatic/**/*.js');
       } else {

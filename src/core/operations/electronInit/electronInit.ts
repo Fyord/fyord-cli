@@ -21,7 +21,6 @@ export class ElectronInitOperation implements IOperation {
       const inRootDir = await this.fse.pathExists(Directories.RootPackage);
 
       if (inRootDir) {
-        await this.installDependencyIfNotInstalledFunc(Directories.WebpackShellPlugin, Commands.InstallWebpackShellPlugin);
         await this.installDependencyIfNotInstalledFunc(Directories.Electron, Commands.InstallElectron);
         await this.installDependencyIfNotInstalledFunc(Directories.ElectronPackager, Commands.InstallElectronPackager);
 

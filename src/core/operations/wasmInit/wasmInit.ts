@@ -24,9 +24,8 @@ export class WasmInit implements IOperation {
       const cargoLockAlreadyExists = await this.fse.pathExists(Directories.CargoLock);
 
       if (inRootDir && !cargoLockAlreadyExists) {
-        await this.installDependencyIfNotInstalledFunc(Directories.WebpackShellPlugin, Commands.InstallWebpackShellPlugin);
         await this.installDependencyIfNotInstalledFunc(Directories.WasmPack, Commands.InstallWasmPack);
-        this.addWebpackOnBuildStartCommandFunc(Commands.WasmPackBuild);
+        // this.addWebpackOnBuildStartCommandFunc(Commands.WasmPackBuild);
         await this.updateFilesWhereChangesNeeded();
         await this.scaffoldNewFiles();
       } else {
