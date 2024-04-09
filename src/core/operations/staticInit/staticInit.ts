@@ -6,7 +6,8 @@ import { Commands, Errors } from '../../../enums/module';
 import {
   UpdateTextInFile,
   updateTextInFile as _updateTextInFile,
-  addEsbuildOnStartCommand as _addEsbuildOnStartCommand
+  addEsbuildCommand as _addEsbuildOnStartCommand,
+  EsbuildTypes
 } from '../../utility/module';
 import { IOperation } from '../operation';
 import { TsconfigTemplate } from './templates/tsconfigTemplate';
@@ -28,7 +29,7 @@ export class StaticInit implements IOperation {
       if (inRootDir && !staticAlreadyExists) {
         this.fse.outputFile(staticTsConfig, TsconfigTemplate);
 
-        this.addEsbuildOnStartCommand(Commands.FyordBuildStatic);
+        this.addEsbuildOnStartCommand(Commands.FyordBuildStatic, EsbuildTypes.Before);
 
         await this.updateTextInFile(Directories.Gitignore, 'public', 'public\nstatic/**/*.js');
       } else {
