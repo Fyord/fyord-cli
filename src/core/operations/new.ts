@@ -45,7 +45,7 @@ export class NewOperation implements IOperation {
 
   private cloneBoilerplateRepo(name: string): void {
     name = name || 'fyord-boilerplate';
-    this.cp.execSync(`git clone -b v.3.0.0 https://github.com/Fyord/fyord-boilerplate.git ./${name}`);
+    this.cp.execSync(`git clone -b v3.0.0 https://github.com/Fyord/fyord-boilerplate.git ./${name}`);
     this.fs.rmdirSync(`./${name}/.git`, { recursive: true });
     this.fs.rmdirSync(`./${name}/.github`, { recursive: true });
   }
