@@ -22,7 +22,7 @@ export class BuildStaticOperation implements IOperation {
     return await new AsyncCommand(async () => {
       if (await this.fse.pathExists(staticTsConfig)) {
         const processDirectory = this.mainProcess.cwd();
-        this.cp.execSync(`./node_modules/typescript/bin/tsc -p ${staticTsConfig}`);
+        this.cp.execSync(`npx tsc -p ${staticTsConfig}`);
 
         const functionModules = this.getAllFilesFunc(Directories.Static)
           .filter(f => f.endsWith('js'))
