@@ -1,4 +1,4 @@
 export * from './getAliasableValueFromMap';
 export * from './updateTextInFile';
 export * from './installDependencyIfNotInstalled';
-export * from './addEsbuildOnStartCommand';
+export * from './addEsbuildCommand';
