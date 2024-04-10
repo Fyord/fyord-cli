@@ -44,7 +44,7 @@ export class WasmInit implements IOperation {
 target
 pkg`
       },
-      {
+      { // TODO
         filePath: './src/index.html',
         oldValue: '<meta http-equiv="Content-Security-Policy" content="',
         newValue: `<meta http-equiv="Content-Security-Policy" content="
@@ -54,13 +54,16 @@ pkg`
         filePath: './src/index.ts',
         oldValue: 'import { defaultLayout } from \'./layouts\';',
         newValue: `import { defaultLayout } from './layouts';
-import { RustWindowKey, Rust } from './rust/rust';`
+import { RustWindowKey, Rust } from './rust/rust';
+import bin from '../pkg/rust_bg.wasm';
+import * as wasm from '../pkg/rust';`
       },
       {
         filePath: './src/index.ts',
         oldValue: '})();',
         newValue: `
-  window[RustWindowKey] = await import('../pkg/rust');
+  await wasm.default(bin);
+  window[RustWindowKey] = wasm;
   Rust()?.greet();
 })();`
       }

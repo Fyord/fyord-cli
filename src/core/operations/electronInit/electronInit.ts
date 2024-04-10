@@ -78,12 +78,6 @@ export class ElectronInitOperation implements IOperation {
       },
       {
         filePath: Directories.WebpackDev,
-        oldValue: 'const common = require(\'./webpack.common.js\');',
-        newValue: `const common = require('./webpack.common.js');
-const WebpackShellPlugin = require('webpack-shell-plugin');`
-      },
-      {
-        filePath: Directories.WebpackDev,
         oldValue: 'devtool: \'inline-source-map\'',
         newValue: `devtool: 'inline-source-map',
   plugins: [
