@@ -6,7 +6,9 @@ import { DIModule } from '../../../diModule';
 import {
   UpdateTextInFile,
   updateTextInFile as _updateTextInFile,
-  installDependencyIfNotInstalled
+  addEsbuildCommand as _addEsbuildCommand,
+  installDependencyIfNotInstalled,
+  EsbuildTypes
 } from '../../utility/module';
 import { IOperation } from '../operation';
 import { RustTsTemplate, CargoTomlTemplate, GreetTemplate, LibTemplate, ModTemplate, UtilsTemplate } from './templates/module';
@@ -15,7 +17,8 @@ export class WasmInit implements IOperation {
   constructor(
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     private updateTextInFile: UpdateTextInFile = _updateTextInFile,
-    private installDependencyIfNotInstalledFunc = installDependencyIfNotInstalled
+    private installDependencyIfNotInstalledFunc = installDependencyIfNotInstalled,
+    private addEsbuildCommand = _addEsbuildCommand
   ) { }
 
   public Execute(): Promise<Result<null>> {
@@ -25,7 +28,7 @@ export class WasmInit implements IOperation {
 
       if (inRootDir && !cargoLockAlreadyExists) {
         await this.installDependencyIfNotInstalledFunc(Directories.WasmPack, Commands.InstallWasmPack);
-        // this.addWebpackOnBuildStartCommandFunc(Commands.WasmPackBuild);
+        this.addEsbuildCommand(Commands.WasmPackBuild, EsbuildTypes.Before);
         await this.updateFilesWhereChangesNeeded();
         await this.scaffoldNewFiles();
       } else {
