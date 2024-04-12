@@ -46,18 +46,6 @@ export class ElectronInitOperation implements IOperation {
 
     const replacements: TextReplacement[] = [
       {
-        filePath: Directories.EsbuildBuild,
-        oldValue: `  const { port } = await context.serve({
-    servedir: BuildConstants.BuildDir,
-    port: 4200,
-    host: 'localhost'
-  });
-
-  const localhostUrl = \`http://localhost:\${port}\`;
-  console.log(\`Serving at \${localhostUrl}\`);`,
-        newValue: Strings.Empty
-      },
-      {
         filePath: Directories.HtmlIndex,
         oldValue: '<base href="/">',
         newValue: '<base href="./">'
