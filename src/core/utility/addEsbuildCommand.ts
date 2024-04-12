@@ -27,8 +27,8 @@ enum Constants {
   BeforeOperationsDeclaration = 'export const beforeOperations: BuildOperation[] = [',
   OnStartOperationsPath = './esbuild/onStartOperations.ts',
   OnStartOperationsDeclaration = 'export const onBuildStartOperations: BuildOperation[] = [',
-  OnEndOperationsPath = './esbuild/onStartOperations.ts',
-  OnEndOperationsDeclaration = 'export const onBuildStartOperations: BuildOperation[] = [',
+  OnEndOperationsPath = './esbuild/onEndOperations.ts',
+  OnEndOperationsDeclaration = 'export const onBuildEndOperations: BuildOperation[] = [',
   ChildProcessImport = "import * as child_process from 'child_process';",
   Exec = 'exec',
   ExecSync = 'execSync'
