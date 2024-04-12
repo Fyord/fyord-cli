@@ -72,7 +72,8 @@ export class ElectronInitOperation implements IOperation {
       },
       {
         filePath: Directories.TsIndex,
-        oldValue: /if (navigator.serviceWorker) {\s*await navigator.serviceWorker.register(\s*'\/service-worker.js', { scope: '\/' });\s*}/,
+        // eslint-disable-next-line max-len
+        oldValue: /\s*if \(navigator.serviceWorker\) {\s*await navigator.serviceWorker.register\(\s*'\/service-worker.js', { scope: '\/' }\);\s*}/,
         newValue: Strings.Empty
       },
       {
@@ -97,11 +98,11 @@ import { baseUrl, Routes } from '../../routes';`
       {
         filePath: notFoundPage,
         // eslint-disable-next-line max-len
-        oldValue: /<p>Could not find content matching, "{decodeURI(route?.path || '')}"<\/p>\s*<p>Please check spelling. Otherwise the resource may have been moved.<\/p>\s*<\/div>;\s*}/,
+        oldValue: /\s*<p>Could not find content matching, "{decodeURI\(route\?.path \|\| ''\)}"<\/p>\s*<p>Please check spelling. Otherwise the resource may have been moved.<\/p>\s*<\/div>;\s*};/,
         newValue: `<p>Could not find content matching, "{decodeURI(route?.href || '')}"</p>
       <p>Please check spelling. Otherwise the resource may have been moved.</p>
     </div>;
-  }
+  };
 
   private recoverFromNonReLoadableState(route?: Route) {
     Asap(() => {
