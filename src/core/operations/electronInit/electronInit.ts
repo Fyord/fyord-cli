@@ -71,6 +71,11 @@ export class ElectronInitOperation implements IOperation {
         newValue: "const platform = 'node';"
       },
       {
+        filePath: Directories.EsbuildBuild,
+        oldValue: 'const bundle = true;',
+        newValue: 'const bundle = false;'
+      },
+      {
         filePath: Directories.TsIndex,
         oldValue: `
   if (navigator.serviceWorker) {
