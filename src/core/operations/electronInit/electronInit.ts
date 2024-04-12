@@ -71,6 +71,17 @@ export class ElectronInitOperation implements IOperation {
         newValue: "const nodeEntryPoints = ['src/electron/main.ts', 'src/electron/preload.ts', 'src/electron/renderer.ts']"
       },
       {
+        filePath: Directories.EsbuildOnStart,
+        // eslint-disable-next-line max-len
+        oldValue: /\s*.replace\(BuildConstants\.ClosingBodyTag, isProductionBuild \?\s*BuildConstants\.ClosingBodyTag :\s*`\${BuildConstants\.HotReloadScript}\${BuildConstants\.ClosingBodyTag}`\)/,
+        newValue: Strings.Empty
+      },
+      {
+        filePath: Directories.EsbuildOnStart,
+        oldValue: 'isProductionBuild',
+        newValue: '_isProductionBuild'
+      },
+      {
         filePath: Directories.TsIndex,
         // eslint-disable-next-line max-len
         oldValue: /\s*if \(navigator.serviceWorker\) {\s*await navigator.serviceWorker.register\(\s*'\/service-worker.js', { scope: '\/' }\);\s*}/,
