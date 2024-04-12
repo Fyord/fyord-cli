@@ -1,5 +1,5 @@
 export type TextReplacement = {
   filePath: string;
-  oldValue: string;
+  oldValue: string | RegExp;
   newValue: string;
 };

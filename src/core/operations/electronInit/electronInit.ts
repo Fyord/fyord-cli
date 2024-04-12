@@ -62,26 +62,17 @@ export class ElectronInitOperation implements IOperation {
       },
       {
         filePath: Directories.EsbuildBuild,
-        oldValue: "const entryPoints = ['src/index.ts', 'src/service-worker.ts'];",
-        newValue: "const entryPoints = ['src/electron/main.ts', 'src/electron/preload.ts', 'src/electron/renderer.ts'];"
+        oldValue: "const browserEntryPoints = ['src/index.ts', 'src/service-worker.ts'];",
+        newValue: "const browserEntryPoints = ['src/index.ts'];"
       },
       {
         filePath: Directories.EsbuildBuild,
-        oldValue: "const platform = 'browser';",
-        newValue: "const platform = 'node';"
-      },
-      {
-        filePath: Directories.EsbuildBuild,
-        oldValue: 'const bundle = true;',
-        newValue: 'const bundle = false;'
+        oldValue: 'const nodeEntryPoints = [];',
+        newValue: "const nodeEntryPoints = ['src/electron/main.ts', 'src/electron/preload.ts', 'src/electron/renderer.ts']"
       },
       {
         filePath: Directories.TsIndex,
-        oldValue: `
-  if (navigator.serviceWorker) {
-    await navigator.serviceWorker.register(
-      '/service-worker.js', { scope: '/' });
-  }`,
+        oldValue: /if (navigator.serviceWorker) {\s*await navigator.serviceWorker.register(\s*'\/service-worker.js', { scope: '\/' });\s*}/,
         newValue: Strings.Empty
       },
       {
@@ -105,10 +96,8 @@ import { baseUrl, Routes } from '../../routes';`
       },
       {
         filePath: notFoundPage,
-        oldValue: `<p>Could not find content matching, "{decodeURI(route?.path || '')}"</p>
-      <p>Please check spelling. Otherwise the resource may have been moved.</p>
-    </div>;
-  }`,
+        // eslint-disable-next-line max-len
+        oldValue: /<p>Could not find content matching, "{decodeURI(route?.path || '')}"<\/p>\s*<p>Please check spelling. Otherwise the resource may have been moved.<\/p>\s*<\/div>;\s*}/,
         newValue: `<p>Could not find content matching, "{decodeURI(route?.href || '')}"</p>
       <p>Please check spelling. Otherwise the resource may have been moved.</p>
     </div>;
