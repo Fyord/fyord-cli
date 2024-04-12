@@ -4,7 +4,14 @@ import { DIModule } from '../../../diModule';
 import { Commands, Directories } from '../../../enums/module';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 import { TextReplacement } from '../../../types/module';
-import { installDependencyIfNotInstalled, updateTextInFile, UpdateTextInFile } from '../../utility/module';
+import {
+  addEsbuildCommand as _addEsbuildCommand,
+  EsbuildModes,
+  EsbuildTypes,
+  installDependencyIfNotInstalled,
+  updateTextInFile,
+  UpdateTextInFile
+} from '../../utility/module';
 import { IOperation } from '../operation';
 import { ElectronMain, ElectronPreload, ElectronRenderer, Routes } from './templates/module';
 
@@ -13,7 +20,8 @@ export class ElectronInitOperation implements IOperation {
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     private installDependencyIfNotInstalledFunc = installDependencyIfNotInstalled,
     private updateTextInFileFunc: UpdateTextInFile = updateTextInFile,
-    private fs = DIModule.FileSystemAdapter
+    private fs = DIModule.FileSystemAdapter,
+    private addEsbuildCommand = _addEsbuildCommand
   ) { }
 
   public Execute(): Promise<Result<null>> {
@@ -23,7 +31,7 @@ export class ElectronInitOperation implements IOperation {
       if (inRootDir) {
         await this.installDependencyIfNotInstalledFunc(Directories.Electron, Commands.InstallElectron);
         await this.installDependencyIfNotInstalledFunc(Directories.ElectronPackager, Commands.InstallElectronPackager);
-
+        this.addEsbuildCommand(Commands.ElectronServe, EsbuildTypes.OnEnd, EsbuildModes.Dev);
         await this.updateFilesWhereChangesNeeded();
         await this.scaffoldNewFiles();
         this.deleteFiles();
@@ -38,9 +46,16 @@ export class ElectronInitOperation implements IOperation {
 
     const replacements: TextReplacement[] = [
       {
-        filePath: Directories.RootPackage,
-        oldValue: '"start": "webpack serve --config webpack.dev.js"',
-        newValue: '"start": "webpack -w --config webpack.dev.js"'
+        filePath: Directories.EsbuildBuild,
+        oldValue: `  const { port } = await context.serve({
+    servedir: BuildConstants.BuildDir,
+    port: 4200,
+    host: 'localhost'
+  });
+
+  const localhostUrl = \`http://localhost:\${port}\`;
+  console.log(\`Serving at \${localhostUrl}\`);`,
+        newValue: Strings.Empty
       },
       {
         filePath: Directories.HtmlIndex,
@@ -58,58 +73,9 @@ export class ElectronInitOperation implements IOperation {
         newValue: '"start_url": "./",'
       },
       {
-        filePath: Directories.WebpackCommon,
-        oldValue: `,
-'service-worker': './src/service-worker.ts'`,
-        newValue: Strings.Empty
-      },
-      {
-        filePath: Directories.WebpackCommon,
-        oldValue: `
-  devServer: {
-    contentBase: './public',
-    compress: true,
-    port: 4200,
-    historyApiFallback: {
-      disableDotRule: true
-    }
-  },`,
-        newValue: Strings.Empty
-      },
-      {
-        filePath: Directories.WebpackDev,
-        oldValue: 'devtool: \'inline-source-map\'',
-        newValue: `devtool: 'inline-source-map',
-  plugins: [
-    new WebpackShellPlugin({
-      onBuildStart: [
-        'tsc -w ./src/electron/main.ts --outDir ./public',
-        'tsc -w ./src/electron/preload.ts --outDir ./public',
-        'tsc -w ./src/electron/renderer.ts --outDir ./public'
-      ],
-      onBuildEnd: [
-        'electron public/main.js'
-      ]
-    })
-  ]`
-      },
-      {
-        filePath: Directories.WebpackProd,
-        oldValue: `new HtmlWebpackPlugin({
-    template: 'src/index.html',
-    hash: true
-  }),`,
-        newValue: `new HtmlWebpackPlugin({
-    template: 'src/index.html',
-    hash: true
-  }),
-  new WebpackShellPlugin({
-    onBuildStart: [
-      'tsc src/electron/main.ts --outDir ./public',
-      'tsc src/electron/preload.ts --outDir ./public',
-      'tsc src/electron/renderer.ts --outDir ./public'
-    ]
-  })`
+        filePath: Directories.EsbuildBuild,
+        oldValue: "const entryPoints = ['src/index.ts', 'src/service-worker.ts'];",
+        newValue: "const entryPoints = ['src/electron/main.ts', 'src/electron/preload.ts', 'src/electron/renderer.ts'];"
       },
       {
         filePath: Directories.TsIndex,

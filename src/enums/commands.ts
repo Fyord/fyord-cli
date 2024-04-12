@@ -3,5 +3,6 @@ export enum Commands {
   WasmPackBuild = 'wasm-pack build --target=web',
   FyordBuildStatic = 'fyord bs',
   InstallElectron = 'npm install --save-dev electron@^20.0.3',
-  InstallElectronPackager = 'npm install --save-dev electron-packager@^15.5.1'
+  InstallElectronPackager = 'npm install --save-dev electron-packager@^15.5.1',
+  ElectronServe = 'electron public/main.js'
 }

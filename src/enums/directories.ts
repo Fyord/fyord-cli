@@ -11,5 +11,6 @@ export enum Directories {
   CargoLock = './Cargo.lock',
   HtmlIndex = './src/index.html',
   TsIndex = './src/index.ts',
-  WebManifest = './src/wwwroot/manifest.webmanifest'
+  WebManifest = './src/wwwroot/manifest.webmanifest',
+  EsbuildBuild = './esbuild/build.ts'
 }
