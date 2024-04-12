@@ -68,7 +68,7 @@ export class ElectronInitOperation implements IOperation {
       {
         filePath: Directories.EsbuildBuild,
         oldValue: 'const nodeEntryPoints = [];',
-        newValue: "const nodeEntryPoints = ['src/electron/main.ts', 'src/electron/preload.ts', 'src/electron/renderer.ts']"
+        newValue: "const nodeEntryPoints = ['src/electron/main.ts', 'src/electron/preload.ts', 'src/electron/renderer.ts'];"
       },
       {
         filePath: Directories.EsbuildOnStart,
