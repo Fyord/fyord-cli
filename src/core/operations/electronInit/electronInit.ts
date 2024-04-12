@@ -78,6 +78,11 @@ export class ElectronInitOperation implements IOperation {
         newValue: "const entryPoints = ['src/electron/main.ts', 'src/electron/preload.ts', 'src/electron/renderer.ts'];"
       },
       {
+        filePath: Directories.EsbuildBuild,
+        oldValue: "const platform = 'browser';",
+        newValue: "const platform = 'node';"
+      },
+      {
         filePath: Directories.TsIndex,
         oldValue: `
   if (navigator.serviceWorker) {
