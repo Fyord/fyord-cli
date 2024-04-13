@@ -13,7 +13,11 @@ export enum EsbuildTypes {
   /**
    * Happens at the end of each build (including builds triggered in watch mode)
    */
-  OnEnd
+  OnEnd,
+  /**
+   * Happens once at the end of the build script
+   */
+  After
 }
 
 export enum EsbuildModes {
@@ -23,12 +27,11 @@ export enum EsbuildModes {
 }
 
 enum Constants {
-  BeforeOperationsPath = './esbuild/beforeOperations.ts',
+  BuildOperationsPath = './esbuild/buildOperations.ts',
   BeforeOperationsDeclaration = 'export const beforeOperations: BuildOperation[] = [',
-  OnStartOperationsPath = './esbuild/onStartOperations.ts',
   OnStartOperationsDeclaration = 'export const onBuildStartOperations: BuildOperation[] = [',
-  OnEndOperationsPath = './esbuild/onEndOperations.ts',
   OnEndOperationsDeclaration = 'export const onBuildEndOperations: BuildOperation[] = [',
+  AfterOperationsDeclaration = 'export const afterOperations: BuildOperation[] = [',
   ChildProcessImport = "import * as child_process from 'child_process';",
   Exec = 'exec',
   ExecSync = 'execSync'
@@ -37,19 +40,15 @@ enum Constants {
 const DeclarationRecord: Record<EsbuildTypes, Constants> = {
   [EsbuildTypes.Before]: Constants.BeforeOperationsDeclaration,
   [EsbuildTypes.OnStart]: Constants.OnStartOperationsDeclaration,
-  [EsbuildTypes.OnEnd]: Constants.OnEndOperationsDeclaration
-};
-
-const PathRecord: Record<EsbuildTypes, Constants> = {
-  [EsbuildTypes.Before]: Constants.BeforeOperationsPath,
-  [EsbuildTypes.OnStart]: Constants.OnStartOperationsPath,
-  [EsbuildTypes.OnEnd]: Constants.OnEndOperationsPath
+  [EsbuildTypes.OnEnd]: Constants.OnEndOperationsDeclaration,
+  [EsbuildTypes.After]: Constants.AfterOperationsDeclaration
 };
 
 const ExecCommandRecord: Record<EsbuildTypes, Constants> = {
   [EsbuildTypes.Before]: Constants.ExecSync,
   [EsbuildTypes.OnStart]: Constants.Exec,
-  [EsbuildTypes.OnEnd]: Constants.Exec
+  [EsbuildTypes.OnEnd]: Constants.Exec,
+  [EsbuildTypes.After]: Constants.ExecSync
 };
 
 const ModeCommandRecord: Record<EsbuildModes, (execCommand: Constants, command: string) => string> = {
@@ -67,7 +66,7 @@ export const addEsbuildCommand = (
   mode = EsbuildModes.All,
   fs = DIModule.FileSystemAdapter
 ): void => {
-  const path = PathRecord[type];
+  const path = Constants.BuildOperationsPath;
   const lineToReplace = DeclarationRecord[type];
   const lineToAdd = `${lineToReplace}
   (${mode === EsbuildModes.All ? '' : 'isProduction'}) => ${ModeCommandRecord[mode](ExecCommandRecord[type], command)},`;

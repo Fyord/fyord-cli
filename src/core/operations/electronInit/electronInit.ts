@@ -31,7 +31,7 @@ export class ElectronInitOperation implements IOperation {
       if (inRootDir) {
         await this.installDependencyIfNotInstalledFunc(Directories.Electron, Commands.InstallElectron);
         await this.installDependencyIfNotInstalledFunc(Directories.ElectronPackager, Commands.InstallElectronPackager);
-        this.addEsbuildCommand(Commands.ElectronServe, EsbuildTypes.OnEnd, EsbuildModes.Dev);
+        this.addEsbuildCommand(Commands.ElectronServe, EsbuildTypes.After, EsbuildModes.Dev);
         await this.updateFilesWhereChangesNeeded();
         await this.scaffoldNewFiles();
         this.deleteFiles();
