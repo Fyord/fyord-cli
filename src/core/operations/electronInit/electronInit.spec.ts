@@ -8,6 +8,7 @@ import { ElectronMain } from './templates/electronMain';
 import { ElectronPreload } from './templates/electronPreload';
 import { ElectronRenderer } from './templates/electronRenderer';
 import { Routes } from './templates/routes';
+import { Commands } from '../../../enums/commands';
 
 describe('ElectronInitOperation', () => {
   const mockFse = new Mock<IFileSystemExtraAdapter>();
@@ -76,6 +77,7 @@ describe('ElectronInitOperation', () => {
 
     const result = await classUnderTest.Execute([]);
 
+    expect(commandsAdded).toContain(Commands.ElectronServe);
     expect(replacementFilePaths.length).toEqual(15);
     expect(replacementOldValues.length).toEqual(15);
     expect(replacementNewValues.length).toEqual(15);

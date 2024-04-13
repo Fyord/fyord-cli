@@ -1,9 +1,10 @@
 import { Strings } from 'tsbase';
 import { Any, Mock, Times } from 'tsmockit';
 import { Directories } from '../../../enums/directories';
-import { Errors } from '../../../enums/module';
+import { Commands, Errors } from '../../../enums/module';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 import { WasmInit } from './wasmInit';
+import { addEsbuildCommand } from '../../utility/addEsbuildCommand';
 
 describe('WasmInit', () => {
   let classUnderTest: WasmInit;
@@ -11,12 +12,13 @@ describe('WasmInit', () => {
 
   let updateTextInFileCalledTimes: number;
   let installDependencyCalledTimes: number;
-  let addWebpackOnBuildCalledTimes: number;
+  let commandsAdded: string[];
+  const fakeAddEsbuildCommand: typeof addEsbuildCommand = (c) => commandsAdded.push(c);
 
   beforeEach(() => {
+    commandsAdded = [];
     updateTextInFileCalledTimes = 0;
     installDependencyCalledTimes = 0;
-    addWebpackOnBuildCalledTimes = 0;
 
     mockFsExtra.Setup(fse => fse.outputFile(Any<string>(), Any<string>()));
     mockFsExtra.Setup(fse => fse.pathExists(Any<string>()), false);
@@ -27,7 +29,7 @@ describe('WasmInit', () => {
       mockFsExtra.Object,
       () => Promise.resolve().then(() => { updateTextInFileCalledTimes++; }),
       () => Promise.resolve().then(() => { installDependencyCalledTimes++; }),
-      () => Promise.resolve().then(() => { addWebpackOnBuildCalledTimes++; })
+      fakeAddEsbuildCommand
     );
   });
 
@@ -61,8 +63,8 @@ describe('WasmInit', () => {
 
     expect(result.IsSuccess).toBeTruthy();
     expect(updateTextInFileCalledTimes).toEqual(4);
-    expect(installDependencyCalledTimes).toEqual(2);
-    expect(addWebpackOnBuildCalledTimes).toEqual(1);
+    expect(installDependencyCalledTimes).toEqual(1);
+    expect(commandsAdded).toContain(Commands.WasmPackBuild);
     mockFsExtra.Verify(fse => fse.outputFile(Strings.Empty, Strings.Empty), 6);
   });
 });
