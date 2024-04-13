@@ -44,7 +44,7 @@ export class WasmInit implements IOperation {
 target
 pkg`
       },
-      { // TODO
+      {
         filePath: './src/index.html',
         oldValue: '<meta http-equiv="Content-Security-Policy" content="',
         newValue: `<meta http-equiv="Content-Security-Policy" content="
