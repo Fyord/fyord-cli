@@ -48,7 +48,7 @@ const ExecCommandRecord: Record<EsbuildTypes, Constants> = {
   [EsbuildTypes.Before]: Constants.ExecSync,
   [EsbuildTypes.OnStart]: Constants.Exec,
   [EsbuildTypes.OnEnd]: Constants.Exec,
-  [EsbuildTypes.After]: Constants.ExecSync
+  [EsbuildTypes.After]: Constants.Exec
 };
 
 const ModeCommandRecord: Record<EsbuildModes, (execCommand: Constants, command: string) => string> = {

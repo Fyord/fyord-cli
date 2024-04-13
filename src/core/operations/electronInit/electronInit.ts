@@ -43,17 +43,13 @@ export class ElectronInitOperation implements IOperation {
     const notFoundPage = './src/pages/not-found/not-found.tsx';
     const notFoundPageSpec = './src/pages/not-found/not-found.spec.tsx';
     const welcomePage = './src/pages/welcome/welcome.tsx';
+    const welcomePageSpec = './src/pages/welcome/welcome.spec.tsx';
 
     const replacements: TextReplacement[] = [
       {
         filePath: Directories.HtmlIndex,
         oldValue: '<base href="/">',
         newValue: '<base href="./">'
-      },
-      {
-        filePath: Directories.HtmlIndex,
-        oldValue: 'fonts.googleapis.com;',
-        newValue: 'https://fonts.googleapis.com;'
       },
       {
         filePath: Directories.WebManifest,
@@ -71,21 +67,21 @@ export class ElectronInitOperation implements IOperation {
         newValue: "const nodeEntryPoints = ['src/electron/main.ts', 'src/electron/preload.ts', 'src/electron/renderer.ts'];"
       },
       {
-        filePath: Directories.EsbuildOnStart,
+        filePath: Directories.EsbuildOperations,
         // eslint-disable-next-line max-len
         oldValue: /\s*.replace\(BuildConstants\.ClosingBodyTag, isProductionBuild \?\s*BuildConstants\.ClosingBodyTag :\s*`\${BuildConstants\.HotReloadScript}\${BuildConstants\.ClosingBodyTag}`\)/,
         newValue: Strings.Empty
-      },
-      {
-        filePath: Directories.EsbuildOnStart,
-        oldValue: 'isProductionBuild',
-        newValue: '_isProductionBuild'
       },
       {
         filePath: Directories.TsIndex,
         // eslint-disable-next-line max-len
         oldValue: /\s*if \(navigator.serviceWorker\) {\s*await navigator.serviceWorker.register\(\s*'\/service-worker.js', { scope: '\/' }\);\s*}/,
         newValue: Strings.Empty
+      },
+      {
+        filePath: Directories.HtmlIndex,
+        oldValue: 'fonts.googleapis.com;',
+        newValue: 'https://fonts.googleapis.com;'
       },
       {
         filePath: notFoundPageSpec,
@@ -133,6 +129,16 @@ import { Routes } from '../../routes';`
         filePath: welcomePage,
         oldValue: 'Route = async (route: Route) => route.path === document.baseURI.split(location.origin)[1];',
         newValue: 'Route = async (route: Route) => route.href === Routes.Home;'
+      },
+      {
+        filePath: welcomePageSpec,
+        oldValue: "import { Asap } from 'fyord';",
+        newValue: "import { Asap } from 'fyord';\nimport { Routes } from '../../routes';"
+      },
+      {
+        filePath: welcomePageSpec,
+        oldValue: "path: '/'",
+        newValue: 'href: Routes.Home'
       }
     ];
 

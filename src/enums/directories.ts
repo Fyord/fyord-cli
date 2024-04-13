@@ -13,5 +13,5 @@ export enum Directories {
   TsIndex = './src/index.ts',
   WebManifest = './src/wwwroot/manifest.webmanifest',
   EsbuildBuild = './esbuild/build.ts',
-  EsbuildOnStart = './esbuild/onStartOperations.ts'
+  EsbuildOperations = './esbuild/buildOperations.ts'
 }
