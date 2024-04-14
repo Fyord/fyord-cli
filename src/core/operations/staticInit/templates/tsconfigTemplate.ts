@@ -8,7 +8,8 @@ export const TsconfigTemplate = `{
 		"target": "esnext",
 		"strict": true,
 		"noImplicitAny": false,
-		"forceConsistentCasingInFileNames": true
+		"forceConsistentCasingInFileNames": true,
+		"types": []
 	}
 }
 `;

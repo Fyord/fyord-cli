@@ -4,10 +4,11 @@ import { TextReplacement } from '../../../types/module';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
 import { DIModule } from '../../../diModule';
 import {
-  addWebpackOnBuildStartCommand,
   UpdateTextInFile,
   updateTextInFile as _updateTextInFile,
-  installDependencyIfNotInstalled
+  addEsbuildCommand as _addEsbuildCommand,
+  installDependencyIfNotInstalled,
+  EsbuildTypes
 } from '../../utility/module';
 import { IOperation } from '../operation';
 import { RustTsTemplate, CargoTomlTemplate, GreetTemplate, LibTemplate, ModTemplate, UtilsTemplate } from './templates/module';
@@ -17,7 +18,7 @@ export class WasmInit implements IOperation {
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     private updateTextInFile: UpdateTextInFile = _updateTextInFile,
     private installDependencyIfNotInstalledFunc = installDependencyIfNotInstalled,
-    private addWebpackOnBuildStartCommandFunc = addWebpackOnBuildStartCommand
+    private addEsbuildCommand = _addEsbuildCommand
   ) { }
 
   public Execute(): Promise<Result<null>> {
@@ -26,9 +27,8 @@ export class WasmInit implements IOperation {
       const cargoLockAlreadyExists = await this.fse.pathExists(Directories.CargoLock);
 
       if (inRootDir && !cargoLockAlreadyExists) {
-        await this.installDependencyIfNotInstalledFunc(Directories.WebpackShellPlugin, Commands.InstallWebpackShellPlugin);
         await this.installDependencyIfNotInstalledFunc(Directories.WasmPack, Commands.InstallWasmPack);
-        this.addWebpackOnBuildStartCommandFunc(Commands.WasmPackBuild);
+        this.addEsbuildCommand(Commands.WasmPackBuild, EsbuildTypes.Before);
         await this.updateFilesWhereChangesNeeded();
         await this.scaffoldNewFiles();
       } else {
@@ -54,13 +54,16 @@ pkg`
         filePath: './src/index.ts',
         oldValue: 'import { defaultLayout } from \'./layouts\';',
         newValue: `import { defaultLayout } from './layouts';
-import { RustWindowKey, Rust } from './rust/rust';`
+import { RustWindowKey, Rust } from './rust/rust';
+import bin from '../pkg/rust_bg.wasm';
+import * as wasm from '../pkg/rust';`
       },
       {
         filePath: './src/index.ts',
         oldValue: '})();',
         newValue: `
-  window[RustWindowKey] = await import('../pkg/rust');
+  await wasm.default(bin);
+  window[RustWindowKey] = wasm;
   Rust()?.greet();
 })();`
       }

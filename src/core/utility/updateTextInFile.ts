@@ -4,7 +4,7 @@ import { IFileSystemExtraAdapter } from '../../fileSystem/module';
 
 export type UpdateTextInFile = (
   fileName: string,
-  oldText: string,
+  oldText: string | RegExp,
   newText: string,
   fse?: IFileSystemExtraAdapter,
   fs?: any
@@ -12,7 +12,7 @@ export type UpdateTextInFile = (
 
 export const updateTextInFile: UpdateTextInFile = async (
   fileName: string,
-  oldText: string,
+  oldText: string | RegExp,
   newText: string,
   fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
   fs: any = filesystem

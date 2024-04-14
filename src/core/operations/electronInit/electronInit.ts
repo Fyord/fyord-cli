@@ -4,7 +4,14 @@ import { DIModule } from '../../../diModule';
 import { Commands, Directories } from '../../../enums/module';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/fileSystemExtraAdapter';
 import { TextReplacement } from '../../../types/module';
-import { installDependencyIfNotInstalled, updateTextInFile, UpdateTextInFile } from '../../utility/module';
+import {
+  addEsbuildCommand as _addEsbuildCommand,
+  EsbuildModes,
+  EsbuildTypes,
+  installDependencyIfNotInstalled,
+  updateTextInFile,
+  UpdateTextInFile
+} from '../../utility/module';
 import { IOperation } from '../operation';
 import { ElectronMain, ElectronPreload, ElectronRenderer, Routes } from './templates/module';
 
@@ -13,7 +20,8 @@ export class ElectronInitOperation implements IOperation {
     private fse: IFileSystemExtraAdapter = DIModule.FileSystemExtraAdapter,
     private installDependencyIfNotInstalledFunc = installDependencyIfNotInstalled,
     private updateTextInFileFunc: UpdateTextInFile = updateTextInFile,
-    private fs = DIModule.FileSystemAdapter
+    private fs = DIModule.FileSystemAdapter,
+    private addEsbuildCommand = _addEsbuildCommand
   ) { }
 
   public Execute(): Promise<Result<null>> {
@@ -21,10 +29,9 @@ export class ElectronInitOperation implements IOperation {
       const inRootDir = await this.fse.pathExists(Directories.RootPackage);
 
       if (inRootDir) {
-        await this.installDependencyIfNotInstalledFunc(Directories.WebpackShellPlugin, Commands.InstallWebpackShellPlugin);
         await this.installDependencyIfNotInstalledFunc(Directories.Electron, Commands.InstallElectron);
         await this.installDependencyIfNotInstalledFunc(Directories.ElectronPackager, Commands.InstallElectronPackager);
-
+        this.addEsbuildCommand(Commands.ElectronServe, EsbuildTypes.After, EsbuildModes.Dev);
         await this.updateFilesWhereChangesNeeded();
         await this.scaffoldNewFiles();
         this.deleteFiles();
@@ -36,22 +43,13 @@ export class ElectronInitOperation implements IOperation {
     const notFoundPage = './src/pages/not-found/not-found.tsx';
     const notFoundPageSpec = './src/pages/not-found/not-found.spec.tsx';
     const welcomePage = './src/pages/welcome/welcome.tsx';
+    const welcomePageSpec = './src/pages/welcome/welcome.spec.tsx';
 
     const replacements: TextReplacement[] = [
-      {
-        filePath: Directories.RootPackage,
-        oldValue: '"start": "webpack serve --config webpack.dev.js"',
-        newValue: '"start": "webpack -w --config webpack.dev.js"'
-      },
       {
         filePath: Directories.HtmlIndex,
         oldValue: '<base href="/">',
         newValue: '<base href="./">'
-      },
-      {
-        filePath: Directories.HtmlIndex,
-        oldValue: 'fonts.googleapis.com;',
-        newValue: 'https://fonts.googleapis.com;'
       },
       {
         filePath: Directories.WebManifest,
@@ -59,73 +57,31 @@ export class ElectronInitOperation implements IOperation {
         newValue: '"start_url": "./",'
       },
       {
-        filePath: Directories.WebpackCommon,
-        oldValue: `,
-'service-worker': './src/service-worker.ts'`,
+        filePath: Directories.EsbuildBuild,
+        oldValue: "const browserEntryPoints = ['src/index.ts', 'src/service-worker.ts'];",
+        newValue: "const browserEntryPoints = ['src/index.ts'];"
+      },
+      {
+        filePath: Directories.EsbuildBuild,
+        oldValue: 'const nodeEntryPoints = [];',
+        newValue: "const nodeEntryPoints = ['src/electron/main.ts', 'src/electron/preload.ts', 'src/electron/renderer.ts'];"
+      },
+      {
+        filePath: Directories.EsbuildOperations,
+        // eslint-disable-next-line max-len
+        oldValue: /\s*.replace\(BuildConstants\.ClosingBodyTag, isProductionBuild \?\s*BuildConstants\.ClosingBodyTag :\s*`\${BuildConstants\.HotReloadScript}\${BuildConstants\.ClosingBodyTag}`\)/,
         newValue: Strings.Empty
-      },
-      {
-        filePath: Directories.WebpackCommon,
-        oldValue: `
-  devServer: {
-    contentBase: './public',
-    compress: true,
-    port: 4200,
-    historyApiFallback: {
-      disableDotRule: true
-    }
-  },`,
-        newValue: Strings.Empty
-      },
-      {
-        filePath: Directories.WebpackDev,
-        oldValue: 'const common = require(\'./webpack.common.js\');',
-        newValue: `const common = require('./webpack.common.js');
-const WebpackShellPlugin = require('webpack-shell-plugin');`
-      },
-      {
-        filePath: Directories.WebpackDev,
-        oldValue: 'devtool: \'inline-source-map\'',
-        newValue: `devtool: 'inline-source-map',
-  plugins: [
-    new WebpackShellPlugin({
-      onBuildStart: [
-        'tsc -w ./src/electron/main.ts --outDir ./public',
-        'tsc -w ./src/electron/preload.ts --outDir ./public',
-        'tsc -w ./src/electron/renderer.ts --outDir ./public'
-      ],
-      onBuildEnd: [
-        'electron public/main.js'
-      ]
-    })
-  ]`
-      },
-      {
-        filePath: Directories.WebpackProd,
-        oldValue: `new HtmlWebpackPlugin({
-    template: 'src/index.html',
-    hash: true
-  }),`,
-        newValue: `new HtmlWebpackPlugin({
-    template: 'src/index.html',
-    hash: true
-  }),
-  new WebpackShellPlugin({
-    onBuildStart: [
-      'tsc src/electron/main.ts --outDir ./public',
-      'tsc src/electron/preload.ts --outDir ./public',
-      'tsc src/electron/renderer.ts --outDir ./public'
-    ]
-  })`
       },
       {
         filePath: Directories.TsIndex,
-        oldValue: `
-  if (navigator.serviceWorker) {
-    await navigator.serviceWorker.register(
-      '/service-worker.js', { scope: '/' });
-  }`,
+        // eslint-disable-next-line max-len
+        oldValue: /\s*if \(navigator.serviceWorker\) {\s*await navigator.serviceWorker.register\(\s*'\/service-worker.js', { scope: '\/' }\);\s*}/,
         newValue: Strings.Empty
+      },
+      {
+        filePath: Directories.HtmlIndex,
+        oldValue: 'fonts.googleapis.com;',
+        newValue: 'https://fonts.googleapis.com;'
       },
       {
         filePath: notFoundPageSpec,
@@ -148,14 +104,12 @@ import { baseUrl, Routes } from '../../routes';`
       },
       {
         filePath: notFoundPage,
-        oldValue: `<p>Could not find content matching, "{decodeURI(route?.path || '')}"</p>
-      <p>Please check spelling. Otherwise the resource may have been moved.</p>
-    </div>;
-  }`,
+        // eslint-disable-next-line max-len
+        oldValue: /\s*<p>Could not find content matching, "{decodeURI\(route\?.path \|\| ''\)}"<\/p>\s*<p>Please check spelling. Otherwise the resource may have been moved.<\/p>\s*<\/div>;\s*};/,
         newValue: `<p>Could not find content matching, "{decodeURI(route?.href || '')}"</p>
       <p>Please check spelling. Otherwise the resource may have been moved.</p>
     </div>;
-  }
+  };
 
   private recoverFromNonReLoadableState(route?: Route) {
     Asap(() => {
@@ -175,6 +129,16 @@ import { Routes } from '../../routes';`
         filePath: welcomePage,
         oldValue: 'Route = async (route: Route) => route.path === document.baseURI.split(location.origin)[1];',
         newValue: 'Route = async (route: Route) => route.href === Routes.Home;'
+      },
+      {
+        filePath: welcomePageSpec,
+        oldValue: "import { Asap } from 'fyord';",
+        newValue: "import { Asap } from 'fyord';\nimport { Routes } from '../../routes';"
+      },
+      {
+        filePath: welcomePageSpec,
+        oldValue: "path: '/'",
+        newValue: 'href: Routes.Home'
       }
     ];
 

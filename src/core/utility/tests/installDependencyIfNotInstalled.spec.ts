@@ -17,8 +17,8 @@ describe('installDependencyIfNotInstalled', () => {
 
   it('should install dependency when NOT already installed', async () => {
     await installDependencyIfNotInstalled(
-      Directories.WebpackShellPlugin,
-      Commands.InstallWebpackShellPlugin,
+      Directories.RootPackage,
+      Commands.ElectronServe,
       mockFseAdapter.Object,
       mockChildProcess.Object);
 
@@ -31,14 +31,14 @@ describe('installDependencyIfNotInstalled', () => {
     mockFseAdapter.Setup(f => f.pathExists(Any<string>()), true);
 
     await installDependencyIfNotInstalled(
-      Directories.WebpackShellPlugin,
-      Commands.InstallWebpackShellPlugin,
+      Directories.RootPackage,
+      Commands.ElectronServe,
       mockFseAdapter.Object,
       mockChildProcess.Object);
 
     mockFseAdapter.Verify(f => f.pathExists(Strings.Empty), Times.Once);
     mockChildProcess.Verify(c => c.execSync(Strings.Empty), Times.Never);
     expect(consoleSpy).toHaveBeenCalledWith(
-      `Skipping "${Commands.InstallWebpackShellPlugin}" as "${Directories.WebpackShellPlugin}" already exists.`);
+      `Skipping "${Commands.ElectronServe}" as "${Directories.RootPackage}" already exists.`);
   });
 });

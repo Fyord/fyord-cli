@@ -3,31 +3,29 @@ import { Any, Mock, Times } from 'tsmockit';
 import { Directories } from '../../../../enums/directories';
 import { Errors } from '../../../../enums/errors';
 import { IFileSystemExtraAdapter } from '../../../../fileSystem/fileSystemExtraAdapter';
+import { addEsbuildCommand } from '../../../utility/addEsbuildCommand';
 import { StaticInit } from '../staticInit';
+import { Commands } from '../../../../enums/commands';
 
 describe('staticInit', () => {
   const mockFseAdapter = new Mock<IFileSystemExtraAdapter>();
 
   let updateTextInFileCalledTimes: number;
-  let installWebpackShellPluginCalledTimes: number;
-  let addWebpackOnBuildStartCommandCalledTimes: number;
   const fakeUpdateTextInFile = () => updateTextInFileCalledTimes++;
-  const fakeInstallWebpackShellPlugin = () => installWebpackShellPluginCalledTimes++;
-  const fakeAddWebpackOnBuildStartCommand = () => addWebpackOnBuildStartCommandCalledTimes++;
+  let commandsAdded: string[];
+  const fakeAddEsbuildCommand: typeof addEsbuildCommand = (c) => commandsAdded.push(c);
 
   let classUnderTest: StaticInit;
 
   beforeEach(() => {
+    commandsAdded = [];
     updateTextInFileCalledTimes = 0;
-    installWebpackShellPluginCalledTimes = 0;
-    addWebpackOnBuildStartCommandCalledTimes = 0;
     mockFseAdapter.Setup(f => f.pathExists(Any<string>()), false);
 
     classUnderTest = new StaticInit(
       mockFseAdapter.Object,
-      fakeUpdateTextInFile as any,
-      fakeInstallWebpackShellPlugin as any,
-      fakeAddWebpackOnBuildStartCommand);
+      fakeAddEsbuildCommand,
+      fakeUpdateTextInFile as any);
   });
 
   it('should return failing result when ran outside root directory', async () => {
@@ -60,7 +58,6 @@ describe('staticInit', () => {
     expect(result.IsSuccess).toBeTruthy();
     mockFseAdapter.Verify(f => f.outputFile(Strings.Empty, Strings.Empty), Times.Once);
     expect(updateTextInFileCalledTimes).toEqual(1);
-    expect(addWebpackOnBuildStartCommandCalledTimes).toEqual(1);
-    expect(installWebpackShellPluginCalledTimes).toEqual(1);
+    expect(commandsAdded).toContain(Commands.FyordBuildStatic);
   });
 });

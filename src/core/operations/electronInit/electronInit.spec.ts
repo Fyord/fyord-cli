@@ -1,12 +1,14 @@
 import { Any, Mock, Times } from 'tsmockit';
 import { DIModule } from '../../../diModule';
 import { IFileSystemExtraAdapter } from '../../../fileSystem/module';
+import { addEsbuildCommand } from '../../utility/addEsbuildCommand';
 import { IOperation } from '../operation';
 import { ElectronInitOperation } from './electronInit';
 import { ElectronMain } from './templates/electronMain';
 import { ElectronPreload } from './templates/electronPreload';
 import { ElectronRenderer } from './templates/electronRenderer';
 import { Routes } from './templates/routes';
+import { Commands } from '../../../enums/commands';
 
 describe('ElectronInitOperation', () => {
   const mockFse = new Mock<IFileSystemExtraAdapter>();
@@ -27,17 +29,26 @@ describe('ElectronInitOperation', () => {
     replacementOldValues.push(oldValue);
     replacementNewValues.push(newValue);
   };
+  let commandsAdded: string[];
+  const fakeAddEsbuildCommand: typeof addEsbuildCommand = (c) => commandsAdded.push(c);
 
   let classUnderTest: IOperation;
 
   beforeEach(() => {
+    commandsAdded = [];
     dependencyDirectories = [];
     dependencyCommands = [];
     replacementFilePaths = [];
     replacementOldValues = [];
     replacementNewValues = [];
 
-    classUnderTest = new ElectronInitOperation(mockFse.Object, fakeInstallDependencyFunc, fakeUpdateTextInFileFunc, mockFs.Object);
+    classUnderTest = new ElectronInitOperation(
+      mockFse.Object,
+      fakeInstallDependencyFunc,
+      fakeUpdateTextInFileFunc,
+      mockFs.Object,
+      fakeAddEsbuildCommand
+    );
   });
 
   it('should construct', () => {
@@ -66,9 +77,10 @@ describe('ElectronInitOperation', () => {
 
     const result = await classUnderTest.Execute([]);
 
-    expect(replacementFilePaths.length).toEqual(16);
-    expect(replacementOldValues.length).toEqual(16);
-    expect(replacementNewValues.length).toEqual(16);
+    expect(commandsAdded).toContain(Commands.ElectronServe);
+    expect(replacementFilePaths.length).toEqual(15);
+    expect(replacementOldValues.length).toEqual(15);
+    expect(replacementNewValues.length).toEqual(15);
     mockFse.Verify(f => f.outputFile(Any<string>(), ElectronMain), Times.Once);
     mockFse.Verify(f => f.outputFile(Any<string>(), ElectronPreload), Times.Once);
     mockFse.Verify(f => f.outputFile(Any<string>(), ElectronRenderer), Times.Once);
