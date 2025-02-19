@@ -32,7 +32,7 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
-    "tsbase": "^6.0.3",
+    "tsbase": "^6.2.1",
     "express": "^4.21.1",
     "fs-extra": "^9.1.0",
     "inquirer": "^8.1.5",
