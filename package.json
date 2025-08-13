@@ -35,7 +35,7 @@
     "tsbase": "^6.0.3",
     "express": "^4.21.1",
     "fs-extra": "^9.1.0",
-    "inquirer": "^8.1.5",
+    "inquirer": "^8.2.7",
     "isomorphic-fetch": "^3.0.0",
     "puppeteer": "^19.6.3"
   },
